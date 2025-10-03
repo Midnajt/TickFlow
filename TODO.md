@@ -33,11 +33,11 @@
    - Utworzona przez Manager
 
 4. **Ticket**
-   - Tytuł
-   - Opis
+   - Tytuł (wymagane, string)
+   - Opis (wymagane, string, max 500 znaków)
    - Status (enum: OPEN, IN_PROGRESS, RESOLVED, CLOSED)
-   - Kategoria
-   - Podkategoria
+   - Kategoria (wymagane, ObjectId ref)
+   - Podkategoria (wymagane, ObjectId ref)
    - Twórca (User)
    - Przypisany Agent (opcjonalnie)
    - Timestamps (created, updated, resolved, closed)
@@ -262,11 +262,11 @@ TickFlow/
 // Ticket Schema
 {
   _id: ObjectId,
-  title: string,
-  description: string,
+  title: string (required, minLength: 1, maxLength: 200),
+  description: string (required, minLength: 1, maxLength: 500),
   status: enum ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'],
-  category: ObjectId (ref: Category),
-  subcategory: ObjectId (ref: Subcategory),
+  category: ObjectId (ref: Category, required),
+  subcategory: ObjectId (ref: Subcategory, required),
   createdBy: ObjectId (ref: User),
   assignedTo: ObjectId (ref: User, role: AGENT) // nullable, populated w response dla User
   assignedAt: Date,
@@ -391,6 +391,10 @@ TickFlow/
 ### 3.2 Ticket Management
 - ❓ Agent przypisuje ticket do siebie - co jeśli inny Agent zrobił to samo w tym samym czasie? → Optymistic locking (version field)
 - ❓ Użytkownik tworzy ticket w nieistniejącej kategorii → Walidacja + error
+- ❓ Użytkownik tworzy ticket bez tytułu → Walidacja + error "Tytuł jest wymagany"
+- ❓ Użytkownik tworzy ticket bez opisu → Walidacja + error "Opis jest wymagany"
+- ❓ Użytkownik wpisuje opis dłuższy niż 500 znaków → Walidacja + error "Opis może mieć maksymalnie 500 znaków"
+- ❓ Użytkownik próbuje stworzyć ticket bez kategorii/podkategorii → Walidacja + error
 - ❓ Podkategoria zostaje usunięta - co z ticketami? → Soft delete lub przepisanie do kategorii nadrzędnej
 - ❓ Ticket ma komentarze, ale został usunięty → Soft delete ticketów
 - ❓ Agent widzi ticket, ale w międzyczasie został odpisany z podkategorii → Real-time update + usunięcie z widoku
@@ -445,6 +449,12 @@ TickFlow/
 - Client-side validation z Zod
 - Real-time field validation
 - Accessible error messages
+- Ticket form validation:
+  * Tytuł: wymagany, minLength: 1, maxLength: 200
+  * Opis: wymagany, minLength: 1, maxLength: 500
+  * Kategoria: wymagana
+  * Podkategoria: wymagana
+  * Live character counter dla opisu (X/500)
 ```
 
 ### 4.2 Backend Error Handling
@@ -459,6 +469,9 @@ TickFlow/
 // Database Errors
 - Connection errors → Retry logic
 - Validation errors → 400 Bad Request
+  * Ticket bez tytułu/opisu → "Tytuł i opis są wymagane"
+  * Opis > 500 znaków → "Opis może mieć maksymalnie 500 znaków"
+  * Brak kategorii/podkategorii → "Kategoria i podkategoria są wymagane"
 - Duplicate key errors → 409 Conflict
 - Not found errors → 404 Not Found
 
@@ -715,7 +728,12 @@ TickFlow/
 - [ ] Utworzyć model User (Mongoose)
 - [ ] Utworzyć model Category (Mongoose)
 - [ ] Utworzyć model Subcategory (Mongoose)
-- [ ] Utworzyć model Ticket (Mongoose)
+- [ ] Utworzyć model Ticket (Mongoose):
+  - [ ] title: { type: String, required: true, minLength: 1, maxLength: 200 }
+  - [ ] description: { type: String, required: true, minLength: 1, maxLength: 500 }
+  - [ ] category: { type: ObjectId, ref: 'Category', required: true }
+  - [ ] subcategory: { type: ObjectId, ref: 'Subcategory', required: true }
+  - [ ] status, createdBy, assignedTo, timestamps
 - [ ] Utworzyć model Comment (Mongoose)
 - [ ] Utworzyć model AuditLog (Mongoose)
 - [ ] Utworzyć model SystemLog (Mongoose)
@@ -738,7 +756,12 @@ TickFlow/
 
 #### TypeScript Types
 - [ ] Zdefiniować types dla User
-- [ ] Zdefiniować types dla Ticket (bez Priority)
+- [ ] Zdefiniować types dla Ticket:
+  - [ ] title: string (required, max 200)
+  - [ ] description: string (required, max 500)
+  - [ ] category: ObjectId (required)
+  - [ ] subcategory: ObjectId (required)
+  - [ ] status, createdBy, assignedTo, timestamps
 - [ ] Zdefiniować types dla Category/Subcategory
 - [ ] Zdefiniować types dla API responses
 - [ ] Zdefiniować types dla Email notifications
@@ -774,10 +797,19 @@ TickFlow/
 - [ ] API: PATCH /api/tickets/[id]/status (change status) + **Email: Notify creator**
 - [ ] UI: Ticket list component (pokazać przypisanego agenta dla User)
 - [ ] UI: Ticket detail component (pokazać przypisanego agenta)
-- [ ] UI: Create ticket form
+- [ ] UI: Create ticket form z walidacją:
+  - [ ] Pole "Kategoria" (select, wymagane)
+  - [ ] Pole "Podkategoria" (select, wymagane, filtrowane wg kategorii)
+  - [ ] Pole "Tytuł" (text input, wymagane, max 200 znaków)
+  - [ ] Pole "Opis" (textarea, wymagane, max 500 znaków)
+  - [ ] Live character counter dla opisu (X/500)
+  - [ ] Walidacja real-time + błędy pod polami
 - [ ] UI: Ticket status badges
 - [ ] UI: Assigned agent display (imię, nazwisko, opcjonalnie avatar)
-- [ ] Walidacja: Zod schemas dla ticket operations
+- [ ] Walidacja: Zod schemas dla ticket operations:
+  - [ ] createTicketSchema (title: required max 200, description: required max 500, category: required, subcategory: required)
+  - [ ] updateTicketSchema
+  - [ ] assignTicketSchema
 
 #### Category/Subcategory System
 - [ ] API: CRUD dla Categories (ADMIN only)
@@ -951,10 +983,17 @@ TickFlow/
 - [ ] Loading states dla wszystkich async operations
 
 #### Validation
-- [ ] Zod schemas dla wszystkich API inputs
-- [ ] Client-side validation dla forms
+- [ ] Zod schemas dla wszystkich API inputs:
+  - [ ] Ticket: title (required, 1-200 chars), description (required, 1-500 chars)
+  - [ ] User: email, password strength
+  - [ ] Category/Subcategory: name, description
+- [ ] Client-side validation dla forms:
+  - [ ] Ticket form: real-time validation z character counters
+  - [ ] User form: email format, password requirements
+  - [ ] Pokazywanie błędów inline pod polami
 - [ ] Server-side validation dla wszystkich endpoints
 - [ ] Sanitization inputs (XSS prevention)
+- [ ] Test edge cases: puste stringi, whitespace, special characters
 
 #### UI/UX
 - [ ] Responsive design (mobile, tablet, desktop)
@@ -1084,13 +1123,26 @@ MVP jest gotowe gdy:
 
 ---
 
-**💡 Ostatnia aktualizacja**: 2025-10-03 v1.2
+**💡 Ostatnia aktualizacja**: 2025-10-03 v1.3
 **👤 Autor**: Marcin
 **🎯 Status**: Ready to start implementation
 
 ---
 
 ## 📝 Changelog Planu
+
+### 2025-10-03 v1.3
+- ✅ **Doprecyzowano**: Struktura ticketu - tytuł i opis są WYMAGANE
+- ✅ **Dodano**: Opis ticketu ma limit 500 znaków (validation)
+- ✅ **Dodano**: Tytuł ticketu ma limit 200 znaków (validation)
+- ✅ **Dodano**: Kategoria i podkategoria są WYMAGANE przy tworzeniu ticketu
+- ✅ **Dodano**: Live character counter dla pola opisu (X/500)
+- ✅ **Zaktualizowano**: Database Schema - ticket validation rules
+- ✅ **Zaktualizowano**: Edge cases dla ticket validation (3.2)
+- ✅ **Zaktualizowano**: Form validation requirements (4.1)
+- ✅ **Zaktualizowano**: Phase 1 tasks - Database Models z validation
+- ✅ **Zaktualizowano**: Phase 2 tasks - Create ticket form z szczegółami
+- ✅ **Zaktualizowano**: Phase 8 tasks - Validation details
 
 ### 2025-10-03 v1.2
 - ⚠️ **WYJAŚNIONO**: BRAK samoobsługowej rejestracji - tylko Manager/Admin tworzy konta
