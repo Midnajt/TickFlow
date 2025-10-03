@@ -130,5 +130,3 @@ Aplikacja do tworzenia i zarządzania ticketami wewnątrz firmy, z możliwości�
 - Problemy wydajnościowe
 
 ---
-
-> 💡 **Nota:** Dokument będzie aktualizowany w miarę rozwoju projektu.
