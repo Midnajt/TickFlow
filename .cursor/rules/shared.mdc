@@ -1,3 +1,44 @@
 ---
 alwaysApply: true
 ---
+# AI Rules for TickFlow
+
+A web-based ticket management application with multi-role support (agent, user (with manager and admin coming soon)). It allows you to create, assign, and process tickets from your company to your IT department, with automatic real-time list refresh. Built on Next.js
+
+## Tech Stack
+
+- Next.js 15
+- TypeScript 5
+- React 19
+- Tailwind CSS 4
+- Prisma 6
+- NextAuth 5
+- Supabase
+
+## Project Structure
+
+When introducing changes to the project, always follow the directory structure below:
+
+- `./app` - Next.js App Router pages and layouts
+- `./app/api` - API routes
+- `./app/components` - React components (server and client)
+- `./app/lib` - utility functions and shared logic
+- `./app/actions` - server actions
+- `./prisma` - database schema and migrations
+- `./public` - public static assets
+
+When modifying the directory structure, always update 
+
+## Coding practices
+
+### Guidelines for clean code
+
+- Use feedbback from linters to improve the code when making changes.
+- Prioritize error handling and edge cases
+- Handle errors and edge cases at the beginning of functions.
+- Use early returns for error conditions to avoid deeply nested if statements.
+- Place the happy path last in the function for improved readability.
+- Avoid unnecessary else statements; use if-return pattern instead.
+- Use guard clauses to handle preconditions and invalid states early.
+- Implement proper error logging and user-friendly error messages.
+- Consider using custom error types or error factories for consistent error handling.

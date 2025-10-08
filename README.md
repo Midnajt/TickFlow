@@ -1,51 +1,91 @@
 # TickFlow
 
-Projekt Next.js z Tailwind CSS.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-## Uruchomienie projektu
+## Table of Contents
+1. [Project Description](#project-description)  
+2. [Tech Stack](#tech-stack)  
+3. [Getting Started Locally](#getting-started-locally)  
+4. [Available Scripts](#available-scripts)  
+5. [Project Scope](#project-scope)  
+6. [Project Status](#project-status)  
+7. [License](#license)  
 
+## Project Description
+TickFlow is a web-based IT ticket reporting and management system. Non-technical employees can submit and track support tickets in real time, while IT agents can view, claim, and resolve tickets in their assigned categories. Built with Next.js, Supabase, and Prisma, TickFlow delivers a responsive UI and real-time updates to streamline IT support workflows.
+
+## Tech Stack
+- **Framework**: Next.js 14+ (App Router)  
+- **Language**: TypeScript  
+- **UI & Styling**: Tailwind CSS, shadcn/ui  
+- **Forms & Validation**: React Hook Form + Zod  
+- **Authentication**: NextAuth.js v5 (Credentials provider, JWT sessions, bcrypt)  
+- **Database & ORM**: PostgreSQL (Supabase), Prisma  
+- **Real-Time**: Supabase Realtime WebSocket  
+- **Deployment**: Vercel (dev/staging), Node.js server (production)  
+
+## Getting Started Locally
+
+### Prerequisites
+- Node.js (v18+ recommended)  
+- npm or yarn  
+- Supabase account with a project and credentials  
+- Environment variables configured (.env.local)
+
+### Environment Variables
+Create a `.env.local` in the project root:
 ```bash
+DATABASE_URL="postgresql://postgres:password@your-supabase-url:5432/postgres"
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="a-secure-random-string"
+```
+
+### Installation & Setup
+```bash
+# Install dependencies
+npm install
+
+# Push Prisma schema to the database
+npx prisma db push
+
+# Seed initial data (categories, users, assignments)
+npx prisma db seed
+
+# Start development server
 npm run dev
 ```
 
-Otwórz [http://localhost:3000](http://localhost:3000) w przeglądarce, aby zobaczyć wynik.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Dostępne skrypty
+## Available Scripts
+- `npm run dev`  
+  Starts the Next.js development server.  
+- `npm run build`  
+  Builds the application for production.  
+- `npm run start`  
+  Runs the production build.  
+- `npm run lint`  
+  Lints codebase using ESLint.
 
-- `npm run dev` - uruchamia serwer deweloperski
-- `npm run build` - buduje aplikację do produkcji
-- `npm run start` - uruchamia serwer produkcyjny
-- `npm run lint` - uruchamia linter
+## Project Scope
+TickFlow MVP includes:
+- **Authentication**: Email/password login, enforced password change on first login, session protection, route middleware.  
+- **Ticket Management**: Create tickets (category→subcategory→title→description), validation, user ticket list & detail.  
+- **Agent Workflow**: Agent view of unassigned and “my tickets” in assigned categories, claim tickets, status transitions (Open → In Progress → Closed).  
+- **Real-Time Updates**: Live ticket list and status changes via Supabase Realtime.  
+- **Seeded Data**: Hardcoded categories, subcategories, and agent assignments for MVP.
 
-## Technologie
+For full requirements, see [prd.md](.ai/prd.md).
 
-- [Next.js](https://nextjs.org/) - framework React
-- [Tailwind CSS v4](https://tailwindcss.com/) - utility-first CSS framework
-- [TypeScript](https://www.typescriptlang.org/) - typowany JavaScript
+## Project Status
+- **MVP 1.0** in active development (4-week roadmap, 15h/week)  
+- Core authentication and ticket CRUD features are implemented; real-time updates and agent workflows are in progress.  
+- See project milestones in [prd.md](.ai/prd.md) and architectural details in [tech-stack.md](.ai/tech-stack.md).
 
-**Uwaga:** Projekt wykorzystuje Tailwind CSS v4, który wymaga `@tailwindcss/postcss` jako plugin PostCSS.
-
-## Struktura projektu
-
-```
-TickFlow/
-├── app/
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── public/
-├── node_modules/
-├── .gitignore
-├── next.config.ts
-├── package.json
-├── postcss.config.mjs
-├── tailwind.config.ts
-├── tsconfig.json
-└── README.md
-```
-
-## Dowiedz się więcej
-
-- [Dokumentacja Next.js](https://nextjs.org/docs)
-- [Dokumentacja Tailwind CSS](https://tailwindcss.com/docs)
+## License
+This project is licensed under the MIT License.  
+See [LICENSE](LICENSE) for details.
 

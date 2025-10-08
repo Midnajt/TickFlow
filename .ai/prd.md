@@ -6,8 +6,6 @@
 **Właściciel:** Marcin  
 **Data utworzenia:** 6 października 2025  
 **Wersja:** MVP 1.0  
-**Status:** Planowanie  
-**Timeline:** 4 tygodnie (60 godzin)
 
 > 📖 **Stack technologiczny:** Szczegóły techniczne (framework, database, dependencies, setup) znajdują się w `.ai/tech-stack.md`
 

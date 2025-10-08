@@ -1,4 +1,60 @@
 ---
-alwaysApply: true
+globs: *.tsx,*.css
+alwaysApply: false
 ---
-Jeżeli prompt dotyczy tailwind to korzystaj z Context7, aby sprawdzić najnowszą dokumentację do biblioteki.
+
+#### Tailwind CSS 4
+
+- Use the @layer directive to organize styles into base, components, and utilities layers
+- Leverage CSS variables and @theme for custom design tokens instead of JavaScript config
+- Use arbitrary values with square brackets (e.g., w-[123px]) for precise one-off designs
+- Implement color-mix() and modern CSS functions for dynamic color variations
+- Use the new @import syntax for Tailwind in your CSS files
+- Implement dark mode with the dark: variant using class or media strategy
+- Use responsive variants (sm:, md:, lg:, xl:, 2xl:) for adaptive designs
+- Leverage state variants (hover:, focus:, active:, disabled:, etc.) for interactive elements
+- Use container queries (e.g., @container) for component-based responsive design
+- Combine utilities with clsx or cn() helper for conditional class application
+
+
+#### REACT_CODING_STANDARDS
+
+
+- Use functional components with hooks instead of class components
+- Implement React.memo() for expensive components that render often with the same props
+- Utilize React.lazy() and Suspense for code-splitting and performance optimization
+- Use the useCallback hook for event handlers passed to child components to prevent unnecessary re-renders
+- Prefer useMemo for expensive calculations to avoid recomputation on every render
+- Implement useId() for generating unique IDs for accessibility attributes
+- Use the new use hook for data fetching in React 19+ projects
+- Consider using the new useOptimistic hook for optimistic UI updates in forms
+- Use useTransition for non-urgent state updates to keep the UI responsive
+
+### Guidelines for REACT
+
+#### NEXT_JS
+
+- Use App Router and Server Components for improved performance and SEO
+- Implement route handlers for API endpoints instead of the pages/api directory
+- Use server actions for form handling and data mutations from Server Components
+- Leverage Next.js Image component with proper sizing for core web vitals optimization
+- Implement the Metadata API for dynamic SEO optimization
+- Implement Streaming and Suspense for improved loading states
+- Use the new Link component without requiring a child <a> tag
+- Leverage parallel routes for complex layouts and parallel data fetching
+- Implement intercepting routes for modal patterns and nested UIs
+
+
+#### ARIA Best Practices
+
+- Use ARIA landmarks to identify regions of the page (main, navigation, search, etc.)
+- Apply appropriate ARIA roles to custom interface elements that lack semantic HTML equivalents
+- Set aria-expanded and aria-controls for expandable content like accordions and dropdowns
+- Use aria-live regions with appropriate politeness settings (polite, assertive) for dynamic content updates
+- Implement aria-hidden="true" to hide decorative or duplicative content from screen readers
+- Apply aria-label or aria-labelledby for elements without visible text labels (e.g., icon buttons)
+- Use aria-describedby to associate descriptive text with form inputs or complex elements
+- Implement aria-current for indicating the current item in navigation or process steps
+- Avoid redundant ARIA that duplicates the semantics of native HTML elements
+- Ensure keyboard navigation works properly with tabIndex and focus management
+- Use aria-invalid and aria-errormessage for form validation feedback
