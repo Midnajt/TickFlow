@@ -1,4 +1,4 @@
--- migration: create categories table
+Supabase Studio-- migration: create categories table
 -- purpose: define main ticket categories
 -- affected: new table (categories)
 -- special considerations: categories cannot be deleted if they have subcategories (enforced by restrict)
