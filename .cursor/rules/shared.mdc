@@ -3,6 +3,8 @@ alwaysApply: true
 ---
 # AI Rules for TickFlow
 
+This is MVP project so we need simple and fast solutions.
+
 A web-based ticket management application with multi-role support (agent, user (with manager and admin coming soon)). It allows you to create, assign, and process tickets from your company to your IT department, with automatic real-time list refresh. Built on Next.js
 
 ## Tech Stack
@@ -31,14 +33,3 @@ When modifying the directory structure, always update
 
 ## Coding practices
 
-### Guidelines for clean code
-
-- Use feedbback from linters to improve the code when making changes.
-- Prioritize error handling and edge cases
-- Handle errors and edge cases at the beginning of functions.
-- Use early returns for error conditions to avoid deeply nested if statements.
-- Place the happy path last in the function for improved readability.
-- Avoid unnecessary else statements; use if-return pattern instead.
-- Use guard clauses to handle preconditions and invalid states early.
-- Implement proper error logging and user-friendly error messages.
-- Consider using custom error types or error factories for consistent error handling.
