@@ -90,13 +90,13 @@ export function requireRole(
  *   return NextResponse.json({ message: `Hello ${user.name}` });
  * });
  */
-export function withAuth(
-  handler: (request: NextRequest, user: UserSessionDTO) => Promise<Response>
+export function withAuth<T = unknown>(
+  handler: (request: NextRequest, user: UserSessionDTO, context?: T) => Promise<Response>
 ) {
-  return async (request: NextRequest): Promise<Response> => {
+  return async (request: NextRequest, context?: T): Promise<Response> => {
     try {
       const user = await requireAuth(request);
-      return await handler(request, user);
+      return await handler(request, user, context);
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.startsWith("AUTHENTICATION_ERROR")) {
@@ -150,13 +150,43 @@ export function withAuth(
  *   return NextResponse.json({ message: "Only agents can see this" });
  * });
  */
-export function withRole(
+export function withRole<T = unknown>(
   allowedRoles: UserSessionDTO["role"][],
-  handler: (request: NextRequest, user: UserSessionDTO) => Promise<Response>
+  handler: (request: NextRequest, user: UserSessionDTO, context?: T) => Promise<Response>
 ) {
-  return withAuth(async (request, user) => {
+  return withAuth<T>(async (request, user, context) => {
     requireRole(user, allowedRoles);
-    return await handler(request, user);
+    return await handler(request, user, context);
   });
+}
+
+/**
+ * Sprawdza czy agent ma dostęp do określonej kategorii
+ * Wymaga dostępu do bazy danych - używane w service layer
+ * 
+ * @param agentId - ID agenta
+ * @param categoryId - ID kategorii
+ * @returns Promise<boolean> - true jeśli agent ma dostęp
+ */
+export async function checkAgentCategoryAccess(
+  agentId: string,
+  categoryId: string
+): Promise<boolean> {
+  // Import dynamiczny, żeby uniknąć circular dependency
+  const { createSupabaseAdmin } = await import("./supabase-auth");
+  const supabase = createSupabaseAdmin();
+
+  const { data, error } = await supabase
+    .from("agent_categories")
+    .select("id")
+    .eq("agent_id", agentId)
+    .eq("category_id", categoryId)
+    .single();
+
+  if (error || !data) {
+    return false;
+  }
+
+  return true;
 }
 

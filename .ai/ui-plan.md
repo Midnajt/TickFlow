@@ -56,7 +56,5 @@ Bezpieczeństwo i autoryzacja:
 - Globalny Error Boundary i error.tsx.
 
 </ui_architecture_planning_summary>
-<unresolved_issues>
-- Brak – wszystkie kluczowe kwestie zostały wyjaśnione.
-</unresolved_issues>
+
 </conversation_summary>

@@ -7,3 +7,8 @@ https://docs.docker.com/desktop/setup/install/windows-install/
 5. stworzenie db-plan.md 
 6. połaczenie z bazą danych
 7. stworzenie api-plan.md
+
+wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-work-already-done.md i dokończ endpointy.
+
+Następnie zaloguj się jako user i dodaj ticket, a także agent i zrealizuj ticket.
+Sprawdź widok dla kilku agentów.
