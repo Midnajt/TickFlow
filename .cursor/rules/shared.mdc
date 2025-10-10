@@ -33,3 +33,5 @@ When modifying the directory structure, always update
 
 ## Coding practices
 
+There is .env.local file but You dont have access to them. There is no need to created new. Just say to me what var i should add there if You need it.
+

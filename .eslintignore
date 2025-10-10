@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Generated types (Supabase)
+app/lib/database.types.ts
+
+# Environment files
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+

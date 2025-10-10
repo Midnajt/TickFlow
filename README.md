@@ -9,20 +9,21 @@
 4. [Available Scripts](#available-scripts)  
 5. [Project Scope](#project-scope)  
 6. [Project Status](#project-status)  
-7. [License](#license)  
+7. [Documentation](#documentation)  
+8. [License](#license)  
 
 ## Project Description
 TickFlow is a web-based IT ticket reporting and management system. Non-technical employees can submit and track support tickets in real time, while IT agents can view, claim, and resolve tickets in their assigned categories. Built with Next.js, Supabase, and Prisma, TickFlow delivers a responsive UI and real-time updates to streamline IT support workflows.
 
 ## Tech Stack
-- **Framework**: Next.js 14+ (App Router)  
-- **Language**: TypeScript  
-- **UI & Styling**: Tailwind CSS, shadcn/ui  
-- **Forms & Validation**: React Hook Form + Zod  
-- **Authentication**: NextAuth.js v5 (Credentials provider, JWT sessions, bcrypt)  
-- **Database & ORM**: PostgreSQL (Supabase), Prisma  
+- **Framework**: Next.js 15 (App Router)  
+- **Language**: TypeScript 5  
+- **UI & Styling**: Tailwind CSS 4, shadcn/ui  
+- **Forms & Validation**: React Hook Form + Zod 4  
+- **Authentication**: Custom JWT-based auth (jose, bcrypt, HTTP-only cookies)  
+- **Database**: PostgreSQL via Supabase  
 - **Real-Time**: Supabase Realtime WebSocket  
-- **Deployment**: Vercel (dev/staging), Node.js server (production)  
+- **Deployment**: Vercel  
 
 ## Getting Started Locally
 
@@ -35,30 +36,28 @@ TickFlow is a web-based IT ticket reporting and management system. Non-technical
 ### Environment Variables
 Create a `.env.local` in the project root:
 ```bash
-DATABASE_URL="postgresql://postgres:password@your-supabase-url:5432/postgres"
 NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
 SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="a-secure-random-string"
+JWT_SECRET="your-super-secret-jwt-key-min-32-chars"
 ```
+
+📖 **Detailed setup guide:** [documentation/env-setup-guide.md](./documentation/env-setup-guide.md)
 
 ### Installation & Setup
 ```bash
 # Install dependencies
 npm install
 
-# Push Prisma schema to the database
-npx prisma db push
-
-# Seed initial data (categories, users, assignments)
-npx prisma db seed
+# Run Supabase migrations
+# (Make sure your SUPABASE_SERVICE_ROLE_KEY is set)
 
 # Start development server
 npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) in your browser.
+
+📖 **API Documentation:** [documentation/auth-api-documentation.md](./documentation/auth-api-documentation.md)
 
 ## Available Scripts
 - `npm run dev`  
@@ -81,9 +80,31 @@ TickFlow MVP includes:
 For full requirements, see [prd.md](.ai/prd.md).
 
 ## Project Status
-- **MVP 1.0** in active development (4-week roadmap, 15h/week)  
-- Core authentication and ticket CRUD features are implemented; real-time updates and agent workflows are in progress.  
-- See project milestones in [prd.md](.ai/prd.md) and architectural details in [tech-stack.md](.ai/tech-stack.md).
+- **MVP 1.0** in active development
+- ✅ Authentication system (JWT-based, complete)
+- 🚧 Ticket management endpoints (in progress)
+- 🚧 Agent workflows (planned)
+- 🚧 Real-time updates (planned)
+
+See project milestones in [.ai/prd.md](.ai/prd.md) and architectural details in [.ai/tech-stack.md](.ai/tech-stack.md).
+
+## Documentation
+
+📚 **Full documentation available in [documentation/](./documentation/)**
+
+### Quick Links
+
+- **[Authentication API](./documentation/auth-api-documentation.md)** - Complete REST API reference
+- **[Environment Setup](./documentation/env-setup-guide.md)** - Configuration guide
+- **[Implementation Summary](./documentation/auth-implementation-summary.md)** - Technical details
+
+### Features Documented
+
+- ✅ Authentication endpoints (login, logout, change-password, session)
+- ✅ JWT token management
+- ✅ Rate limiting
+- ✅ Security best practices
+- ✅ Code examples & troubleshooting
 
 ## License
 This project is licensed under the MIT License.  
