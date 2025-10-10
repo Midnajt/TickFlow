@@ -1,4 +1,5 @@
 export default function Home() {
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <main className="text-center px-4">
@@ -24,6 +25,12 @@ export default function Home() {
             className="px-6 py-3 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-900 transition-colors shadow-lg hover:shadow-xl dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             Dokumentacja Tailwind
+          </a>
+          <a
+            href="/supabase-test"
+            className="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors shadow-lg hover:shadow-xl"
+          >
+            Test Supabase Connection
           </a>
         </div>
         <div className="mt-12 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl mx-auto">

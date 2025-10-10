@@ -1,0 +1,179 @@
+---
+alwaysApply: false
+---
+---
+alwaysApply: false
+---
+# Supabase Next.js Initialization
+
+This document provides a reproducible guide to create the necessary file structure for integrating Supabase with your Next.js project.
+
+## Prerequisites
+
+- Your project should use Next.js 15, TypeScript 5, React 19, shadcn/ui, and Tailwind 4.
+- Install the `@supabase/supabase-js` package.
+- Ensure that a file `/app/lib/database.types.ts` exists and contains the correct type definitions for your database.
+- Ensure environment variables are configured in `.env.local`.
+
+IMPORTANT: Check prerequisites before performing actions below. If they're not met, stop and ask the user for the fix.
+
+## File Structure and Setup
+
+### 1. Supabase Client Initialization (Client-Side)
+
+Create the file `/app/lib/supabase.ts` with the following content:
+
+```ts
+import { createClient } from '@supabase/supabase-js'
+import type { Database } from './database.types'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+```
+
+This file initializes the Supabase client for client-side operations using public environment variables.
+
+### 2. Supabase Server Client (Server-Side)
+
+Create the file `/app/lib/supabase-server.ts` with the following content:
+
+```ts
+import { createClient } from '@supabase/supabase-js'
+import type { Database } from './database.types'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+export const supabaseServer = createClient<Database>(
+  supabaseUrl,
+  supabaseServiceKey,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
+```
+
+This file initializes the Supabase client for server-side operations (Server Actions, API Routes) with elevated privileges.
+
+**IMPORTANT:** Use `supabaseServer` only in Server Components, Server Actions, or API Routes. Never expose it to the client.
+
+### 3. Environment Variables
+
+Ensure the following variables are set in `.env.local`:
+
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Database Connection (for Prisma)
+DATABASE_URL=postgresql://postgres:[password]@db.your-project.supabase.co:5432/postgres
+
+# NextAuth (if used)
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret
+```
+
+### 4. Usage Examples
+
+#### Client Component (Real-time subscription):
+
+```tsx
+'use client'
+
+import { useEffect, useState } from 'react'
+import { supabase } from '@/app/lib/supabase'
+import type { Database } from '@/app/lib/database.types'
+
+type Ticket = Database['public']['Tables']['tickets']['Row']
+
+export function TicketList() {
+  const [tickets, setTickets] = useState<Ticket[]>([])
+
+  useEffect(() => {
+    // Subscribe to real-time changes
+    const channel = supabase
+      .channel('tickets-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'tickets' },
+        (payload) => {
+          console.log('Change received!', payload)
+          // Handle real-time update
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
+  return <div>{/* Render tickets */}</div>
+}
+```
+
+#### Server Action (Data mutation):
+
+```ts
+'use server'
+
+import { supabaseServer } from '@/app/lib/supabase-server'
+import { revalidatePath } from 'next/cache'
+
+export async function createTicket(formData: FormData) {
+  const title = formData.get('title') as string
+  
+  const { data, error } = await supabaseServer
+    .from('tickets')
+    .insert({ title, status: 'open' })
+    .select()
+    .single()
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/tickets')
+  return { data }
+}
+```
+
+#### Server Component (Data fetching):
+
+```tsx
+import { supabaseServer } from '@/app/lib/supabase-server'
+
+export default async function TicketsPage() {
+  const { data: tickets, error } = await supabaseServer
+    .from('tickets')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  return (
+    <div>
+      {tickets.map(ticket => (
+        <div key={ticket.id}>{ticket.title}</div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Notes
+
+- **Client vs Server**: Use `supabase` (client) for real-time subscriptions and client-side queries. Use `supabaseServer` for server-side operations with elevated privileges.
+- **Type Safety**: Always import `Database` type from `./database.types` for full type inference.
+- **Environment Variables**: `NEXT_PUBLIC_*` variables are exposed to the browser. Keep `SUPABASE_SERVICE_ROLE_KEY` private.
+- **Real-time**: Supabase Realtime works on both Vercel and custom Node.js deployments.
+- **Regenerate Types**: Run `npx supabase gen types typescript --project-id YOUR_PROJECT_ID > app/lib/database.types.ts` after schema changes.
