@@ -1,1 +1,9 @@
 https://docs.docker.com/desktop/setup/install/windows-install/
+
+1. prd.md
+2. tech-stack na podstawie prd.md
+3. rules wymagane dla wybranego stacki
+4. stworzenie migracji do bazy danych
+5. stworzenie db-plan.md 
+6. połaczenie z bazą danych
+7. stworzenie api-plan.md
