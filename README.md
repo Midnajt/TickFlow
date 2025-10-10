@@ -81,7 +81,9 @@ For full requirements, see [prd.md](.ai/prd.md).
 
 ## Project Status
 - **MVP 1.0** in active development
-- ✅ Authentication system (JWT-based, complete)
+- ✅ Authentication system (JWT-based, complete with middleware)
+- ✅ Login & Change Password views (fully functional)
+- ✅ Route protection & session management
 - 🚧 Ticket management endpoints (in progress)
 - 🚧 Agent workflows (planned)
 - 🚧 Real-time updates (planned)
@@ -94,16 +96,24 @@ See project milestones in [.ai/prd.md](.ai/prd.md) and architectural details in 
 
 ### Quick Links
 
+**Authentication & Security:**
 - **[Authentication API](./documentation/auth-api-documentation.md)** - Complete REST API reference
 - **[Environment Setup](./documentation/env-setup-guide.md)** - Configuration guide
 - **[Implementation Summary](./documentation/auth-implementation-summary.md)** - Technical details
+- **[Login Implementation](./documentation/login-implementation-complete.md)** - Frontend implementation details
+- **[Testing Plan](./documentation/login-testing-plan.md)** - Manual testing scenarios
+- **[Components Guide](./documentation/auth-components-guide.md)** - Reusable component documentation
 
 ### Features Documented
 
 - ✅ Authentication endpoints (login, logout, change-password, session)
-- ✅ JWT token management
+- ✅ JWT token management & HTTP-only cookies
+- ✅ Route protection middleware
+- ✅ Login & Change Password views
+- ✅ React Hook Form + Zod validation
 - ✅ Rate limiting
 - ✅ Security best practices
+- ✅ Full accessibility (A11y) support
 - ✅ Code examples & troubleshooting
 
 ## License
