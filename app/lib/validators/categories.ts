@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 /**
  * Schema walidacji dla parametrów zapytania GET /api/categories
