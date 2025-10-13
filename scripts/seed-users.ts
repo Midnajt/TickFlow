@@ -42,9 +42,23 @@ const testUsers = [
     force_password_change: false,
   },
   {
+    email: 'agent2@tickflow.com',
+    password: 'Agent2123!@#',
+    name: 'Sarah Agent',
+    role: 'AGENT' as const,
+    force_password_change: false,
+  },
+  {
     email: 'user@tickflow.com',
     password: 'User123!@#',
     name: 'Jane User',
+    role: 'USER' as const,
+    force_password_change: false,
+  },
+  {
+    email: 'user2@tickflow.com',
+    password: 'User2123!@#',
+    name: 'Bob User',
     role: 'USER' as const,
     force_password_change: false,
   },

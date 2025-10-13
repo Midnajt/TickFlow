@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { AuthService } from '@/app/lib/services/auth';
+import { jwtVerify } from 'jose';
 
 /**
  * Next.js Middleware - Ochrana tras i przekierowania
@@ -22,22 +22,32 @@ export async function middleware(request: NextRequest) {
     pathname === path || pathname.startsWith(`${path}/`)
   );
 
+  // Wspólny sekret JWT (dopasowany do AuthService)
+  const JWT_SECRET = new TextEncoder().encode(
+    process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+  );
+
+  async function verifyToken(value: string | undefined) {
+    if (!value) return false;
+    try {
+      await jwtVerify(value, JWT_SECRET);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   // Jeśli użytkownik jest na ścieżce publicznej i MA token -> redirect do /
   if (isPublicPath && token) {
-    try {
-      // Weryfikuj token przed przekierowaniem
-      await AuthService.getSession(token);
-      
-      // Token jest ważny, przekieruj do głównej strony
+    const isValid = await verifyToken(token);
+    if (isValid) {
       const url = request.nextUrl.clone();
       url.pathname = '/';
       return NextResponse.redirect(url);
-    } catch (error) {
-      // Token nieprawidłowy - usuń cookie i pozwól zostać na stronie logowania
-      const response = NextResponse.next();
-      response.cookies.delete('auth-token');
-      return response;
     }
+    const response = NextResponse.next();
+    response.cookies.delete('auth-token');
+    return response;
   }
 
   // Jeśli użytkownik jest na chronionej ścieżce i NIE MA tokenu -> redirect do /login
@@ -49,35 +59,15 @@ export async function middleware(request: NextRequest) {
 
   // Jeśli użytkownik MA token i jest na chronionej ścieżce -> weryfikuj token
   if (isProtectedPath && token) {
-    try {
-      const session = await AuthService.getSession(token);
-      
-      // Sprawdź czy użytkownik musi zmienić hasło
-      if (session.user.passwordResetRequired && pathname !== '/change-password') {
-        // Przekieruj do zmiany hasła
-        const url = request.nextUrl.clone();
-        url.pathname = '/change-password';
-        return NextResponse.redirect(url);
-      }
-
-      // Jeśli użytkownik jest na /change-password ale NIE wymaga zmiany hasła
-      if (!session.user.passwordResetRequired && pathname === '/change-password') {
-        // Przekieruj do głównej strony
-        const url = request.nextUrl.clone();
-        url.pathname = '/';
-        return NextResponse.redirect(url);
-      }
-
-      // Token jest ważny - pozwól na dostęp
+    const isValid = await verifyToken(token);
+    if (isValid) {
       return NextResponse.next();
-    } catch (error) {
-      // Token nieprawidłowy lub wygasł - usuń cookie i przekieruj do logowania
-      const url = request.nextUrl.clone();
-      url.pathname = '/login';
-      const response = NextResponse.redirect(url);
-      response.cookies.delete('auth-token');
-      return response;
     }
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    const response = NextResponse.redirect(url);
+    response.cookies.delete('auth-token');
+    return response;
   }
 
   // Dla wszystkich innych przypadków - pozwól na dostęp

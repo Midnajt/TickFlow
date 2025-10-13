@@ -1,93 +1,79 @@
-# TickFlow - Stack Technologiczny
+## TickFlow - Stack Technologiczny
 
-**Projekt:** TickFlow - System zgłaszania ticketów IT  
-**Wersja:** MVP 1.0  
-**Data aktualizacji:** 6 października 2025
+Projekt: TickFlow – System zgłaszania ticketów IT
+Wersja: MVP 1.0
+Data aktualizacji: 6 października 2025
 
----
-
-## 🛠️ Stack technologiczny
-
-### Frontend & Backend
-
-```yaml
+### 🛠️ Stack technologiczny
+#### Frontend & Backend
 Framework:       Next.js 14+ (App Router)
 Language:        TypeScript
 Styling:         Tailwind CSS
 UI Components:   shadcn/ui
 Form Handling:   React Hook Form + Zod validation
 State:           React Server Components + Server Actions
-```
 
-### Database & Real-time
-
-```yaml
+#### Database & Real-time
 Database:        PostgreSQL (Supabase)
 ORM:             Prisma
 Real-time:       Supabase Realtime (WebSocket)
 Hosting DB:      Supabase Cloud (darmowy tier: 500MB)
-```
 
-### Autentykacja
-
-```yaml
+#### Autentykacja
 Auth Library:    NextAuth.js v5 (Auth.js)
 Strategy:        Credentials (email + password)
 Session:         JWT
 Password:        bcrypt hashing
-```
 
-### Deployment
-
-```yaml
+#### Deployment
 Development/Staging:  Vercel (darmowy)
 Production (docelowo): Node.js server (własna domena)
 Database (zawsze):     Supabase Cloud
 Real-time (zawsze):    Supabase WebSocket (działa niezależnie od hostingu)
-```
 
 ### Dlaczego Supabase Real-time?
 
-✅ Działa niezależnie od lokalizacji aplikacji Next.js  
-✅ Darmowy tier wystarczający na projekt  
-✅ Łatwa integracja (PostgreSQL Replication)  
-✅ Automatic reconnection  
-✅ Nie wymaga custom WebSocket servera  
+✅ Działa niezależnie od lokalizacji aplikacji Next.js
+✅ Darmowy tier wystarczający na projekt
+✅ Łatwa integracja (PostgreSQL Replication)
+✅ Automatic reconnection
+✅ Bez własnego serwera WebSocket
 
----
+### 📦 Dependencies (bez JSON)
 
-## 📦 Dependencies
+#### Runtime
 
-### Kluczowe zależności
+next ^14.2
 
-```json
-{
-  "dependencies": {
-    "next": "^14.2.0",
-    "react": "^18.3.0",
-    "next-auth": "^5.0.0-beta",
-    "@prisma/client": "^5.18.0",
-    "@supabase/supabase-js": "^2.45.0",
-    "bcrypt": "^5.1.1",
-    "zod": "^3.23.0",
-    "react-hook-form": "^7.52.0"
-  },
-  "devDependencies": {
-    "prisma": "^5.18.0",
-    "typescript": "^5.5.0",
-    "tailwindcss": "^3.4.0",
-    "@types/bcrypt": "^5.0.2"
-  }
-}
-```
+react ^18.3
 
----
+next-auth ^5 (beta / v5)
 
-## 🌍 Environment Variables
+@supabase/supabase-js ^2.45
 
-### Development (.env.local)
+@prisma/client ^5.18
 
-```bash
+bcrypt ^5.1
+
+zod ^3.23
+
+react-hook-form ^7.52
+
+#### Dev
+
+prisma ^5.18
+
+typescript ^5.5
+
+tailwindcss ^3.4
+
+@types/bcrypt ^5.0
+
+Tip: trzymaj wersje w ryzach przez ~ dla patchy na prodzie, ^ na dev.
+
+### 🌍 Environment Variables
+#### Development (.env.local)
+```dotenv
 # Database
 DATABASE_URL="postgresql://postgres:password@db.xxx.supabase.co:5432/postgres"
 
@@ -101,28 +87,26 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJxxx..."
 SUPABASE_SERVICE_ROLE_KEY="eyJxxx..."
 ```
 
-### Production (Vercel)
-
-```bash
+#### Production (Vercel)
+```dotenv
 # Database
-DATABASE_URL="postgresql://..." # to samo Supabase
+DATABASE_URL="postgresql://..." # Supabase
 
 # NextAuth
 NEXTAUTH_URL="https://tickflow.vercel.app"
-NEXTAUTH_SECRET="different-secret-for-prod"
+NEXTAUTH_SECRET="prod-secret"
 
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co" # to samo
-NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJxxx..." # to samo
-SUPABASE_SERVICE_ROLE_KEY="eyJxxx..." # to samo
+NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJxxx..."
+SUPABASE_SERVICE_ROLE_KEY="eyJxxx..."
 ```
 
----
+Bezpieczeństwo: SERVICE_ROLE_KEY tylko po stronie serwera; nigdy w przeglądarce.
 
-## 📁 Folder Structure
-
-```
+### 📁 Folder Structure
 tickflow/
+```text
 ├── .ai/
 │   ├── prd.md
 │   └── tech-stack.md (ten dokument)
@@ -132,32 +116,15 @@ tickflow/
 │   └── seed.ts
 ├── src/
 │   ├── app/
-│   │   ├── (auth)/
-│   │   │   ├── login/
-│   │   │   └── register/
-│   │   ├── (dashboard)/
-│   │   │   ├── user/
-│   │   │   │   ├── tickets/
-│   │   │   │   └── new-ticket/
-│   │   │   └── agent/
-│   │   │       ├── tickets/
-│   │   │       └── my-tickets/
-│   │   ├── api/
-│   │   │   └── auth/
-│   │   │       └── [...nextauth]/
+│   │   ├── (auth)/login/
+│   │   ├── (dashboard)/user/{tickets,new-ticket}/
+│   │   ├── (dashboard)/agent/{tickets,my-tickets}/
+│   │   ├── api/auth/[...nextauth]/
 │   │   ├── layout.tsx
 │   │   └── page.tsx
-│   ├── components/
-│   │   ├── ui/ (shadcn)
-│   │   ├── tickets/
-│   │   └── auth/
-│   ├── lib/
-│   │   ├── auth.ts (NextAuth config)
-│   │   ├── db.ts (Prisma client)
-│   │   ├── supabase.ts (Supabase client)
-│   │   └── validators/ (Zod schemas)
-│   └── hooks/
-│       └── useRealtimeTickets.ts
+│   ├── components/{ui,tickets,auth}/
+│   ├── lib/{auth.ts,db.ts,supabase.ts,validators/}
+│   └── hooks/useRealtimeTickets.ts
 ├── public/
 ├── .env.local
 ├── .env.example
@@ -167,70 +134,290 @@ tickflow/
 └── README.md
 ```
 
----
+### 🧩 Model danych (ERD) – skrót
+User (1) ──creates──> (N) Ticket
+User (1) ──assigned──> (N) Ticket
+Category (1) ──has──> (N) Subcategory
+Subcategory (1) ──has──> (N) Ticket
+User(Agent) (N) ──has access to──> (N) Category
 
-## 📚 Dokumentacja
 
-### Bookmark'uj te linki:
+#### Relacje kluczowe
 
-- **Next.js:** https://nextjs.org/docs
-- **NextAuth.js v5:** https://authjs.dev
-- **Prisma:** https://www.prisma.io/docs
-- **Supabase Realtime:** https://supabase.com/docs/guides/realtime
-- **shadcn/ui:** https://ui.shadcn.com
-- **Tailwind CSS:** https://tailwindcss.com/docs
-- **React Hook Form:** https://react-hook-form.com
-- **Zod:** https://zod.dev
+Agent ↔ Category (many-to-many) – dostęp agenta do kategorii
 
----
+Category ↔ Subcategory (one-to-many)
 
-## 🎯 Decyzje architektoniczne
+Subcategory ↔ Ticket (one-to-many)
 
-### Dlaczego Next.js App Router a nie Pages Router?
+### 🗃️ Prisma Schema (źródło prawdy dla ORM)
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(USER)
+  passwordResetRequired Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-- App Router to przyszłość Next.js
-- Server Components = lepsze performance
-- Server Actions = prostsze mutacje (bez API routes)
+  ticketsCreated  Ticket[] @relation("CreatedTickets")
+  ticketsAssigned Ticket[] @relation("AssignedTickets")
+  agentCategories AgentCategory[]
+}
 
-### Dlaczego Prisma a nie Drizzle?
+enum Role {
+  USER
+  AGENT
+}
 
-- Prostsza nauka dla pierwszego projektu Next.js
-- Lepsza dokumentacja
-- Migrations out-of-the-box
+model Category {
+  id            String        @id @default(cuid())
+  name          String        @unique
+  description   String?
+  subcategories Subcategory[]
+  agents        AgentCategory[]
+  createdAt     DateTime      @default(now())
+}
 
-### Dlaczego Supabase a nie własny WebSocket?
+model Subcategory {
+  id          String   @id @default(cuid())
+  name        String
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tickets     Ticket[]
+  createdAt   DateTime @default(now())
 
-- Darmowy tier wystarczający
-- Działa niezależnie od hostingu Next.js
-- Gotowe rozwiązanie = mniej kodu do maintenance
+  @@unique([categoryId, name])
+  @@index([categoryId])
+}
 
-### Dlaczego NextAuth.js v5 a nie Clerk/Auth0?
+model AgentCategory {
+  id         String   @id @default(cuid())
+  userId     String
+  categoryId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
 
-- Darmowy (Clerk/Auth0 = paid na więcej userów)
-- Pełna kontrola nad database schema
-- Integracja z Prisma
+  @@unique([userId, categoryId])
+  @@index([userId])
+  @@index([categoryId])
+}
 
----
+model Ticket {
+  id            String       @id @default(cuid())
+  title         String
+  description   String       @db.VarChar(300)
+  status        TicketStatus @default(OPEN)
+  subcategoryId String
+  subcategory   Subcategory  @relation(fields: [subcategoryId], references: [id])
+  createdById   String
+  createdBy     User         @relation("CreatedTickets", fields: [createdById], references: [id])
+  assignedToId  String?
+  assignedTo    User?        @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
-## ✅ Setup Checklist
+  @@index([status])
+  @@index([assignedToId])
+  @@index([createdById])
+  @@index([subcategoryId])
+}
 
-Przed rozpoczęciem kodowania upewnij się że:
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+```
 
-- [ ] Masz konto Supabase (darmowe)
-- [ ] Utworzyłeś projekt w Supabase
-- [ ] Masz DATABASE_URL z Supabase
-- [ ] Masz ANON_KEY i SERVICE_ROLE_KEY
-- [ ] Zainstalowałeś wszystkie dependencies (`npm install`)
-- [ ] Wygenerowałeś NEXTAUTH_SECRET (`openssl rand -base64 32`)
-- [ ] Utworzyłeś `.env.local` z wszystkimi zmiennymi
-- [ ] Przeczytałeś Next.js App Router basics (2-3h)
-- [ ] Zrobiłeś `npx prisma db push` (pierwsza migracja)
-- [ ] Uruchomiłeś seed (`npx prisma db seed`) - tworzy kategorie, podkategorie, użytkowników
-- [ ] Aplikacja odpala się lokalnie (`npm run dev`)
-- [ ] Możesz się zalogować jako user@firma.pl / Start!125
-- [ ] Po zalogowaniu system wymusza zmianę hasła
+### 🌱 Seed danych (skrót – TS)
+```ts
+// prisma/seed.ts (skrót najważniejszych danych)
+const DEFAULT_PASSWORD = 'Start!125';
 
----
+const categoriesWithSubcategories = [
+  { name: 'Hardware', description: 'Problemy sprzętowe',
+    subcategories: ['Komputer/Laptop','Drukarka','Monitor','Akcesoria (mysz, klawiatura)','Inne'] },
+  { name: 'Software', description: 'Problemy z oprogramowaniem',
+    subcategories: ['Instalacja programu','Problem z aplikacją','Licencje','Aktualizacje','Inne'] },
+  { name: 'Network', description: 'Problemy z siecią',
+    subcategories: ['Brak internetu','Wolne WiFi','VPN','Dostęp do serwera','Inne'] },
+  { name: 'Account & Access', description: 'Dostępy i konta',
+    subcategories: ['Reset hasła','Dostęp do systemu','Uprawnienia','Konto email','Inne'] },
+  { name: 'Other', description: 'Pozostałe problemy',
+    subcategories: ['Inne problemy'] },
+];
 
-*Dokument aktualizowany w trakcie projektu.*
+const users = [
+  { email: 'jan.kowalski@firma.pl', name: 'Jan Kowalski', role: 'AGENT', password: DEFAULT_PASSWORD, passwordResetRequired: true },
+  { email: 'anna.nowak@firma.pl', name: 'Anna Nowak', role: 'AGENT', password: DEFAULT_PASSWORD, passwordResetRequired: true },
+  { email: 'user@firma.pl',       name: 'Testowy User',   role: 'USER',  password: DEFAULT_PASSWORD, passwordResetRequired: true },
+];
 
+const agentCategoryAssignments = [
+  { agent: 'jan.kowalski@firma.pl',  categories: ['Hardware','Network'] },
+  { agent: 'anna.nowak@firma.pl',    categories: ['Software','Account & Access','Other'] },
+];
+```
+
+### 🔐 Matryca uprawnień (RBAC – MVP)
+```text
+Akcja / Rola	USER	AGENT
+Logowanie	✅	✅
+Tworzenie ticketu	✅	✅
+Podgląd własnych ticketów	✅	✅
+Podgląd cudzych ticketów	❌	⚠️ (tylko w swoich kategoriach i tylko „otwarte”)
+Przypisywanie ticketu	❌	✅ (tylko ze swoich kategorii)
+Zmiana statusu ticketu	❌	✅ (przypisane do siebie)
+Zarządzanie kategoriami	❌	❌
+```
+### ⚡ Real-time: kanały i zdarzenia
+
+Źródło: Supabase Realtime (replikacja tabel)
+
+Kanały logiczne (tabele): Ticket, opcjonalnie AgentCategory
+
+Zdarzenia:
+
+ticket.created – nowy ticket (po INSERT)
+
+ticket.assigned – przypisanie (po UPDATE.assignedToId)
+
+ticket.status_changed – zmiana statusu (po UPDATE.status)
+
+Filtrowanie po stronie klienta:
+
+Agent: subskrybuje tylko tickety z własnych kategorii (JOIN: Ticket → Subcategory → Category → AgentCategory)
+
+User: subskrybuje tylko tickety gdzie createdById = session.user.id
+
+Zasada anty-duplikacyjna: po assignedToId != null ticket znika z listy „do wzięcia” u innych agentów z tej kategorii.
+
+### 🧪 Walidacje formularzy (Zod – biznesowe reguły MVP)
+
+Hasło (zmiana przy 1. logowaniu): min. 8 znaków, min. 1 litera, 1 cyfra, 1 znak specjalny.
+
+Ticket:
+
+categoryId – wymagane
+
+subcategoryId – wymagane, zależne od kategorii
+
+title – wymagane, min. 5 znaków
+
+description – wymagane, max. 300 znaków (licznik znaków w UI)
+
+### 🔒 Bezpieczeństwo
+
+NextAuth v5 (Credentials + JWT), sesje krótkie, odświeżanie przez ponowne logowanie (MVP).
+
+Hashing haseł: bcrypt.
+
+Wymuszenie zmiany hasła: passwordResetRequired = true dla kont z hasłem domyślnym.
+
+Separacja danych: zapytania zawsze filtrowane po roli i kontekście (user: createdById; agent: kategorie).
+
+Klucze: SUPABASE_SERVICE_ROLE_KEY tylko po stronie serwera.
+
+Rate limiting (MVP – lekki): prosty ogranicznik na endpoint logowania i tworzenia ticketów (edge/middleware).
+
+### 🧰 Server Actions (MVP – przykładowe operacje)
+
+createTicket(formData) – walidacja Zod → insert Ticket
+
+assignTicket(ticketId) – kontrola dostępu do kategorii → update assignedToId & status=IN_PROGRESS
+
+closeTicket(ticketId) – tylko właściciel przypisania → status=CLOSED
+
+changePassword(old, next) – weryfikacja hasła → update user + passwordResetRequired=false
+
+Uwaga: w MVP preferujemy Server Actions zamiast klasycznych API routes.
+
+### 🧱 Decyzje architektoniczne (skrót)
+
+App Router (przyszłość Next.js), Server Components (wydajność), Server Actions (prostsze mutacje).
+
+Prisma > Drizzle – krzywa nauki i dokumentacja.
+
+Supabase Realtime > custom WS – mniej utrzymania, szybciej do MVP.
+
+NextAuth v5 > Clerk/Auth0 – kontrola nad schematem i koszty.
+
+### 🧯 Błędy i logowanie
+
+UI: spójne stany loading/empty/error, toasty dla akcji.
+
+Serwer: logi błędów (console / Vercel logs), maskowanie danych wrażliwych.
+
+Fallback realtime: w razie problemów – opcjonalny polling (np. co 5 s) w widokach agent/user.
+
+### 🚀 Build & Deploy
+
+Dev: npm run dev
+
+Prisma: npx prisma db push → npx prisma db seed
+
+Vercel: ustaw sekrety środowiskowe, włącz build Next.js, migracje przez prisma migrate deploy (w razie potrzeby).
+
+Monitoring (proste): Vercel analytics + logi edge/functions.
+
+### 🧪 Testy (lightweight na MVP)
+
+Unit: walidacje Zod (schematy)
+
+E2E (opcjonalnie): kilka krytycznych ścieżek w Playwright (login, create, assign, close)
+
+Manual: smoke test po deployu (checklista poniżej)
+
+### ✅ Setup Checklist
+
+ Supabase: projekt + DATABASE_URL, ANON_KEY, SERVICE_ROLE_KEY
+
+ NEXTAUTH_SECRET wygenerowany (openssl rand -base64 32)
+
+ .env.local uzupełnione
+
+ npm install ukończone
+
+ npx prisma db push + npx prisma db seed
+
+ npm run dev startuje bez błędów
+
+ Login testowy: user@firma.pl / Start!125
+
+ Po zalogowaniu wymuszona zmiana hasła działa
+
+### 📚 Dokumentacja (linki)
+
+Next.js – docs
+
+Auth.js (NextAuth v5) – docs
+
+Prisma – docs
+
+Supabase Realtime – docs
+
+shadcn/ui – docs
+
+Tailwind CSS – docs
+
+React Hook Form – docs
+
+Zod – docs
+
+(Celowo bez surowych URL – wkleisz w README, a tu utrzymujemy „czysty” kontekst pod prompty.)
+
+### 📝 Notatki developerskie (do przypominania w promptach)
+
+Kategorie i podkategorie są stałe w MVP (bez UI do edycji).
+
+Agent widzi tylko kategorie, do których ma dostęp (JOIN po AgentCategory).
+
+Przejęty ticket natychmiast znika z listy innych agentów tej kategorii (real-time).
+
+Opis ticketu max 300 znaków, tytuł min. 5 znaków, oba wymagane.
+
+Reset hasła (na potrzeby wsparcia): ustaw hasło na Start!125 i passwordResetRequired=true, system wymusi zmianę.

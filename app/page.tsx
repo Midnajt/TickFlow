@@ -41,13 +41,29 @@ export default async function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Witaj, {user.name}! 👋
-          </h2>
-          <p className="text-gray-400">
-            Pomyślnie zalogowałeś się do systemu TickFlow
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-2">
+              Witaj, {user.name}! 👋
+            </h2>
+            <p className="text-gray-400">
+              Pomyślnie zalogowałeś się do systemu TickFlow
+            </p>
+          </div>
+          <a
+            href="/tickets"
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            {user.role === 'AGENT' ? 'Zarządzaj zgłoszeniami' : 'Moje zgłoszenia'}
+          </a>
         </div>
 
         {/* Stats Cards */}
@@ -211,15 +227,37 @@ export default async function Home() {
           </div>
 
           <div className="bg-gradient-to-br from-purple-600 to-pink-700 rounded-xl shadow-lg p-6 text-white">
-            <h3 className="text-xl font-bold mb-2">🚧 Planowane</h3>
+            <h3 className="text-xl font-bold mb-2">✨ Nowo dodane</h3>
             <ul className="space-y-2 text-sm">
-              <li>• Zarządzanie zgłoszeniami</li>
-              <li>• Dashboard agenta</li>
-              <li>• Real-time updates</li>
-              <li>• Kategorie i podkategorie</li>
-              <li>• Historia zmian</li>
-              <li>• Powiadomienia</li>
+              <li>• ✅ Zarządzanie zgłoszeniami</li>
+              <li>• ✅ Dashboard agenta i użytkownika</li>
+              <li>• ✅ Real-time updates (Supabase Realtime)</li>
+              <li>• ✅ Kategorie i podkategorie</li>
+              <li>• 🚧 Historia zmian</li>
+              <li>• 🚧 Powiadomienia</li>
             </ul>
+          </div>
+        </div>
+
+        {/* Test Credentials */}
+        <div className="mt-8 bg-gray-800 rounded-xl shadow-md p-6 border border-gray-700">
+          <h3 className="text-lg font-semibold text-white mb-4">🧪 Testowe konta (do testowania API)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-blue-400 font-semibold mb-2">AGENCI:</p>
+              <div className="space-y-1 font-mono text-xs bg-gray-700 p-3 rounded text-gray-300">
+                <p>👨‍💼 admin@tickflow.com / Admin123!@#</p>
+                <p>👨‍💼 agent@tickflow.com / Agent123!@#</p>
+                <p>👩‍💼 agent2@tickflow.com / Agent2123!@#</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-green-400 font-semibold mb-2">UŻYTKOWNICY:</p>
+              <div className="space-y-1 font-mono text-xs bg-gray-700 p-3 rounded text-gray-300">
+                <p>👤 user@tickflow.com / User123!@#</p>
+                <p>👤 user2@tickflow.com / User2123!@#</p>
+              </div>
+            </div>
           </div>
         </div>
       </main>
