@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "seed:users": "tsx scripts/seed-users.ts",
-    "seed:categories": "tsx scripts/seed-categories.ts"
+    "seed:categories": "tsx scripts/seed-categories.ts",
+    "seed:navireo": "tsx scripts/seed-navireo.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
