@@ -32,7 +32,7 @@ export const GET = withAuth(async (request: NextRequest, user) => {
 
     // Walidacja query params
     const validatedParams = getTicketsQuerySchema.parse({
-      status: statusParam,
+      status: statusParam ?? undefined,
       assignedToMe: assignedToMeParam,
       page: pageParam,
       limit: limitParam,

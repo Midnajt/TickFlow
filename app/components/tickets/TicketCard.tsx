@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import type { TicketListItemDTO, TicketStatus } from '@/src/types';
 
 interface TicketCardProps {
@@ -27,6 +28,16 @@ export function TicketCard({
   isAgent = false,
 }: TicketCardProps) {
   const status = statusConfig[ticket.status];
+
+  const dateFmt = useMemo(
+    () =>
+      new Intl.DateTimeFormat('pl-PL', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+        timeZone: 'Europe/Warsaw',
+      }),
+    []
+  );
 
   return (
     <div
@@ -87,7 +98,7 @@ export function TicketCard({
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>{new Date(ticket.createdAt).toLocaleString('pl-PL')}</span>
+          <span>{dateFmt.format(new Date(ticket.createdAt))}</span>
         </div>
       </div>
 

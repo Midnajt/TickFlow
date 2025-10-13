@@ -11,6 +11,7 @@ import { ticketsApi } from '@/app/lib/api-client';
 import type { TicketStatus, UserSessionDTO } from '@/src/types';
 import { authApi } from '@/app/lib/api-client';
 import { useEffect } from 'react';
+import { TicketDetailsDialog } from '@/app/components/tickets/TicketDetailsDialog';
 
 export default function TicketsPage() {
   const router = useRouter();
@@ -19,6 +20,8 @@ export default function TicketsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [statusFilter, setStatusFilter] = useState<TicketStatus | 'ALL'>('ALL');
   const [assignedToMeFilter, setAssignedToMeFilter] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
 
   // Fetch user session
   useEffect(() => {
@@ -72,8 +75,8 @@ export default function TicketsPage() {
   };
 
   const handleTicketClick = (ticketId: string) => {
-    // TODO: Navigate to ticket details page
-    console.log('Ticket clicked:', ticketId);
+    setSelectedTicketId(ticketId);
+    setDetailsOpen(true);
   };
 
   const handleCreateSuccess = () => {
@@ -235,6 +238,15 @@ export default function TicketsPage() {
             onUpdateStatus={isAgent ? handleUpdateStatus : undefined}
           />
         )}
+
+        {/* Ticket Details Dialog */}
+        <TicketDetailsDialog
+          ticketId={selectedTicketId}
+          open={detailsOpen}
+          onOpenChange={setDetailsOpen}
+          userRole={user.role}
+          onUpdated={refetch}
+        />
       </main>
     </div>
   );
