@@ -486,5 +486,27 @@ export class TicketService {
       },
     };
   }
+
+  /**
+   * Zwraca statystyki ticketów dla dashboardu
+   * - openCount: liczba ticketów w statusie OPEN
+   * - resolvedCount: liczba ticketów w statusach RESOLVED + CLOSED
+   * Wykorzystuje istniejące reguły dostępu z getTickets.
+   */
+  static async getTicketStats(
+    userId: string,
+    userRole: UserRole
+  ): Promise<{ openCount: number; resolvedCount: number }> {
+    const [open, resolved, closed] = await Promise.all([
+      this.getTickets(userId, userRole, { status: "OPEN", page: 1, limit: 1 }),
+      this.getTickets(userId, userRole, { status: "RESOLVED", page: 1, limit: 1 }),
+      this.getTickets(userId, userRole, { status: "CLOSED", page: 1, limit: 1 }),
+    ]);
+
+    const openCount = open.pagination?.total || 0;
+    const resolvedCount = (resolved.pagination?.total || 0) + (closed.pagination?.total || 0);
+
+    return { openCount, resolvedCount };
+  }
 }
 

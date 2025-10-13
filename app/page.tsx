@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { AuthService } from '@/app/lib/services/auth';
+import { TicketService } from '@/app/lib/services/tickets';
 import DashboardHeader from '@/app/components/DashboardHeader';
 import type { UserSessionDTO } from '@/src/types';
 
@@ -32,6 +33,12 @@ export default async function Home() {
   if (user.passwordResetRequired) {
     redirect('/change-password');
   }
+
+  // Stats for dashboard
+  const { openCount, resolvedCount } = await TicketService.getTicketStats(
+    user.id,
+    user.role
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -85,7 +92,7 @@ export default async function Home() {
                   />
                 </svg>
               </div>
-              <span className="text-3xl font-bold text-white">0</span>
+              <span className="text-3xl font-bold text-white">{openCount}</span>
             </div>
             <h3 className="text-sm font-medium text-gray-400 mb-1">
               Otwarte zgłoszenia
@@ -110,12 +117,12 @@ export default async function Home() {
                   />
                 </svg>
               </div>
-              <span className="text-3xl font-bold text-white">0</span>
+              <span className="text-3xl font-bold text-white">{resolvedCount}</span>
             </div>
             <h3 className="text-sm font-medium text-gray-400 mb-1">
               Rozwiązane
             </h3>
-            <p className="text-xs text-gray-500">W tym miesiącu</p>
+            <p className="text-xs text-gray-500">Łącznie</p>
           </div>
 
           <div className="bg-gray-800 rounded-xl shadow-md p-6 border border-gray-700 hover:shadow-lg transition-all">
