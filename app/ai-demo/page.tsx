@@ -129,11 +129,11 @@ export default function AiDemoPage() {
         {/* Back to App */}
         <div className="mt-8 text-center">
           <a
-            href="/tickets"
+            href="/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
           >
             <span>←</span>
-            Powrót do ticketów
+            Powrót do strony głównej
           </a>
         </div>
       </div>
