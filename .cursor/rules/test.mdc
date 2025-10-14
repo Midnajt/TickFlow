@@ -1,0 +1,9 @@
+---
+alwaysApply: false
+---
+
+Uruchomiłem test npm run test:e2e
+Napraw test tak, aby świecił się na zielono.
+Nie uruchamiaj npm run test, zrobię to samodzielnie.
+Możesz zaktualizować dokumenty opisujące zadania testów, mokowania danych etc, ale na koniec nie twórz podsumowania.
+Korzystaj z @playwright-testinf.mdc

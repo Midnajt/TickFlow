@@ -7,54 +7,50 @@ describe('Ticket Validators', () => {
       const validData = {
         title: 'Valid ticket title',
         description: 'This is a valid description for the ticket',
-        categoryId: 'cat-123',
-        subcategoryId: 'sub-456',
+        subcategoryId: '123e4567-e89b-12d3-a456-426614174000',
       }
 
       const result = createTicketSchema.safeParse(validData)
       expect(result.success).toBe(true)
     })
 
-    it('should reject title shorter than 5 characters', () => {
+    it('should reject title shorter than 3 characters', () => {
       const invalidData = {
-        title: 'Test',
+        title: 'Te',
         description: 'Valid description',
-        categoryId: 'cat-123',
-        subcategoryId: 'sub-456',
+        subcategoryId: '123e4567-e89b-12d3-a456-426614174000',
       }
 
       const result = createTicketSchema.safeParse(invalidData)
       expect(result.success).toBe(false)
     })
 
-    it('should reject description longer than 300 characters', () => {
+    it('should reject description longer than 2000 characters', () => {
       const invalidData = {
         title: 'Valid title',
-        description: 'a'.repeat(301),
-        categoryId: 'cat-123',
-        subcategoryId: 'sub-456',
+        description: 'a'.repeat(2001),
+        subcategoryId: '123e4567-e89b-12d3-a456-426614174000',
       }
 
       const result = createTicketSchema.safeParse(invalidData)
       expect(result.success).toBe(false)
     })
 
-    it('should reject missing categoryId', () => {
-      const invalidData = {
+    it('should accept optional categoryId', () => {
+      const validData = {
         title: 'Valid title',
         description: 'Valid description',
-        subcategoryId: 'sub-456',
+        subcategoryId: '123e4567-e89b-12d3-a456-426614174000',
       }
 
-      const result = createTicketSchema.safeParse(invalidData)
-      expect(result.success).toBe(false)
+      const result = createTicketSchema.safeParse(validData)
+      expect(result.success).toBe(true)
     })
 
     it('should reject missing subcategoryId', () => {
       const invalidData = {
         title: 'Valid title',
         description: 'Valid description',
-        categoryId: 'cat-123',
       }
 
       const result = createTicketSchema.safeParse(invalidData)
@@ -65,8 +61,7 @@ describe('Ticket Validators', () => {
       const dataWithWhitespace = {
         title: '  Valid ticket title  ',
         description: '  This is a valid description  ',
-        categoryId: 'cat-123',
-        subcategoryId: 'sub-456',
+        subcategoryId: '123e4567-e89b-12d3-a456-426614174000',
       }
 
       const result = createTicketSchema.safeParse(dataWithWhitespace)

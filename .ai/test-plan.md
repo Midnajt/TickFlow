@@ -101,21 +101,31 @@ AI Suggestions: OpenRouter (GPT-4o-mini).
 - Hooki pure: funkcje formatujące, pipeline danych  
 
 ### 4.2 Testy Integracyjne
-- API Routes: z użyciem `node-mocks-http` + Vitest przeciwko testowej bazie (Prisma + Supabase‐emulator)  
+- API Routes: z użyciem bezpośredniego mockowania `NextRequest` + Vitest przeciwko testowej bazie (Prisma + Supabase‐emulator)  
 - Server Actions: wywołanie funkcji `completeAi`, `createTicket`, `assignTicket`, `closeTicket`, `changePassword` z mokami zależności
 - MSW dla mockowania zewnętrznych API (OpenRouter, Supabase)
 
 **Przykład testu API Route:**
 ```typescript
 import { describe, it, expect, vi } from 'vitest'
-import { createMocks } from 'node-mocks-http'
 import { POST } from '@/app/api/tickets/route'
+import { NextRequest } from 'next/server'
+
+// Helper to create mock request
+function createMockRequest(body: any): NextRequest {
+  return {
+    json: async () => body,
+    headers: new Headers(),
+    method: 'POST',
+    url: 'http://localhost:3000/api/tickets',
+  } as NextRequest
+}
 
 describe('POST /api/tickets', () => {
   it('should create ticket with valid data', async () => {
-    const { req } = createMocks({
-      method: 'POST',
-      body: { title: 'Test', description: 'Test desc' }
+    const req = createMockRequest({ 
+      title: 'Test', 
+      description: 'Test desc' 
     })
     const response = await POST(req)
     expect(response.status).toBe(201)
@@ -146,7 +156,6 @@ describe('POST /api/tickets', () => {
 | **Component Testing** | **@testing-library/react 16.x** | Standard branżowy, user-centric approach, wsparcie dla React 19 |
 | **E2E Testing** | **Playwright 1.48+** | Oficjalnie polecany przez Next.js, najlepsze wsparcie dla RSC i real-time |
 | **API Mocking** | **MSW 2.x** | Mockowanie na poziomie network, działa w testach i przeglądarce |
-| **API Route Testing** | **node-mocks-http** | Lekkie mockowanie req/res dla Next.js API Routes |
 | **Coverage** | **@vitest/coverage-v8** | Built-in w Vitest, szybki, dokładny |
 | **Debugowanie** | **@vitest/ui** | Graficzny interfejs do analizy i debugowania testów |
 | **Dane testowe** | **@faker-js/faker** | Generowanie realistycznych danych testowych |
@@ -171,7 +180,6 @@ describe('POST /api/tickets', () => {
     
     // Mocking & Utilities
     "msw": "^2.6.0",
-    "node-mocks-http": "^1.16.1",
     "jsdom": "^25.0.0",
     "@faker-js/faker": "^9.3.0"
   }

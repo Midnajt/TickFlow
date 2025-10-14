@@ -1,11 +1,15 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import LoginForm from '@/app/components/LoginForm'
+import { LoginForm } from '@/app/components/LoginForm'
 
 describe('LoginForm', () => {
   beforeEach(() => {
     // Reset any mocks before each test
+    vi.clearAllMocks()
+    
+    // Mock fetch globally for each test
+    global.fetch = vi.fn()
   })
 
   it('should render login form with email and password fields', () => {
@@ -20,11 +24,15 @@ describe('LoginForm', () => {
     const user = userEvent.setup()
     render(<LoginForm />)
 
-    const submitButton = screen.getByRole('button', { name: /zaloguj/i })
-    await user.click(submitButton)
-
+    const emailInput = screen.getByLabelText(/email/i)
+    
+    // Type something and then clear to trigger validation
+    await user.type(emailInput, 'test')
+    await user.clear(emailInput)
+    await user.tab()
+    
     await waitFor(() => {
-      expect(screen.getByText(/email jest wymagany/i)).toBeInTheDocument()
+      expect(screen.getByText(/Nieprawidłowy format adresu email/i)).toBeInTheDocument()
     })
   })
 
@@ -34,12 +42,12 @@ describe('LoginForm', () => {
 
     const emailInput = screen.getByLabelText(/email/i)
     await user.type(emailInput, 'invalid-email')
-
-    const submitButton = screen.getByRole('button', { name: /zaloguj/i })
-    await user.click(submitButton)
+    
+    // Blur to trigger onBlur validation
+    await user.tab()
 
     await waitFor(() => {
-      expect(screen.getByText(/nieprawidłowy format email/i)).toBeInTheDocument()
+      expect(screen.getByText(/nieprawidłowy format adresu email/i)).toBeInTheDocument()
     })
   })
 

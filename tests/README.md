@@ -101,6 +101,44 @@ describe('MyComponent', () => {
 })
 ```
 
+### API Route Tests (Next.js App Router)
+
+```typescript
+import { describe, it, expect, vi } from 'vitest'
+import { POST } from '@/app/api/auth/login/route'
+import { NextRequest } from 'next/server'
+
+// Mock dependencies
+vi.mock('@/app/lib/supabase-server', () => ({
+  supabaseServer: {
+    from: vi.fn(() => ({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      single: vi.fn(),
+    })),
+  },
+}))
+
+// Helper to create mock request
+function createMockRequest(body: any): NextRequest {
+  return {
+    json: async () => body,
+    headers: new Headers(),
+    method: 'POST',
+    url: 'http://localhost:3000/api/auth/login',
+  } as NextRequest
+}
+
+describe('POST /api/auth/login', () => {
+  it('should return 400 for invalid data', async () => {
+    const req = createMockRequest({ email: 'invalid' })
+    const response = await POST(req)
+    
+    expect(response.status).toBe(400)
+  })
+})
+```
+
 ### E2E Tests (Playwright)
 
 ```typescript
@@ -133,6 +171,44 @@ export const handlers = [
 ### Supabase Mocks
 
 Supabase client is mocked in `tests/mocks/supabase.ts` and automatically applied in all tests.
+
+### API Route Testing
+
+When testing API routes in `tests/integration/api/`, mock the service layer instead of the database:
+
+```typescript
+// Mock the AuthService instead of database/bcrypt directly
+vi.mock('@/app/lib/services/auth', () => ({
+  AuthService: {
+    login: vi.fn(),
+  },
+}))
+
+// In tests, control the service behavior
+vi.mocked(AuthService.login).mockRejectedValue(
+  new Error('AUTHENTICATION_ERROR:Nieprawidłowy email lub hasło')
+)
+```
+
+This approach is cleaner and tests the actual route logic without coupling to implementation details.
+
+### Component Testing with react-hook-form
+
+When testing components that use `react-hook-form` with `mode: 'onBlur'`:
+
+```typescript
+// Trigger validation by focusing and blurring
+const emailInput = screen.getByLabelText(/email/i)
+await user.click(emailInput)
+await user.tab() // This triggers onBlur validation
+
+// Now validation errors should appear
+await waitFor(() => {
+  expect(screen.getByText(/email jest wymagany/i)).toBeInTheDocument()
+})
+```
+
+The validation in react-hook-form doesn't trigger on submit if no fields have been touched. Use `onBlur` events to trigger field-level validation.
 
 ## Coverage Requirements
 

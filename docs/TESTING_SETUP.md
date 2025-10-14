@@ -20,7 +20,6 @@
 
 **Mocking & Utilities:**
 - `msw` ^2.6 - API mocking with Service Worker
-- `node-mocks-http` - HTTP request/response mocking
 - `@faker-js/faker` - Test data generation
 
 ### 2. Configuration Files Created ✅
@@ -100,12 +99,14 @@ tests/
 
 **Component Test** - `tests/components/LoginForm.test.tsx`:
 - Form rendering tests
-- Validation error tests
+- Validation error tests (using onBlur mode)
 - User interaction tests
+- Tests react-hook-form validation correctly
 
 **API Test** - `tests/integration/api/auth.test.ts`:
 - Invalid request body handling
 - Invalid credentials handling
+- Mocks AuthService instead of database layer
 
 **E2E Tests**:
 - `tests/e2e/auth.spec.ts` - Complete authentication flow
@@ -217,7 +218,7 @@ Run `npm run test:coverage` to check current coverage.
 ✅ Use `describe` for grouping related tests
 ✅ Use `it` or `test` for individual test cases
 ✅ Follow AAA pattern: Arrange, Act, Assert
-✅ Mock external dependencies (Supabase, APIs)
+✅ Mock external dependencies at the service layer (not DB directly)
 ✅ Use `beforeEach` for test setup
 ✅ Keep tests isolated and independent
 
@@ -227,6 +228,7 @@ Run `npm run test:coverage` to check current coverage.
 ✅ Wait for async changes with `waitFor`
 ✅ Test behavior, not implementation
 ✅ Avoid `data-testid` unless necessary
+✅ For onBlur validation, trigger blur events with `user.tab()`
 
 ### Playwright (E2E)
 ✅ Use Page Object Model for complex pages

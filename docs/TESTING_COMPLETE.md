@@ -15,7 +15,6 @@ Your TickFlow project now has a **production-ready testing environment** with un
 - ✅ **@testing-library/user-event** - User interactions
 - ✅ **@playwright/test** v1.48+ - E2E testing
 - ✅ **msw** v2.6+ - API mocking
-- ✅ **node-mocks-http** - HTTP mocking
 - ✅ **@faker-js/faker** - Test data generation
 - ✅ **@vitejs/plugin-react** - React support
 - ✅ **jsdom** / **happy-dom** - DOM environment
@@ -33,8 +32,8 @@ Your TickFlow project now has a **production-ready testing environment** with un
 - ✅ `tests/mocks/supabase.ts` - Supabase mocks
 - ✅ `tests/unit/validators.test.ts` - Auth validator tests (8 tests) ✓
 - ✅ `tests/unit/ticket-validators.test.ts` - Ticket validator tests
-- ✅ `tests/components/LoginForm.test.tsx` - Component test example
-- ✅ `tests/integration/api/auth.test.ts` - API route test example
+- ✅ `tests/components/LoginForm.test.tsx` - Component test example (with react-hook-form onBlur validation)
+- ✅ `tests/integration/api/auth.test.ts` - API route test example (mocking service layer)
 - ✅ `tests/e2e/auth.spec.ts` - Authentication E2E tests (5 scenarios)
 - ✅ `tests/e2e/tickets.spec.ts` - Ticket management E2E tests (8 scenarios)
 
