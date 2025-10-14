@@ -23,6 +23,7 @@ TickFlow is a web-based IT ticket reporting and management system. Non-technical
 - **Authentication**: Custom JWT-based auth (jose, bcrypt, HTTP-only cookies)  
 - **Database**: PostgreSQL via Supabase  
 - **Real-Time**: Supabase Realtime WebSocket  
+- **Testing**: Vitest 2.x (unit/integration), Playwright 1.48+ (E2E), Testing Library, MSW  
 - **Deployment**: Vercel  
 
 ## Getting Started Locally
@@ -60,6 +61,8 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
 📖 **API Documentation:** [documentation/auth-api-documentation.md](./documentation/auth-api-documentation.md)
 
 ## Available Scripts
+
+### Development
 - `npm run dev`  
   Starts the Next.js development server.  
 - `npm run build`  
@@ -68,6 +71,22 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
   Runs the production build.  
 - `npm run lint`  
   Lints codebase using ESLint.
+
+### Testing
+- `npm test`  
+  Runs unit and integration tests with Vitest.  
+- `npm run test:watch`  
+  Runs tests in watch mode for active development.  
+- `npm run test:ui`  
+  Opens Vitest UI for interactive test debugging.  
+- `npm run test:coverage`  
+  Generates test coverage report (target: ≥80%).  
+- `npm run test:e2e`  
+  Runs end-to-end tests with Playwright.  
+- `npm run test:e2e:ui`  
+  Opens Playwright UI for interactive E2E testing.  
+- `npm run test:all`  
+  Runs all tests (unit, integration, E2E) with coverage.
 
 ## Project Scope
 TickFlow MVP includes:
@@ -84,9 +103,11 @@ For full requirements, see [prd.md](.ai/prd.md).
 - ✅ Authentication system (JWT-based, complete with middleware)
 - ✅ Login & Change Password views (fully functional)
 - ✅ Route protection & session management
+- ✅ Test infrastructure (Vitest + Playwright configured)
 - 🚧 Ticket management endpoints (in progress)
 - 🚧 Agent workflows (planned)
 - 🚧 Real-time updates (planned)
+- 🚧 Test coverage expansion (target: ≥80%)
 
 See project milestones in [.ai/prd.md](.ai/prd.md) and architectural details in [.ai/tech-stack.md](.ai/tech-stack.md).
 
@@ -104,8 +125,14 @@ See project milestones in [.ai/prd.md](.ai/prd.md) and architectural details in 
 - **[Testing Plan](./documentation/login-testing-plan.md)** - Manual testing scenarios
 - **[Components Guide](./documentation/auth-components-guide.md)** - Reusable component documentation
 
+**Testing:**
+- **[Test Plan](.ai/test-plan.md)** - Comprehensive testing strategy and execution plan
+- **Testing Stack**: Vitest (unit/integration), Playwright (E2E), Testing Library, MSW (mocking)
+- **Coverage Target**: ≥80% for all TypeScript code
+
 ### Features Documented
 
+**Authentication & Security:**
 - ✅ Authentication endpoints (login, logout, change-password, session)
 - ✅ JWT token management & HTTP-only cookies
 - ✅ Route protection middleware
@@ -115,6 +142,14 @@ See project milestones in [.ai/prd.md](.ai/prd.md) and architectural details in 
 - ✅ Security best practices
 - ✅ Full accessibility (A11y) support
 - ✅ Code examples & troubleshooting
+
+**Testing Infrastructure:**
+- ✅ Vitest 2.x configuration for unit & integration tests
+- ✅ Playwright 1.48+ setup for E2E testing
+- ✅ Testing Library for component testing
+- ✅ MSW 2.x for API mocking
+- ✅ Coverage reporting (target: ≥80%)
+- ✅ CI/CD pipeline ready (GitHub Actions)
 
 ## License
 This project is licensed under the MIT License.  

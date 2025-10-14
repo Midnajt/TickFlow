@@ -69,6 +69,20 @@ tailwindcss ^3.4
 
 @types/bcrypt ^5.0
 
+#### Testing
+
+vitest ^2.1
+
+@testing-library/react ^16.1
+
+@playwright/test ^1.48
+
+msw ^2.6
+
+node-mocks-http ^1.16
+
+@faker-js/faker ^9.3
+
 Tip: trzymaj wersje w ryzach przez ~ dla patchy na prodzie, ^ na dev.
 
 ### 🌍 Environment Variables
@@ -363,6 +377,196 @@ Aplikacja wykorzystuje AI do automatycznej klasyfikacji zgłoszeń na podstawie 
 - **Implementacja:** Wywoływane przez Server Action (`/app/actions/ai/complete.ts`), które korzysta z dedykowanego serwisu (`/app/lib/services/openrouter`).
 - **Bezpieczeństwo:** Klucz `OPENROUTER_API_KEY` jest używany wyłącznie po stronie serwera i nigdy nie jest eksponowany do klienta.
 
+### 🧪 Testing & Quality Assurance
+
+#### Strategia Testowania
+TickFlow implementuje wielowarstwową strategię testowania zapewniającą wysoką jakość kodu i niezawodność aplikacji:
+
+**Poziomy testowania:**
+- **Unit Tests** – walidatory Zod, utility functions, business logic
+- **Integration Tests** – API Routes, Server Actions, database interactions
+- **Component Tests** – React components z Testing Library
+- **E2E Tests** – pełne scenariusze użytkownika z Playwright
+
+**Cel pokrycia:** ≥80% dla całego kodu TypeScript
+
+#### Stos Technologiczny Testów
+
+**Test Runner & Framework:**
+- **Vitest 2.x** – nowoczesny test runner, 10-20x szybszy niż Jest
+  - Natywne wsparcie ESM
+  - Zero-config TypeScript
+  - Kompatybilny z Next.js 15 + Turbopack
+  - Built-in coverage przez @vitest/coverage-v8
+
+**Component Testing:**
+- **@testing-library/react 16.x** – user-centric testing approach
+- **@testing-library/jest-dom** – custom matchers dla DOM
+- **@testing-library/user-event** – symulacja interakcji użytkownika
+
+**E2E Testing:**
+- **Playwright 1.48+** – oficjalnie polecany przez Next.js
+  - Multi-browser support (Chromium, Firefox, WebKit)
+  - Wsparcie dla React Server Components
+  - Auto-wait dla elementów
+  - Screenshot & video recording
+  - Parallel execution
+
+**Mocking & Utilities:**
+- **MSW 2.x** – mockowanie na poziomie network layer
+  - Działa w testach i przeglądarce
+  - Service Worker dla realistic mocking
+- **node-mocks-http** – mockowanie Request/Response dla API Routes
+- **@faker-js/faker** – generowanie realistycznych danych testowych
+
+#### Konfiguracja Vitest
+```typescript
+// vitest.config.ts
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./tests/setup.ts'],
+    globals: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      exclude: ['node_modules/', 'tests/', '**/*.config.*', 'supabase/migrations/'],
+      thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 }
+    }
+  },
+  resolve: {
+    alias: { '@': path.resolve(__dirname, './app') }
+  }
+})
+```
+
+#### Konfiguracja Playwright
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test'
+
+export default defineConfig({
+  testDir: './tests/e2e',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+  ],
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
+})
+```
+
+#### Struktura Testów
+```
+tests/
+├── setup.ts                    # Vitest setup & global mocks
+├── mocks/
+│   ├── handlers.ts            # MSW handlers
+│   └── supabase.ts            # Supabase client mocks
+├── unit/
+│   ├── validators.test.ts     # Zod schemas validation
+│   └── services.test.ts       # Business logic tests
+├── integration/
+│   ├── api/                   # API Routes tests
+│   └── actions/               # Server Actions tests
+├── components/
+│   ├── forms.test.tsx         # Form components tests
+│   └── tickets.test.tsx       # Ticket components tests
+└── e2e/
+    ├── auth.spec.ts           # Authentication flows
+    ├── tickets.spec.ts        # Ticket management
+    └── realtime.spec.ts       # Real-time features
+```
+
+#### Skrypty Testowe
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:all": "npm run test:coverage && npm run test:e2e"
+  }
+}
+```
+
+#### Obszary Testowe
+
+**Testy Jednostkowe:**
+- Walidatory Zod (`validators/*.ts`)
+- Utility functions (`lib/utils/*`)
+- Rate limiter logic
+- OpenRouter service (z mocked fetch)
+- Auth utilities
+
+**Testy Integracyjne:**
+- API Routes: `/api/auth/*`, `/api/tickets/*`, `/api/categories/*`
+- Server Actions: `completeAi`, `createTicket`, `assignTicket`, `closeTicket`
+- Database interactions (Prisma + test database)
+
+**Testy Komponentów:**
+- Formularze: `LoginForm`, `ChangePasswordForm`, `CreateTicketForm`
+- Komponenty ticketów: `TicketCard`, `TicketList`, `TicketDetailsDialog`
+- Hooki: `useTickets`, `useRealtimeTickets`, `useCategories`
+
+**Testy E2E (Playwright):**
+1. Autentykacja: login → wymuszenie zmiany hasła → dashboard
+2. User workflow: tworzenie ticketu → walidacje → lista ticketów
+3. Agent workflow: widok kategorii → przypisanie → zmiana statusu
+4. Real-time: synchronizacja list między użytkownikami
+5. AI Suggestions: analiza opisu → sugestie kategorii
+
+#### CI/CD Integration
+```yaml
+# .github/workflows/test.yml
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run test:coverage
+      - run: npx playwright install --with-deps
+      - run: npm run test:e2e
+      - uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+```
+
+#### Kryteria Akceptacji Testów
+- ✅ Coverage ≥ 80% dla całego kodu TypeScript
+- ✅ Wszystkie krytyczne scenariusze E2E przechodzą bez błędów
+- ✅ Brak regresji w autoryzacji i RBAC
+- ✅ Stabilne testy (deterministyczne, bez flaky tests)
+- ✅ Automatyczny raport coverage w CI
+- ✅ Szybkie wykonanie: unit <10s, integration <30s, E2E <2min
+
 ### 🧱 Decyzje architektoniczne (skrót)
 
 App Router (przyszłość Next.js), Server Components (wydajność), Server Actions (prostsze mutacje).
@@ -405,6 +609,8 @@ Manual: smoke test po deployu (checklista poniżej)
 
  NEXTAUTH_SECRET wygenerowany (openssl rand -base64 32)
 
+ OPENROUTER_API_KEY dodany (dla AI suggestions)
+
  .env.local uzupełnione
 
  npm install ukończone
@@ -416,6 +622,10 @@ Manual: smoke test po deployu (checklista poniżej)
  Login testowy: user@firma.pl / Start!125
 
  Po zalogowaniu wymuszona zmiana hasła działa
+
+ npm test – testy jednostkowe przechodzą
+
+ npm run test:e2e – testy E2E gotowe do uruchomienia
 
 ### 📚 Dokumentacja (linki)
 
