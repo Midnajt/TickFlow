@@ -102,6 +102,8 @@ Ograniczenie długości opisu, by zgłoszenia były konkretne i zwięzłe.
 
 Po wysłaniu zgłoszenia użytkownik widzi je na liście swoich ticketów.
 
+Dodatkowo, formularz jest wyposażony w funkcję **Sugestia AI** (opartą o OpenRouter), która po wpisaniu opisu problemu automatycznie proponuje kategorię, podkategorię i tytuł, co znacznie przyspiesza proces.
+
 #### 3.2 Śledzenie statusu
 
 Użytkownik może w każdej chwili sprawdzić status swojego zgłoszenia.

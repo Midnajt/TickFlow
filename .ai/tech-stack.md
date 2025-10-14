@@ -85,6 +85,8 @@ NEXTAUTH_SECRET="generated-secret-here"
 NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJxxx..."
 SUPABASE_SERVICE_ROLE_KEY="eyJxxx..."
+# OpenRouter (AI Suggestions)
+OPENROUTER_API_KEY="sk-or-v1-..."
 ```
 
 #### Production (Vercel)
@@ -100,6 +102,8 @@ NEXTAUTH_SECRET="prod-secret"
 NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJxxx..."
 SUPABASE_SERVICE_ROLE_KEY="eyJxxx..."
+# OpenRouter (AI Suggestions)
+OPENROUTER_API_KEY="sk-or-v1-..."
 ```
 
 Bezpieczeństwo: SERVICE_ROLE_KEY tylko po stronie serwera; nigdy w przeglądarce.
@@ -110,21 +114,34 @@ tickflow/
 ├── .ai/
 │   ├── prd.md
 │   └── tech-stack.md (ten dokument)
+├── app/
+│   ├── (auth)/login/
+│   ├── (dashboard)/
+│   │   ├── user/{tickets,new-ticket}/
+│   │   └── agent/{tickets,my-tickets}/
+│   ├── ai-demo/page.tsx
+│   ├── api/
+│   │   ├── auth/[...nextauth]/route.ts
+│   │   └── ai/complete/route.ts
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── tickets/
+│   │   ├── auth/
+│   │   └── examples/
+│   ├── lib/
+│   │   ├── auth.ts
+│   │   ├── db.ts
+│   │   ├── supabase.ts
+│   │   ├── validators/
+│   │   └── services/openrouter/
+│   ├── actions/
+│   │   └── ai/complete.ts
+│   ├── layout.tsx
+│   └── page.tsx
 ├── prisma/
 │   ├── schema.prisma
 │   ├── migrations/
 │   └── seed.ts
-├── src/
-│   ├── app/
-│   │   ├── (auth)/login/
-│   │   ├── (dashboard)/user/{tickets,new-ticket}/
-│   │   ├── (dashboard)/agent/{tickets,my-tickets}/
-│   │   ├── api/auth/[...nextauth]/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── components/{ui,tickets,auth}/
-│   ├── lib/{auth.ts,db.ts,supabase.ts,validators/}
-│   └── hooks/useRealtimeTickets.ts
 ├── public/
 ├── .env.local
 ├── .env.example
@@ -325,16 +342,26 @@ Klucze: SUPABASE_SERVICE_ROLE_KEY tylko po stronie serwera.
 Rate limiting (MVP – lekki): prosty ogranicznik na endpoint logowania i tworzenia ticketów (edge/middleware).
 
 ### 🧰 Server Actions (MVP – przykładowe operacje)
-
+completeAi(formData) – analiza opisu → zwraca sugestie AI (kategoria, tytuł itp.)
 createTicket(formData) – walidacja Zod → insert Ticket
-
 assignTicket(ticketId) – kontrola dostępu do kategorii → update assignedToId & status=IN_PROGRESS
-
 closeTicket(ticketId) – tylko właściciel przypisania → status=CLOSED
-
 changePassword(old, next) – weryfikacja hasła → update user + passwordResetRequired=false
 
 Uwaga: w MVP preferujemy Server Actions zamiast klasycznych API routes.
+
+### 🤖 AI & Machine Learning
+#### AI Suggestions (Ticket Classification)
+Aplikacja wykorzystuje AI do automatycznej klasyfikacji zgłoszeń na podstawie opisu problemu. Funkcja "Sugestia AI" w formularzu tworzenia ticketu:
+- **Serwis:** OpenRouter (`openrouter.ai`) jako brama do modeli językowych.
+- **Model:** Domyślnie `openai/gpt-4o-mini` dla optymalnego balansu między szybkością, kosztem i jakością.
+- **Funkcjonalność:** Analizuje opis użytkownika i zwraca ustrukturyzowaną odpowiedź JSON zawierającą:
+    - `categoryId` (sugerowana kategoria)
+    - `subcategoryId` (sugerowana podkategoria)
+    - `summary` (krótkie podsumowanie problemu)
+    - `suggestedSteps` (proponowane kroki do rozwiązania)
+- **Implementacja:** Wywoływane przez Server Action (`/app/actions/ai/complete.ts`), które korzysta z dedykowanego serwisu (`/app/lib/services/openrouter`).
+- **Bezpieczeństwo:** Klucz `OPENROUTER_API_KEY` jest używany wyłącznie po stronie serwera i nigdy nie jest eksponowany do klienta.
 
 ### 🧱 Decyzje architektoniczne (skrót)
 

@@ -10,5 +10,11 @@ https://docs.docker.com/desktop/setup/install/windows-install/
 
 wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-work-already-done.md i dokończ endpointy.
 
-Następnie zaloguj się jako user i dodaj ticket, a także agent i zrealizuj ticket.
-Sprawdź widok dla kilku agentów.
+
+- Przywróć ticket
+- Przekaż ticket
+- Resetuj hasło
+- Opis kategorii i podkategorii dla ai (plus kto go obsługuje)
+- Admin tabela z opisami dla kategorii i podkategorii
+- Admin lista agentów i użytkowników + wymuś restart hasła
+- Admin tabela z logami
