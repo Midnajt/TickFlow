@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,7 +8,11 @@ import { loginSchema, type LoginInput } from '@/app/lib/validators/auth';
 import type { LoginResponseDTO } from '@/src/types';
 import { ErrorAlert } from './ErrorAlert';
 
-export function LoginForm() {
+interface LoginFormProps {
+  onFormReady?: (fillForm: (email: string, password: string) => void) => void;
+}
+
+export function LoginForm({ onFormReady }: LoginFormProps) {
   const router = useRouter();
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,10 +21,20 @@ export function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     mode: 'onBlur',
   });
+
+  useEffect(() => {
+    if (onFormReady) {
+      onFormReady((email: string, password: string) => {
+        setValue('email', email);
+        setValue('password', password);
+      });
+    }
+  }, [onFormReady, setValue]);
 
   const onSubmit = async (data: LoginInput) => {
     setErrorMessages([]);

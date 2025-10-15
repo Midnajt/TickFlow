@@ -51,28 +51,20 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Header */}
       <DashboardHeader user={user} />
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Welcome Section */}
         <DashboardWelcome user={user} />
 
-        {/* Stats Cards */}
         <DashboardStats openCount={openCount} resolvedCount={resolvedCount} userRole={user.role} />
 
-        {/* Info Panel */}
         <DashboardInfo user={user} />
 
-        {/* Features Grid */}
         <DashboardFeatures />
 
-        {/* Test Credentials */}
         <DashboardTestAccounts />
       </main>
 
-      {/* Footer */}
       <DashboardFooter />
     </div>
   );
