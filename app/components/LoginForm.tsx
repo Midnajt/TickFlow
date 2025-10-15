@@ -19,7 +19,7 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    mode: 'onSubmit',
+    mode: 'onBlur',
   });
 
   const onSubmit = async (data: LoginInput) => {

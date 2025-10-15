@@ -32,7 +32,7 @@ describe('LoginForm', () => {
     await user.tab()
     
     await waitFor(() => {
-      expect(screen.getByText(/Nieprawidłowy format adresu email/i)).toBeInTheDocument()
+      expect(screen.getByText(/Email jest wymagany/i)).toBeInTheDocument()
     })
   })
 
