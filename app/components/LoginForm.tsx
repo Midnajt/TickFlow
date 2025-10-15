@@ -79,13 +79,15 @@ export function LoginForm() {
       // Success - handle redirect
       const loginResponse = responseData as LoginResponseDTO;
       
-      if (loginResponse.user.passwordResetRequired) {
-        router.push('/change-password');
-      } else {
-        router.push('/');
-      }
+      // Wait for cookie to be set by waiting for the response to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      router.refresh();
+      if (loginResponse.user.passwordResetRequired) {
+        // Use window.location for full page reload to ensure cookie is sent
+        window.location.href = '/change-password';
+      } else {
+        window.location.href = '/';
+      }
     } catch (err) {
       console.error('Login error:', err);
       setErrorMessages(['Wystąpił błąd połączenia. Sprawdź swoje połączenie internetowe.']);

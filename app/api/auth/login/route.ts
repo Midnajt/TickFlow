@@ -58,9 +58,10 @@ export async function POST(request: NextRequest) {
       value: loginResponse.session.token,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Allow cookie in test environment
       maxAge: 60 * 60 * 24 * 7, // 7 dni w sekundach
       path: "/",
+      domain: process.env.COOKIE_DOMAIN || undefined, // Explicit domain for tests
     });
 
     // Dodanie nagłówków rate limit

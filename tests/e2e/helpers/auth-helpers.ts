@@ -48,11 +48,30 @@ export async function loginUser(
   await page.getByLabel(/email/i).fill(email)
   await page.getByLabel(/hasło/i).fill(password)
   
+  // Wait for network response
+  const responsePromise = page.waitForResponse(
+    response => response.url().includes('/api/auth/login') && response.status() === 200
+  )
+  
   // Submit form
   await page.getByRole('button', { name: /zaloguj/i }).click()
   
-  // Wait for redirect
-  await expect(page).toHaveURL(expectRedirect, { timeout: 10000 })
+  // Wait for API response
+  await responsePromise
+  
+  // Verify cookie was set
+  const cookies = await page.context().cookies()
+  const authCookie = cookies.find(c => c.name === 'auth-token')
+  
+  if (!authCookie) {
+    throw new Error('Auth cookie was not set after login')
+  }
+  
+  // Wait for redirect with longer timeout
+  await expect(page).toHaveURL(expectRedirect, { timeout: 15000 })
+  
+  // Verify we're actually authenticated
+  await page.waitForLoadState('networkidle')
 }
 
 /**

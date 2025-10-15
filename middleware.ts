@@ -11,6 +11,15 @@ export async function middleware(request: NextRequest) {
   
   // Pobierz token z cookie
   const token = request.cookies.get('auth-token')?.value;
+  
+  // Debug logging for E2E tests
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[Middleware Debug]', {
+      pathname,
+      hasToken: !!token,
+      cookies: request.cookies.getAll().map(c => c.name),
+    });
+  }
 
   // Ścieżki publiczne (dostępne bez logowania)
   const publicPaths = ['/login'];

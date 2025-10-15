@@ -78,6 +78,17 @@ export default defineConfig({
     /* Locale and timezone */
     locale: 'pl-PL',
     timezoneId: 'Europe/Warsaw',
+    
+    /* Ensure cookies persist across navigations */
+    storageState: undefined, // Don't load storage state at start
+    
+    /* Accept downloads and handle cookies properly */
+    acceptDownloads: true,
+    
+    /* Add extra HTTP headers to ensure cookie acceptance */
+    extraHTTPHeaders: {
+      'Accept': 'application/json, text/plain, */*',
+    },
   },
 
   /* Configure projects for major browsers */
@@ -115,8 +126,12 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000, // 2 minutes to start server
-    stdout: 'ignore', // Don't show server logs in test output
+    stdout: 'pipe', // Show server logs for debugging (was 'ignore')
     stderr: 'pipe', // Show server errors
+    env: {
+      // Disable Fast Refresh during E2E tests to prevent request interruptions
+      NEXT_PRIVATE_DISABLE_FAST_REFRESH: '1',
+    },
   },
   
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
