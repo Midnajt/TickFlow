@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { createClient } from '@supabase/supabase-js';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import type { Database } from '../app/lib/database.types';
 
 // Załaduj zmienne środowiskowe z .env.local
@@ -64,7 +64,7 @@ const testUsers = [
   },
   {
     email: 'newuser@tickflow.com',
-    password: 'TempPass123!',
+    password: 'Agent123!@#',
     name: 'New User',
     role: 'USER' as const,
     force_password_change: true, // Wymaga zmiany hasła przy pierwszym logowaniu

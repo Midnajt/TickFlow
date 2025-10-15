@@ -46,20 +46,26 @@ npm run test:all
 
 ```
 tests/
-├── setup.ts                    # Vitest setup & global mocks
+├── setup.ts                         # Vitest setup & global mocks
 ├── mocks/
-│   ├── handlers.ts            # MSW request handlers
-│   └── supabase.ts            # Supabase client mocks
-├── unit/
-│   └── validators.test.ts     # Zod schema validation tests
-├── integration/
+│   ├── handlers.ts                 # MSW request handlers
+│   └── supabase.ts                 # Supabase client mocks
+├── unit/                           # Unit tests (Pure functions, utilities)
+│   ├── validators.test.ts          # Auth validators (loginSchema, changePasswordSchema)
+│   ├── ticket-validators.test.ts   # Ticket validators
+│   ├── category-validators.test.ts # Category validators (NEW)
+│   ├── ai-validators.test.ts       # AI validators (NEW)
+│   ├── api-response.test.ts        # API response utilities (NEW)
+│   ├── auth-utils.test.ts          # Auth utilities & middleware (NEW)
+│   └── rate-limiter.test.ts        # Rate limiting middleware (NEW)
+├── integration/                    # Integration tests (API routes, services)
 │   └── api/
-│       └── auth.test.ts       # API route tests
-├── components/
-│   └── LoginForm.test.tsx     # Component tests
-└── e2e/
-    ├── auth.spec.ts           # Authentication E2E tests
-    └── tickets.spec.ts        # Ticket management E2E tests
+│       └── auth.test.ts            # Authentication API routes
+├── components/                     # Component tests
+│   └── LoginForm.test.tsx          # Login form component
+└── e2e/                            # E2E tests (Complete user flows)
+    ├── auth.spec.ts                # Authentication flows
+    └── tickets.spec.ts             # Ticket management flows
 ```
 
 ## Writing Tests
@@ -220,6 +226,30 @@ Target: **≥80%** for all metrics
 
 Run `npm run test:coverage` to generate a coverage report in `coverage/` directory.
 
+## Test Coverage by Module
+
+### ✅ Validators (100% coverage)
+- **Auth Validators** (`validators.test.ts`): Login schema, password change schema
+- **Ticket Validators** (`ticket-validators.test.ts`): Create ticket, update status
+- **Category Validators** (`category-validators.test.ts`): Query parameters validation
+- **AI Validators** (`ai-validators.test.ts`): Model params, completion schemas, structured output
+
+### ✅ Utilities (High priority - Phase 1 complete)
+- **API Response** (`api-response.test.ts`): Success/error responses, validation errors, HTTP status codes
+- **Auth Utils** (`auth-utils.test.ts`): Token extraction, auth middleware, role-based access control
+- **Rate Limiter** (`rate-limiter.test.ts`): Request limiting, IP tracking, time windows, headers
+
+### 🚧 Services (In progress - Phase 2)
+- Auth Service: Login, password change, JWT verification
+- Ticket Service: CRUD operations, assignment, status updates
+- Category Service: Fetching categories and subcategories
+- Agent Category Service: Agent-category assignments
+
+### 🚧 Hooks (Planned - Phase 3)
+- useTickets: Ticket fetching and filtering
+- useCategories: Category management
+- useRealtimeTickets: Real-time synchronization
+
 ## Best Practices
 
 1. **Follow AAA Pattern**: Arrange, Act, Assert
@@ -229,6 +259,8 @@ Run `npm run test:coverage` to generate a coverage report in `coverage/` directo
 5. **Mock external dependencies**: Database, APIs, third-party services
 6. **Use data-testid sparingly**: Prefer accessible queries (getByRole, getByLabel)
 7. **Write deterministic tests**: Avoid flaky tests with proper waits and assertions
+8. **Test edge cases**: Empty inputs, null values, boundary conditions
+9. **Test error paths**: Invalid data, network errors, authorization failures
 
 ## CI/CD Integration
 

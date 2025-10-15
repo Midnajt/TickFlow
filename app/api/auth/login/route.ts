@@ -17,7 +17,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Parsowanie body żądania
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error("Failed to parse request body:", parseError);
+      return NextResponse.json(
+        {
+          error: "VALIDATION_ERROR",
+          message: "Invalid request body",
+        },
+        { status: 400 }
+      );
+    }
 
     // Walidacja danych wejściowych za pomocą Zod
     const validationResult = loginSchema.safeParse(body);

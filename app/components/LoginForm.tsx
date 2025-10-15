@@ -19,7 +19,7 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
 
   const onSubmit = async (data: LoginInput) => {
@@ -36,7 +36,14 @@ export function LoginForm() {
         credentials: 'include',
       });
 
-      const responseData = await response.json();
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse response:', parseError);
+        setErrorMessages(['Wystąpił błąd podczas przetwarzania odpowiedzi serwera']);
+        return;
+      }
 
       // Handle different error status codes
       if (!response.ok) {

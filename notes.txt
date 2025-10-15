@@ -18,3 +18,8 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 - Admin tabela z opisami dla kategorii i podkategorii
 - Admin lista agentów i użytkowników + wymuś restart hasła
 - Admin tabela z logami
+
+MCP:
+😎 svelte-autofixer
+😎 figma MCP server
+😎  jakiś do vercela

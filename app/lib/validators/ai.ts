@@ -36,7 +36,9 @@ export type LLMText = string;
 export const JsonSchemaSchema = z.object({
   name: z.string().min(1),
   strict: z.boolean(),
-  schema: z.any(), // JSON Schema może być dowolnym obiektem
+  schema: z.any().refine((val) => val !== undefined, {
+    message: "Schema field is required",
+  }), // JSON Schema może być dowolnym obiektem
 });
 
 export type JsonSchema = z.infer<typeof JsonSchemaSchema>;

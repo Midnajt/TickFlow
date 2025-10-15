@@ -17,8 +17,8 @@ export default function LogoutButton() {
       });
 
       if (response.ok) {
-        router.push('/login');
-        router.refresh();
+        // Hard redirect to login page (forces full page reload)
+        window.location.href = '/login';
       } else {
         console.error('Logout failed');
       }

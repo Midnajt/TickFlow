@@ -17,7 +17,10 @@ export function getAuthToken(request: NextRequest): string | null {
   // Priorytet 2: Authorization header (Bearer token)
   const authHeader = request.headers.get("Authorization");
   if (authHeader?.startsWith("Bearer ")) {
-    return authHeader.substring(7);
+    const token = authHeader.substring(7);
+    // Return empty string if Bearer is present but token is empty
+    // This allows distinguishing between "no auth header" and "empty token"
+    return token;
   }
 
   return null;

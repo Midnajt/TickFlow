@@ -25,7 +25,7 @@ export function ChangePasswordForm({ isForced = false }: ChangePasswordFormProps
     reset,
   } = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
 
   const onSubmit = async (data: ChangePasswordInput) => {

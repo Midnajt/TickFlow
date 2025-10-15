@@ -5,13 +5,14 @@ import * as z from "zod";
  */
 export const loginSchema = z.object({
   email: z
-    .string({ message: "Email jest wymagany" })
+    .string({ required_error: "Email jest wymagany" })
+    .min(1, "Email jest wymagany")
     .email("Nieprawidłowy format adresu email")
     .toLowerCase()
     .trim(),
   password: z
-    .string({ message: "Hasło jest wymagane" })
-    .min(1, "Hasło nie może być puste"),
+    .string({ required_error: "Hasło jest wymagane" })
+    .min(1, "Hasło jest wymagane"),
 });
 
 /**
