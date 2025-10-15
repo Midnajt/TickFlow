@@ -41,7 +41,7 @@ export class AuthService {
     }
 
     // Weryfikacja hasła
-    const isPasswordValid = await compare(password, user.password);
+    const isPasswordValid = await compare(password, (user as any).password);
     if (!isPasswordValid) {
       throw new Error("AUTHENTICATION_ERROR:Nieprawidłowy email lub hasło");
     }
@@ -51,9 +51,9 @@ export class AuthService {
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 dni od teraz
 
     const token = await new SignJWT({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
+      userId: (user as any).id,
+      email: (user as any).email,
+      role: (user as any).role,
     })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
@@ -62,11 +62,11 @@ export class AuthService {
 
     // Utworzenie DTO użytkownika
     const userSession: UserSessionDTO = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      passwordResetRequired: user.force_password_change,
+      id: (user as any).id,
+      email: (user as any).email,
+      name: (user as any).name,
+      role: (user as any).role,
+      passwordResetRequired: (user as any).force_password_change,
     };
 
     return {
@@ -100,7 +100,7 @@ export class AuthService {
     }
 
     // Weryfikacja obecnego hasła
-    const isPasswordValid = await compare(currentPassword, user.password);
+    const isPasswordValid = await compare(currentPassword, (user as any).password);
     if (!isPasswordValid) {
       throw new Error("AUTHENTICATION_ERROR:Aktualne hasło jest nieprawidłowe");
     }
@@ -150,11 +150,11 @@ export class AuthService {
       }
 
       const userSession: UserSessionDTO = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        passwordResetRequired: user.force_password_change,
+        id: (user as any).id,
+        email: (user as any).email,
+        name: (user as any).name,
+        role: (user as any).role,
+        passwordResetRequired: (user as any).force_password_change,
       };
 
       return {

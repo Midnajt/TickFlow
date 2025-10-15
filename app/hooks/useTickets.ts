@@ -31,6 +31,7 @@ export function useTickets(options: UseTicketsOptions = {}) {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     options.status,
     options.assignedToMe,

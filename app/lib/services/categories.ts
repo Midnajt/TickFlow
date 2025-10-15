@@ -44,12 +44,12 @@ export class CategoryService {
       }
 
       // Mapowanie do DTO
-      const categories: CategoryDTO[] = (data || []).map((category) => ({
+      const categories: CategoryDTO[] = (data || []).map((category: any) => ({
         id: category.id,
         name: category.name,
         description: category.description,
         createdAt: category.created_at,
-        subcategories: (category.subcategories || []).map((sub) => ({
+        subcategories: (category.subcategories || []).map((sub: any) => ({
           id: sub.id,
           name: sub.name,
           categoryId: sub.category_id,
@@ -118,11 +118,11 @@ export class CategoryService {
       }
 
       return {
-        id: data.id,
-        name: data.name,
-        description: data.description,
-        createdAt: data.created_at,
-        subcategories: (data.subcategories || []).map((sub) => ({
+        id: (data as any).id,
+        name: (data as any).name,
+        description: (data as any).description,
+        createdAt: (data as any).created_at,
+        subcategories: ((data as any).subcategories || []).map((sub: any) => ({
           id: sub.id,
           name: sub.name,
           categoryId: sub.category_id,
@@ -218,13 +218,13 @@ export class CategoryService {
       .eq("id", subcategoryId)
       .single();
 
-    if (error || !data || !data.categories) {
+    if (error || !data || !(data as any).categories) {
       throw new Error("NOT_FOUND:Podkategoria nie została znaleziona");
     }
 
     return {
-      id: data.categories.id,
-      name: data.categories.name,
+      id: (data as any).categories.id,
+      name: (data as any).categories.name,
     };
   }
 }

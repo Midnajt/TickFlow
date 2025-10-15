@@ -43,7 +43,7 @@ export class AgentCategoryService {
         agent_id,
         category_id,
         created_at,
-        categories (
+        categories!inner (
           id,
           name
         )
@@ -57,7 +57,7 @@ export class AgentCategoryService {
     }
 
     // Mapowanie do DTO
-    const agentCategories: AgentCategoryDTO[] = (data || []).map((ac) => ({
+    const agentCategories: AgentCategoryDTO[] = (data || []).map((ac: any) => ({
       id: ac.id,
       userId: ac.agent_id,
       categoryId: ac.category_id,
@@ -98,7 +98,7 @@ export class AgentCategoryService {
       .select(
         `
         created_at,
-        users (
+        users!inner (
           id,
           name,
           email
@@ -113,7 +113,7 @@ export class AgentCategoryService {
     }
 
     // Mapowanie do DTO
-    const agents: AgentDTO[] = (data || []).map((ac) => ({
+    const agents: AgentDTO[] = (data || []).map((ac: any) => ({
       id: ac.users.id,
       name: ac.users.name,
       email: ac.users.email,

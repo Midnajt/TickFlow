@@ -5,9 +5,9 @@ const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321'
 export const handlers = [
   // Auth handlers
   http.post('/api/auth/login', async ({ request }) => {
-    const body = await request.json()
+    const body = await request.json() as any
     
-    if (body.email === 'test@firma.pl' && body.password === 'Test123!') {
+    if (body?.email === 'test@firma.pl' && body?.password === 'Test123!') {
       return HttpResponse.json({
         user: {
           id: 'test-user-id',
@@ -93,7 +93,7 @@ export const handlers = [
   }),
 
   http.post('/api/tickets', async ({ request }) => {
-    const body = await request.json()
+    const body = await request.json() as any
     
     return HttpResponse.json(
       {
