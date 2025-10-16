@@ -19,6 +19,8 @@ const testAccounts: TestAccount[] = [
   { email: 'user2@tickflow.com', password: 'User2123!@#', label: 'user2@tickflow.com / User2123!@#', icon: '👤' },
 ];
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 export default function LoginPage() {
   const [fillFormFn, setFillFormFn] = useState<((email: string, password: string) => void) | null>(null);
 
@@ -36,49 +38,51 @@ export default function LoginPage() {
     <AuthLayout>
       <LoginForm onFormReady={handleFormReady} />
       
-      <div className="mt-6 border-t border-gray-700 pt-6">
-        <div className="text-xs text-gray-400 space-y-2">
-          <p className="font-semibold text-gray-300">Testowe konta (kliknij aby wypełnić):</p>
-          <div className="space-y-1 font-mono bg-gray-700 p-3 rounded text-[10px]">
-            <p className="text-blue-400 font-semibold">AGENCI:</p>
-            {testAccounts.slice(0, 3).map((account, index) => (
-              <p
-                key={index}
-                onClick={() => handleAccountClick(account)}
-                className="cursor-pointer hover:text-white hover:bg-gray-600 p-1 rounded transition-colors"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleAccountClick(account);
-                  }
-                }}
-              >
-                {account.icon} {account.label}
-              </p>
-            ))}
-            <p className="text-green-400 font-semibold mt-2">UŻYTKOWNICY:</p>
-            {testAccounts.slice(3).map((account, index) => (
-              <p
-                key={index + 3}
-                onClick={() => handleAccountClick(account)}
-                className="cursor-pointer hover:text-white hover:bg-gray-600 p-1 rounded transition-colors"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleAccountClick(account);
-                  }
-                }}
-              >
-                {account.icon} {account.label}
-              </p>
-            ))}
+      {isDevelopment && (
+        <div className="mt-6 border-t border-gray-700 pt-6">
+          <div className="text-xs text-gray-400 space-y-2">
+            <p className="font-semibold text-gray-300">Testowe konta (kliknij aby wypełnić):</p>
+            <div className="space-y-1 font-mono bg-gray-700 p-3 rounded text-[10px]">
+              <p className="text-blue-400 font-semibold">AGENCI:</p>
+              {testAccounts.slice(0, 3).map((account, index) => (
+                <p
+                  key={index}
+                  onClick={() => handleAccountClick(account)}
+                  className="cursor-pointer hover:text-white hover:bg-gray-600 p-1 rounded transition-colors"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleAccountClick(account);
+                    }
+                  }}
+                >
+                  {account.icon} {account.label}
+                </p>
+              ))}
+              <p className="text-green-400 font-semibold mt-2">UŻYTKOWNICY:</p>
+              {testAccounts.slice(3).map((account, index) => (
+                <p
+                  key={index + 3}
+                  onClick={() => handleAccountClick(account)}
+                  className="cursor-pointer hover:text-white hover:bg-gray-600 p-1 rounded transition-colors"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleAccountClick(account);
+                    }
+                  }}
+                >
+                  {account.icon} {account.label}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </AuthLayout>
   );
 }
