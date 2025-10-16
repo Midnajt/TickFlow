@@ -18,6 +18,8 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 - Admin tabela z opisami dla kategorii i podkategorii
 - Admin lista agentów i użytkowników + wymuś restart hasła
 - Admin tabela z logami
+- jeżeli ktoś kliknie Zastosuj sugestie to przewiń ekran w przypadku mobilek do komunikatu i okna z kategoriami
+- Sprawdź kiedy jest wymagane ustawienie hasła
 
 - trzeba ustawić wyświetlanie użytkowników tylko na lokalnym serwerze, a nie na produkcji
 
