@@ -32,6 +32,7 @@ export class TicketQueryBuilder {
           id,
           name,
           category_id,
+          description,
           categories!inner (
             id,
             name
@@ -72,6 +73,7 @@ export class TicketQueryBuilder {
           id,
           name,
           category_id,
+          description,
           categories!inner (
             id,
             name

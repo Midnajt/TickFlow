@@ -25,6 +25,7 @@ export class TicketMapper {
         id: ticket.subcategories.id,
         name: ticket.subcategories.name,
         categoryId: ticket.subcategories.category_id,
+        description: ticket.subcategories.description,
         category: {
           id: ticket.subcategories.categories.id,
           name: ticket.subcategories.categories.name,
@@ -61,6 +62,7 @@ export class TicketMapper {
         id: ticket.subcategories.id,
         name: ticket.subcategories.name,
         categoryId: ticket.subcategories.category_id,
+        description: ticket.subcategories.description,
         category: {
           id: ticket.subcategories.categories.id,
           name: ticket.subcategories.categories.name,

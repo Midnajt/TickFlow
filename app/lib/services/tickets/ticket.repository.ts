@@ -62,6 +62,7 @@ export class TicketRepository {
           id,
           name,
           category_id,
+          description,
           categories!inner (
             id,
             name
