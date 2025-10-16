@@ -59,9 +59,10 @@ export class TicketService {
    */
   static async assignTicket(
     agentId: string,
-    ticketId: string
+    ticketId: string,
+    userRole: UserRole = "AGENT"
   ): Promise<TicketAssignmentDTO> {
-    return this.commandService.assignTicket(agentId, ticketId);
+    return this.commandService.assignTicket(agentId, ticketId, userRole);
   }
 
   /**
@@ -70,9 +71,10 @@ export class TicketService {
   static async updateTicketStatus(
     agentId: string,
     ticketId: string,
-    status: TicketStatus
+    status: TicketStatus,
+    userRole: UserRole = "AGENT"
   ): Promise<TicketStatusUpdateDTO> {
-    return this.commandService.updateTicketStatus(agentId, ticketId, status);
+    return this.commandService.updateTicketStatus(agentId, ticketId, status, userRole);
   }
 
   /**

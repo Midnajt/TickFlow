@@ -100,6 +100,9 @@ export class TicketQueryBuilder {
     if (userRole === "USER") {
       // USER widzi tylko swoje tickety
       this.query = this.query.eq("created_by_id", userId);
+    } else if (userRole === "ADMIN") {
+      // ADMIN widzi wszystkie tickety bez filtrów
+      // Brak filtrowania - pozostaw query bez zmian
     } else if (userRole === "AGENT") {
       // AGENT widzi tickety z kategorii do których ma dostęp
       const agentCategoryIds = await AgentCategoryService.getAgentCategoryIds(userId);

@@ -31,7 +31,7 @@ const testUsers = [
     email: 'admin@tickflow.com',
     password: 'Admin123!@#',
     name: 'Admin User',
-    role: 'AGENT' as const,
+    role: 'ADMIN' as const,
     force_password_change: false,
   },
   {

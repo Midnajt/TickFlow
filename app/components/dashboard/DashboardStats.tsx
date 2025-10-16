@@ -3,7 +3,7 @@ import { TicketIcon, CheckCircleIcon, LightningIcon } from './icons';
 interface DashboardStatsProps {
   openCount: number;
   resolvedCount: number;
-  userRole: 'USER' | 'AGENT';
+  userRole: 'USER' | 'AGENT' | 'ADMIN';
 }
 
 interface StatCardConfig {
@@ -19,6 +19,20 @@ interface StatCardConfig {
  * Sekcja ze statystykami ticketów
  */
 export function DashboardStats({ openCount, resolvedCount, userRole }: DashboardStatsProps) {
+  const getRoleDisplay = () => {
+    switch (userRole) {
+      case 'AGENT':
+        return { label: 'Agent', description: 'Możesz zarządzać zgłoszeniami' };
+      case 'ADMIN':
+        return { label: 'Administrator', description: 'Pełny dostęp do systemu' };
+      case 'USER':
+      default:
+        return { label: 'User', description: 'Możesz tworzyć zgłoszenia' };
+    }
+  };
+
+  const roleDisplay = getRoleDisplay();
+
   const statsConfig: StatCardConfig[] = [
     {
       label: 'Otwarte zgłoszenia',
@@ -38,11 +52,11 @@ export function DashboardStats({ openCount, resolvedCount, userRole }: Dashboard
     },
     {
       label: 'Twoja rola',
-      value: userRole === 'AGENT' ? 'Agent' : 'User',
-      description: userRole === 'AGENT' ? 'Możesz zarządzać zgłoszeniami' : 'Możesz tworzyć zgłoszenia',
+      value: roleDisplay.label,
+      description: roleDisplay.description,
       icon: LightningIcon,
-      iconBgColor: 'bg-purple-900',
-      iconColor: 'text-purple-400',
+      iconBgColor: userRole === 'ADMIN' ? 'bg-red-900' : 'bg-purple-900',
+      iconColor: userRole === 'ADMIN' ? 'text-red-400' : 'text-purple-400',
     },
   ];
 

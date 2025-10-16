@@ -63,7 +63,8 @@ export class TicketCommandService {
    */
   async assignTicket(
     agentId: string,
-    ticketId: string
+    ticketId: string,
+    userRole: UserRole = "AGENT"
   ): Promise<TicketAssignmentDTO> {
     // Pobranie ticketu
     const ticket = await this.repository.findById(ticketId);
@@ -73,16 +74,19 @@ export class TicketCommandService {
       throw new Error("VALIDATION_ERROR:Ticket jest już przypisany do innego agenta");
     }
 
-    // Sprawdzenie czy agent ma dostęp do kategorii ticketu
-    const hasAccess = await AgentCategoryService.hasAccessToTicket(
-      agentId,
-      ticket.subcategory_id
-    );
-
-    if (!hasAccess) {
-      throw new Error(
-        "AUTHORIZATION_ERROR:Nie masz uprawnień do kategorii tego ticketu"
+    // Admin może przypisać każdy ticket
+    if (userRole !== "ADMIN") {
+      // Sprawdzenie czy agent ma dostęp do kategorii ticketu
+      const hasAccess = await AgentCategoryService.hasAccessToTicket(
+        agentId,
+        ticket.subcategory_id
       );
+
+      if (!hasAccess) {
+        throw new Error(
+          "AUTHORIZATION_ERROR:Nie masz uprawnień do kategorii tego ticketu"
+        );
+      }
     }
 
     // Przypisanie ticketu i zmiana statusu na IN_PROGRESS
@@ -98,26 +102,30 @@ export class TicketCommandService {
   async updateTicketStatus(
     agentId: string,
     ticketId: string,
-    status: TicketStatus
+    status: TicketStatus,
+    userRole: UserRole = "AGENT"
   ): Promise<TicketStatusUpdateDTO> {
     // Pobranie ticketu
     const ticket = await this.repository.findById(ticketId);
 
-    // Sprawdzenie czy agent ma dostęp do kategorii ticketu
-    const hasAccess = await AgentCategoryService.hasAccessToTicket(
-      agentId,
-      ticket.subcategory_id
-    );
-
-    if (!hasAccess) {
-      throw new Error(
-        "AUTHORIZATION_ERROR:Nie masz uprawnień do kategorii tego ticketu"
+    // Admin może zmienić status każdego ticketu
+    if (userRole !== "ADMIN") {
+      // Sprawdzenie czy agent ma dostęp do kategorii ticketu
+      const hasAccess = await AgentCategoryService.hasAccessToTicket(
+        agentId,
+        ticket.subcategory_id
       );
-    }
 
-    // Sprawdzenie czy ticket jest przypisany do tego agenta (tylko jeśli już jest przypisany)
-    if (ticket.assigned_to_id && ticket.assigned_to_id !== agentId) {
-      throw new Error("AUTHORIZATION_ERROR:Ten ticket jest przypisany do innego agenta");
+      if (!hasAccess) {
+        throw new Error(
+          "AUTHORIZATION_ERROR:Nie masz uprawnień do kategorii tego ticketu"
+        );
+      }
+
+      // Sprawdzenie czy ticket jest przypisany do tego agenta (tylko jeśli już jest przypisany)
+      if (ticket.assigned_to_id && ticket.assigned_to_id !== agentId) {
+        throw new Error("AUTHORIZATION_ERROR:Ten ticket jest przypisany do innego agenta");
+      }
     }
 
     // Aktualizacja statusu

@@ -55,6 +55,8 @@ export default function TicketsPage() {
   const { isConnected: realtimeConnected } = useRealtimeTickets(refetch);
 
   const isAgent = user?.role === 'AGENT';
+  const isAdmin = user?.role === 'ADMIN';
+  const canManageTickets = isAgent || isAdmin;
 
   const handleAssignTicket = async (ticketId: string) => {
     try {

@@ -113,6 +113,9 @@ export class TicketQueryService {
       if (ticket.created_by_id !== userId) {
         throw new Error("AUTHORIZATION_ERROR:Brak uprawnień do tego ticketu");
       }
+    } else if (userRole === "ADMIN") {
+      // ADMIN ma dostęp do wszystkich ticketów
+      // Brak sprawdzenia uprawnień
     } else if (userRole === "AGENT") {
       // AGENT może zobaczyć tylko tickety z jego kategorii
       const { AgentCategoryService } = await import("@/app/lib/services/agent-categories");

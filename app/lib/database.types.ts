@@ -206,7 +206,7 @@ export interface Database {
       [key: string]: never;
     };
     Enums: {
-      role: "USER" | "AGENT";
+      role: "USER" | "AGENT" | "ADMIN";
       ticket_status: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
     };
     CompositeTypes: {
@@ -313,7 +313,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      role: ["USER", "AGENT"] as const,
+      role: ["USER", "AGENT", "ADMIN"] as const,
       ticket_status: ["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"] as const,
     },
   },

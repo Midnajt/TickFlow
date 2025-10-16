@@ -30,6 +30,8 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${
                 user.role === 'AGENT'
                   ? 'bg-purple-900 text-purple-300'
+                  : user.role === 'ADMIN'
+                  ? 'bg-red-900 text-red-300'
                   : 'bg-blue-900 text-blue-300'
               }`}
             >

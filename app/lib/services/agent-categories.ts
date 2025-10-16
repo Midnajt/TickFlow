@@ -22,19 +22,45 @@ export class AgentCategoryService {
   ): Promise<GetAgentCategoriesResponseDTO> {
     const supabase = createSupabaseAdmin();
 
-    // Weryfikacja czy użytkownik jest agentem
+    // Weryfikacja czy użytkownik jest agentem lub adminem
     const { data: agent, error: agentError } = await supabase
       .from("users")
       .select("id, role")
       .eq("id", agentId)
-      .eq("role", "AGENT")
+      .in("role", ["AGENT", "ADMIN"])
       .single();
 
     if (agentError || !agent) {
-      throw new Error("NOT_FOUND:Agent nie został znaleziony lub nie ma roli AGENT");
+      throw new Error("NOT_FOUND:Agent nie został znaleziony lub nie ma roli AGENT/ADMIN");
     }
 
-    // Pobranie kategorii przypisanych do agenta
+    // Admin ma dostęp do wszystkich kategorii
+    if (agent.role === "ADMIN") {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id, name")
+        .order("name", { ascending: true });
+
+      if (error) {
+        throw new Error(`DATABASE_ERROR:Błąd podczas pobierania kategorii: ${error.message}`);
+      }
+
+      // Mapowanie na ten sam format co agent categories
+      const agentCategories: AgentCategoryDTO[] = (data || []).map((category: any) => ({
+        id: `admin-${category.id}`,
+        userId: agentId,
+        categoryId: category.id,
+        category: {
+          id: category.id,
+          name: category.name,
+        },
+        createdAt: new Date().toISOString(),
+      }));
+
+      return { agentCategories };
+    }
+
+    // Pobranie kategorii przypisanych do agenta (tylko dla AGENT roli)
     const { data, error } = await supabase
       .from("agent_categories")
       .select(
@@ -135,6 +161,17 @@ export class AgentCategoryService {
   ): Promise<boolean> {
     const supabase = createSupabaseAdmin();
 
+    // Sprawdzenie czy user to admin
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", agentId)
+      .single();
+
+    if (!userError && user?.role === "ADMIN") {
+      return true;
+    }
+
     const { data, error } = await supabase
       .from("agent_categories")
       .select("id")
@@ -154,6 +191,27 @@ export class AgentCategoryService {
   static async getAgentCategoryIds(agentId: string): Promise<string[]> {
     const supabase = createSupabaseAdmin();
 
+    // Sprawdzenie czy user to admin
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", agentId)
+      .single();
+
+    // Admin ma dostęp do wszystkich kategorii
+    if (!userError && user?.role === "ADMIN") {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id");
+
+      if (error) {
+        throw new Error(`DATABASE_ERROR:Błąd podczas pobierania kategorii: ${error.message}`);
+      }
+
+      return (data || []).map((cat) => cat.id);
+    }
+
+    // Dla agentów zwróć przypisane kategorie
     const { data, error } = await supabase
       .from("agent_categories")
       .select("category_id")
@@ -177,6 +235,17 @@ export class AgentCategoryService {
     subcategoryId: string
   ): Promise<boolean> {
     const supabase = createSupabaseAdmin();
+
+    // Sprawdzenie czy user to admin
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", agentId)
+      .single();
+
+    if (!userError && user?.role === "ADMIN") {
+      return true;
+    }
 
     // Pobierz categoryId z subcategoryId
     const { data: subcategory, error: subError } = await supabase
