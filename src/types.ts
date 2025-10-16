@@ -79,6 +79,7 @@ export interface SubcategoryDTO {
   id: SubcategoryRow["id"];
   name: SubcategoryRow["name"];
   categoryId: SubcategoryRow["category_id"];
+  description: SubcategoryRow["description"];
 }
 
 // Full category with optional subcategories

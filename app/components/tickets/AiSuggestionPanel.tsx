@@ -38,15 +38,28 @@ export function AiSuggestionPanel({
         <div>
           <span className="text-gray-400">Kategoria:</span>
           <span className="ml-2 text-purple-200 font-medium">
-            {suggestion.categoryId}
+            {suggestion.categoryName}
           </span>
         </div>
         <div>
           <span className="text-gray-400">Podkategoria:</span>
           <span className="ml-2 text-purple-200 font-medium">
-            {suggestion.subcategoryId}
+            {suggestion.subcategoryName}
           </span>
         </div>
+        {suggestion.suggestedAgents && suggestion.suggestedAgents.length > 0 && (
+          <div>
+            <span className="text-gray-400">Ticket trafi do:</span>
+            <p className="mt-1 text-purple-100">
+              {suggestion.suggestedAgents.map((agent, idx) => (
+                <span key={idx}>
+                  {agent.name}
+                  {idx < suggestion.suggestedAgents.length - 1 && ', '}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
         <div>
           <span className="text-gray-400">Podsumowanie:</span>
           <p className="mt-1 text-purple-100">{suggestion.summary}</p>

@@ -2,6 +2,8 @@
 
 import * as z from "zod";
 import { openrouter } from "@/app/lib/services/openrouter/server";
+import { CategoryService } from "@/app/lib/services/categories";
+import { AgentCategoryService } from "@/app/lib/services/agent-categories";
 
 /**
  * Schemat wejścia do AI completion
@@ -18,6 +20,64 @@ export interface TicketGuidance {
   subcategoryId: string;
   summary: string;
   suggestedSteps: string[];
+  suggestedAgents: Array<{
+    name: string;
+    email: string;
+  }>;
+}
+
+/**
+ * Buduje dynamiczny system prompt z aktualnymi kategoriami, podkategoriami i agentami
+ * @returns Sformatowany prompt systemowy dla AI
+ */
+async function buildSystemPrompt(): Promise<string> {
+  // Pobierz wszystkie kategorie z podkategoriami i opisami
+  const { categories } = await CategoryService.getCategories(true);
+
+  // Zbuduj podstawowy prompt
+  let prompt = `Jesteś asystentem TickFlow - systemu zgłoszeń IT.
+Twoim zadaniem jest analiza problemu użytkownika i:
+1. Zaklasyfikowanie go do właściwej kategorii i podkategorii
+2. Stworzenie zwięzłego podsumowania problemu
+3. Zasugerowanie kroków rozwiązania
+4. Wskazanie agentów, którzy będą obsługiwać zgłoszenie
+
+Dostępne kategorie, podkategorie i przypisani agenci:
+
+`;
+
+  // Dla każdej kategorii pobierz agentów i zbuduj szczegółowy opis
+  for (const category of categories) {
+    const categoryDesc = category.description ? ` - ${category.description}` : '';
+    prompt += `- Kategoria: ${category.name} (ID: "${category.id}")${categoryDesc}\n`;
+
+    // Pobierz agentów dla tej kategorii
+    try {
+      const { agents } = await AgentCategoryService.getAgentsByCategory(category.id);
+      if (agents.length > 0) {
+        const agentsList = agents.map(a => `${a.name} (${a.email})`).join(', ');
+        prompt += `  Agenci obsługujący tę kategorię: ${agentsList}\n`;
+      } else {
+        prompt += `  Agenci obsługujący tę kategorię: Brak przypisanych agentów\n`;
+      }
+    } catch (error) {
+      prompt += `  Agenci obsługujący tę kategorię: Brak informacji\n`;
+    }
+
+    // Dodaj podkategorie
+    if (category.subcategories.length > 0) {
+      prompt += `  Podkategorie:\n`;
+      for (const sub of category.subcategories) {
+        const subDesc = sub.description ? ` - ${sub.description}` : '';
+        prompt += `    • ${sub.name} (ID: "${sub.id}")${subDesc}\n`;
+      }
+    }
+    prompt += '\n';
+  }
+
+  prompt += `\nOdpowiadaj zawsze w języku polskim.`;
+
+  return prompt;
 }
 
 /**
@@ -35,33 +95,8 @@ export async function completeAi(formData: FormData): Promise<TicketGuidance> {
     description: formData.get("description"),
   });
 
-  // Komunikat systemowy definiujący rolę AI
-  const system = `Jesteś asystentem TickFlow - systemu zgłoszeń IT.
-Twoim zadaniem jest analiza problemu użytkownika i:
-1. Zaklasyfikowanie go do właściwej kategorii i podkategorii
-2. Stworzenie zwięzłego podsumowania problemu
-3. Zasugerowanie kroków rozwiązania
-
-Dostępne kategorie i podkategorie:
-- Hardware (categoryId: "hardware")
-  - Komputer (subcategoryId: "computer")
-  - Drukarka (subcategoryId: "printer")
-  - Monitor (subcategoryId: "monitor")
-  - Inne urządzenia (subcategoryId: "other-hardware")
-- Software (categoryId: "software")
-  - System operacyjny (subcategoryId: "os")
-  - Aplikacje (subcategoryId: "apps")
-  - Licencje (subcategoryId: "licenses")
-- Sieć (categoryId: "network")
-  - Internet (subcategoryId: "internet")
-  - VPN (subcategoryId: "vpn")
-  - Wi-Fi (subcategoryId: "wifi")
-- Konta i dostępy (categoryId: "accounts")
-  - Hasła (subcategoryId: "passwords")
-  - Uprawnienia (subcategoryId: "permissions")
-  - Nowe konto (subcategoryId: "new-account")
-
-Odpowiadaj zawsze w języku polskim.`;
+  // Pobierz dynamiczny system prompt z aktualnymi danymi z bazy
+  const system = await buildSystemPrompt();
 
   // Prompt dla AI z instrukcją zwrócenia JSON
   const aiPrompt = `${description}
@@ -69,11 +104,17 @@ Odpowiadaj zawsze w języku polskim.`;
 Przeanalizuj powyższy opis problemu i zwróć odpowiedź w formacie JSON:
 
 {
-  "categoryId": "jedno z: hardware, software, network, accounts",
-  "subcategoryId": "odpowiednie ID podkategorii",
+  "categoryId": "ID wybranej kategorii (np. 'hardware', 'software' itp.)",
+  "subcategoryId": "ID wybranej podkategorii",
   "summary": "zwięzłe podsumowanie problemu (max 200 znaków)",
-  "suggestedSteps": ["krok 1", "krok 2", "krok 3"]
+  "suggestedSteps": ["krok 1", "krok 2", "krok 3"],
+  "suggestedAgents": [
+    {"name": "Imię i nazwisko agenta", "email": "email@example.com"},
+    {"name": "Inny agent", "email": "agent@example.com"}
+  ]
 }
+
+WAŻNE: W polu suggestedAgents zwróć TYLKO tych agentów, którzy są przypisani do wybranej kategorii (zgodnie z informacją "Agenci obsługujący tę kategorię" podaną wyżej).
 
 Odpowiedz TYLKO prawidłowym JSON bez żadnego dodatkowego tekstu.`;
 

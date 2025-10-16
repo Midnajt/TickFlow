@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useCategories } from '@/app/hooks/useCategories';
 import { useAiSuggestions } from '@/app/hooks/useAiSuggestions';
 import { ticketsApi } from '@/app/lib/api-client';
@@ -31,8 +31,21 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Refs for scrolling
+  const errorRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
+
   // AI Suggestions Hook
   const ai = useAiSuggestions(categories);
+
+  /**
+   * Przewiń do błędu gdy się pojawi
+   */
+  useEffect(() => {
+    if (ai.error) {
+      errorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [ai.error]);
 
   /**
    * Handler dla sugestii AI
@@ -52,6 +65,11 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
         subcategoryId,
         title: formData.title || title,
       });
+      
+      // Przewiń do sekcji kategorii po zastosowaniu sugestii
+      setTimeout(() => {
+        categoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     });
   };
 
@@ -104,26 +122,31 @@ export function CreateTicketForm({ onSuccess, onCancel }: CreateTicketFormProps)
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Error Alert */}
       {(error || ai.error) && (
-        <div className="bg-red-900/50 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
+        <div 
+          ref={errorRef}
+          className="bg-red-900/50 border border-red-700 text-red-200 px-4 py-3 rounded-lg"
+        >
           {error || ai.error}
         </div>
       )}
 
       {/* Form Fields */}
-      <TicketFormFields
-        title={formData.title}
-        description={formData.description}
-        selectedCategoryId={selectedCategoryId}
-        subcategoryId={formData.subcategoryId}
-        categories={categories}
-        categoriesLoading={categoriesLoading}
-        onTitleChange={(value) => setFormData({ ...formData, title: value })}
-        onDescriptionChange={handleDescriptionChange}
-        onCategoryChange={handleCategoryChange}
-        onSubcategoryChange={(value) => setFormData({ ...formData, subcategoryId: value })}
-        onAiSuggest={handleAiSuggest}
-        isAiLoading={ai.isLoading}
-      />
+      <div ref={categoryRef}>
+        <TicketFormFields
+          title={formData.title}
+          description={formData.description}
+          selectedCategoryId={selectedCategoryId}
+          subcategoryId={formData.subcategoryId}
+          categories={categories}
+          categoriesLoading={categoriesLoading}
+          onTitleChange={(value) => setFormData({ ...formData, title: value })}
+          onDescriptionChange={handleDescriptionChange}
+          onCategoryChange={handleCategoryChange}
+          onSubcategoryChange={(value) => setFormData({ ...formData, subcategoryId: value })}
+          onAiSuggest={handleAiSuggest}
+          isAiLoading={ai.isLoading}
+        />
+      </div>
 
       {/* AI Suggestion Panel */}
       {ai.isVisible && ai.suggestion && (

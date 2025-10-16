@@ -33,7 +33,8 @@ export class CategoryService {
           subcategories (
             id,
             name,
-            category_id
+            category_id,
+            description
           )
         `
         )
@@ -53,6 +54,7 @@ export class CategoryService {
           id: sub.id,
           name: sub.name,
           categoryId: sub.category_id,
+          description: sub.description,
         })),
       }));
 
@@ -106,7 +108,8 @@ export class CategoryService {
           subcategories (
             id,
             name,
-            category_id
+            category_id,
+            description
           )
         `
         )
@@ -126,6 +129,7 @@ export class CategoryService {
           id: sub.id,
           name: sub.name,
           categoryId: sub.category_id,
+          description: sub.description,
         })),
       };
     } else {
@@ -161,7 +165,7 @@ export class CategoryService {
 
     const { data, error } = await supabase
       .from("subcategories")
-      .select("id, name, category_id")
+      .select("id, name, category_id, description")
       .eq("category_id", categoryId)
       .order("name", { ascending: true });
 
@@ -173,6 +177,7 @@ export class CategoryService {
       id: sub.id,
       name: sub.name,
       categoryId: sub.category_id,
+      description: sub.description,
     }));
   }
 

@@ -104,7 +104,7 @@ export function TicketFormFields({
 
       {/* Description with AI Button */}
       <div>
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 mt-2 ">
           <label htmlFor="description" className="block text-sm font-medium text-gray-300">
             Opis problemu *
           </label>

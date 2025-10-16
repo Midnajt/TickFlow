@@ -6,9 +6,15 @@ import type { CategoryDTO } from '@/src/types';
 
 export interface AiSuggestion {
   categoryId: string;
+  categoryName: string;
   subcategoryId: string;
+  subcategoryName: string;
   summary: string;
   suggestedSteps: string[];
+  suggestedAgents: Array<{
+    name: string;
+    email: string;
+  }>;
 }
 
 /**
@@ -39,7 +45,19 @@ export function useAiSuggestions(categories: CategoryDTO[]) {
       formData.append('description', description);
 
       const result = await completeAi(formData);
-      setSuggestion(result);
+      
+      // Znajdź nazwy kategorii i podkategorii na podstawie ID
+      const category = categories.find(c => c.id === result.categoryId);
+      const subcategory = category?.subcategories.find(s => s.id === result.subcategoryId);
+      
+      // Rozszerz wynik o nazwy
+      const enrichedResult: AiSuggestion = {
+        ...result,
+        categoryName: category?.name || result.categoryId,
+        subcategoryName: subcategory?.name || result.subcategoryId,
+      };
+      
+      setSuggestion(enrichedResult);
       setIsVisible(true);
     } catch (err) {
       setError(
