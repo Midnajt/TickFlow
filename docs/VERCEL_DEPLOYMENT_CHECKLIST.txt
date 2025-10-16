@@ -1,0 +1,260 @@
+================================================================================
+                  TICKFLOW - VERCEL DEPLOYMENT CHECKLIST
+================================================================================
+
+Print this page and keep it on your desk! ✓
+
+================================================================================
+ETAP 1: PRE-DEPLOYMENT (PRZED DEPLOYMENTEM)
+================================================================================
+
+LOKALNIE (Your Computer):
+  [ ] Czytam: docs/VERCEL_README.md (15 min)
+  [ ] npm run lint        (Brak linting errors)
+  [ ] npm run build       (Build succeeds)
+  [ ] npm run start       (App runs locally)
+  [ ] npm test            (Tests pass)
+  [ ] git status          (Nothing to commit)
+
+GITHUB:
+  [ ] Kod zacommittowany
+  [ ] Kod zpushowany na main branch
+  [ ] GitHub Actions workflow przeszedł
+
+SUPABASE:
+  [ ] Konto Supabase istnieje
+  [ ] Projekt Supabase istnieje
+  [ ] DATABASE_URL zanotowany
+
+================================================================================
+ETAP 2: VERCEL SETUP (KONFIGURACJA VERCEL)
+================================================================================
+
+VERCEL ACCOUNT:
+  [ ] Zalogowany na https://vercel.com
+  [ ] Konto GitHub połączone
+
+PROJECT CREATION:
+  [ ] Projekt TickFlow utworzony w Vercel
+  [ ] Repository wybrany (GitHub)
+  [ ] Main branch zaznaczony
+  [ ] Next.js detectowany
+
+ENVIRONMENT VARIABLES:
+  [ ] Projekt Settings → Environment Variables otwarte
+  
+  [ ] DATABASE_URL ......................... (postgresql://...)
+  [ ] NEXTAUTH_URL ......................... (https://tickflow.vercel.app)
+  [ ] NEXTAUTH_SECRET ...................... (wygenerowany)
+  [ ] NEXT_PUBLIC_SUPABASE_URL ............ (https://xxx.supabase.co)
+  [ ] NEXT_PUBLIC_SUPABASE_ANON_KEY ...... (eyJ...)
+  [ ] SUPABASE_SERVICE_ROLE_KEY .......... (Production ONLY!)
+  [ ] JWT_SECRET ........................... (wygenerowany)
+  [ ] OPENROUTER_API_KEY ................. (sk-or-v1-...) [opcjonalnie]
+  [ ] NODE_ENV ............................ (production)
+
+  Wszystkie ustawione na: Production ✓
+
+================================================================================
+ETAP 3: DATABASE SETUP (SUPABASE)
+================================================================================
+
+SQL MIGRATIONS:
+  [ ] Supabase dashboard otwarte (https://supabase.com/dashboard)
+  [ ] Projekt wybrany
+  [ ] SQL Editor otwarte
+  
+  [ ] Migracja 1: create_enums.sql ............ RUN ✓
+  [ ] Migracja 2: create_users_table.sql ..... RUN ✓
+  [ ] Migracja 3: create_categories_table.sql  RUN ✓
+  [ ] Migracja 4: subcategories.sql .......... RUN ✓
+  [ ] Migracja 5: create_tickets_table.sql .. RUN ✓
+  [ ] Migracja 6: agent_categories.sql ...... RUN ✓
+  [ ] Migracja 7: rls_policies.sql .......... RUN ✓
+  [ ] Migracja 8: agent_role_trigger.sql .... RUN ✓
+  [ ] Migracja 9: updated_at_triggers.sql ... RUN ✓
+  [ ] Migracja 10: add_admin_role.sql ...... RUN ✓
+
+TABLE EDITOR CHECK:
+  [ ] users table istnieje
+  [ ] categories table istnieje
+  [ ] subcategories table istnieje
+  [ ] tickets table istnieje
+  [ ] agent_categories table istnieje
+
+REALTIME SETTINGS:
+  [ ] Supabase: Project Settings → Realtime
+  [ ] Realtime: ENABLED
+
+================================================================================
+ETAP 4: DEPLOYMENT
+================================================================================
+
+GIT PUSH:
+  [ ] git push origin main
+  [ ] GitHub Actions workflow uruchomiony
+  [ ] Workflow testy: PASS ✓
+
+VERCEL DEPLOYMENT:
+  [ ] Vercel Dashboard otwarte
+  [ ] Deployments sekcja
+  [ ] Nowy deployment pojawił się
+  [ ] Status: "Deployment ready" ✓
+  [ ] Build Logs: BEZ BŁĘDÓW
+
+TIME TO LIVE:
+  [ ] ~30 sekund od push do live
+  [ ] https://tickflow.vercel.app dostępna
+
+================================================================================
+ETAP 5: TESTING (TESTOWANIE)
+================================================================================
+
+APLIKACJA:
+  [ ] https://tickflow.vercel.app otwiera się
+  [ ] Strona ładuje bez błędów
+  [ ] UI wygląda prawidłowo
+
+LOGOWANIE:
+  [ ] Login form widoczny
+  [ ] Można się zalogować (test@firma.pl / Start!125)
+  [ ] Sesja utrzymywana
+  [ ] Logout działa
+
+FUNKCJONALNOŚĆ:
+  [ ] Dashboard wyświetla się
+  [ ] Można tworzyć ticket
+  [ ] Tickety wyświetlają się na liście
+  [ ] Real-time updates działają (otwórz w 2 oknach, stwórz ticket w jednym)
+  [ ] Status zmienia się w real-time
+
+BŁĘDY:
+  [ ] Browser Console (F12): BEZ BŁĘDÓW
+  [ ] Network Tab: Wszystkie requesty 200/201
+  [ ] Supabase Logs: BEZ BŁĘDÓW
+
+================================================================================
+ETAP 6: MONITORING SETUP (MONITORING)
+================================================================================
+
+VERCEL NOTYFIKACJE:
+  [ ] Project Settings → Notifications
+  [ ] Email notifikacje ENABLED
+  [ ] Deployment Started: ✓
+  [ ] Deployment Completed: ✓
+  [ ] Deployment Error: ✓
+
+MONITORING DASHBOARDS (bookmark'uj!):
+  [ ] Vercel: https://vercel.com/dashboard
+  [ ] Supabase: https://supabase.com/dashboard
+  [ ] GitHub Actions: https://github.com/YOUR-USER/tickflow/actions
+
+================================================================================
+ETAP 7: POST-DEPLOYMENT
+================================================================================
+
+DOCUMENTATION:
+  [ ] docs/VERCEL_README.md przeczytany
+  [ ] docs/vercel-quick-start.md przeczytany
+  [ ] docs/vercel-faq-scenarios.md zaznajomiony się
+  [ ] docs/DEPLOYMENT_SUMMARY.md przeczytany
+
+GIT WORKFLOW (DZIENNE PRACE):
+  [ ] Nowe feature: git checkout -b feature/my-feature
+  [ ] Edycja kodu + npm run dev testing
+  [ ] git push origin feature/my-feature
+  [ ] Preview URL pojawia się na Vercel
+  [ ] Code review z team
+  [ ] git checkout main + git merge + git push origin main
+  [ ] Vercel auto-deployuje do produkcji ✓
+
+EMERGENCY PROCEDURES:
+  [ ] Wiem gdzie znaleźć Build Logs (Vercel → Deployments → Logs)
+  [ ] Wiem jak rollbackować (Deployments → Previous version → Redeploy)
+  [ ] Wiem jak aktualizować zmienne (Project Settings → Environment Variables)
+
+================================================================================
+JEŚLI COŚ POWIAŁO - QUICK DEBUGGING
+================================================================================
+
+Problem: Build fails
+  → Check: Vercel → Deployments → Build Logs
+  → Fix: Rozwiąż lokalnie, git push origin main (Vercel spróbuje ponownie)
+
+Problem: Application runs but shows error
+  → Check: Browser Console (F12)
+  → Check: Vercel → Deployments → Runtime Logs
+
+Problem: Real-time not working
+  → Check: Supabase → Project Settings → Realtime → Enabled?
+  → Check: Zmienne NEXT_PUBLIC_SUPABASE_URL i ANON_KEY ustawione?
+
+Problem: Database connection error
+  → Check: DATABASE_URL w Vercel Environment Variables
+  → Check: Supabase Database status
+
+Problem: Missing Environment Variable error
+  → Check: Project Settings → Environment Variables
+  → Add: Brakującą zmienną
+  → Click: Redeploy
+
+Więcej: Przeczytaj docs/vercel-faq-scenarios.md
+
+================================================================================
+WAŻNE RZECZY DO ZAPAMIĘTANIA
+================================================================================
+
+1. git push origin main = Automatycznie deployuje na PRODUKCJĘ
+2. git push origin feature/* = Tworzy PREVIEW (NIE deployuje na prod)
+3. .env.local NIGDY nie commituj! (jest w .gitignore)
+4. SUPABASE_SERVICE_ROLE_KEY = Production ONLY! Nigdy w Preview!
+5. Deploy zajmuje ~30 sekund od push do live
+6. Zmienne Vercel są enkryptowane i bezpieczne
+
+================================================================================
+PRZYDATNE LINKI
+================================================================================
+
+Documentation:
+  📖 docs/VERCEL_README.md - START HERE
+  ⚡ docs/vercel-quick-start.md - Quick 10-minute guide
+  📚 docs/vercel-deployment.md - Full comprehensive guide
+  🔐 docs/vercel-env-setup.md - Environment variables guide
+  ❓ docs/vercel-faq-scenarios.md - FAQ & real scenarios
+  📊 docs/vercel-flow-diagram.md - Diagrams & visual flows
+
+External:
+  🌐 https://vercel.com/dashboard - Vercel Console
+  🌐 https://supabase.com/dashboard - Supabase Console
+  🌐 https://github.com/YOUR-USER/tickflow - GitHub Repo
+  🌐 https://tickflow.vercel.app - PRODUCTION APP
+
+Project Documentation:
+  📖 .ai/prd.md - Product Requirements
+  🛠️ .ai/tech-stack.md - Technology Stack
+
+================================================================================
+NOTES
+================================================================================
+
+Build time: _____ seconds
+First deployment date: _____________
+Production URL: https://tickflow.vercel.app
+Custom domain: _____________
+Issues encountered: _______________________
+
+================================================================================
+
+✅ GOTOWE DO PRODUKCJI!
+
+Teraz wystarczy:
+  git push origin main
+
+I aplikacja sama się zaktualizuje na produkcji! 🚀
+
+================================================================================
+Printed: ____________
+Last Updated: 16 październik 2025
+Version: 1.0
+Status: ✅ Production Ready
+================================================================================
