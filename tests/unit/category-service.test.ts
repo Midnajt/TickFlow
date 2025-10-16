@@ -30,8 +30,8 @@ describe('CategoryService', () => {
         description: 'Hardware issues',
         created_at: '2025-01-01T00:00:00Z',
         subcategories: [
-          { id: 'sub-1', name: 'Komputer/Laptop', category_id: 'cat-1' },
-          { id: 'sub-2', name: 'Drukarka', category_id: 'cat-1' }
+          { id: 'sub-1', name: 'Komputer/Laptop', category_id: 'cat-1', description: 'Computer and laptop issues' },
+          { id: 'sub-2', name: 'Drukarka', category_id: 'cat-1', description: 'Printer issues' }
         ]
       },
       {
@@ -40,7 +40,7 @@ describe('CategoryService', () => {
         description: 'Software issues',
         created_at: '2025-01-02T00:00:00Z',
         subcategories: [
-          { id: 'sub-3', name: 'Instalacja programu', category_id: 'cat-2' }
+          { id: 'sub-3', name: 'Instalacja programu', category_id: 'cat-2', description: 'Software installation' }
         ]
       }
     ]
@@ -132,8 +132,8 @@ describe('CategoryService', () => {
         description: 'Hardware issues',
         createdAt: '2025-01-01T00:00:00Z',
         subcategories: [
-          { id: 'sub-1', name: 'Komputer/Laptop', categoryId: 'cat-1' },
-          { id: 'sub-2', name: 'Drukarka', categoryId: 'cat-1' }
+          { id: 'sub-1', name: 'Komputer/Laptop', categoryId: 'cat-1', description: 'Computer and laptop issues' },
+          { id: 'sub-2', name: 'Drukarka', categoryId: 'cat-1', description: 'Printer issues' }
         ]
       })
     })
@@ -252,8 +252,8 @@ describe('CategoryService', () => {
       description: 'Hardware issues',
       created_at: '2025-01-01T00:00:00Z',
       subcategories: [
-        { id: 'sub-1', name: 'Komputer/Laptop', category_id: 'cat-1' },
-        { id: 'sub-2', name: 'Drukarka', category_id: 'cat-1' }
+        { id: 'sub-1', name: 'Komputer/Laptop', category_id: 'cat-1', description: 'Computer and laptop issues' },
+        { id: 'sub-2', name: 'Drukarka', category_id: 'cat-1', description: 'Printer issues' }
       ]
     }
 
@@ -362,8 +362,8 @@ describe('CategoryService', () => {
         description: 'Hardware issues',
         createdAt: '2025-01-01T00:00:00Z',
         subcategories: [
-          { id: 'sub-1', name: 'Komputer/Laptop', categoryId: 'cat-1' },
-          { id: 'sub-2', name: 'Drukarka', categoryId: 'cat-1' }
+          { id: 'sub-1', name: 'Komputer/Laptop', categoryId: 'cat-1', description: 'Computer and laptop issues' },
+          { id: 'sub-2', name: 'Drukarka', categoryId: 'cat-1', description: 'Printer issues' }
         ]
       })
     })
@@ -393,9 +393,9 @@ describe('CategoryService', () => {
 
   describe('getSubcategoriesByCategoryId', () => {
     const mockSubcategories = [
-      { id: 'sub-1', name: 'Komputer/Laptop', category_id: 'cat-1' },
-      { id: 'sub-2', name: 'Drukarka', category_id: 'cat-1' },
-      { id: 'sub-3', name: 'Monitor', category_id: 'cat-1' }
+      { id: 'sub-1', name: 'Komputer/Laptop', category_id: 'cat-1', description: 'Computer and laptop issues' },
+      { id: 'sub-2', name: 'Drukarka', category_id: 'cat-1', description: 'Printer issues' },
+      { id: 'sub-3', name: 'Monitor', category_id: 'cat-1', description: 'Monitor issues' }
     ]
 
     it('should return all subcategories for a category', async () => {
@@ -414,7 +414,7 @@ describe('CategoryService', () => {
       const result = await CategoryService.getSubcategoriesByCategoryId(categoryId)
 
       expect(mockSupabase.from).toHaveBeenCalledWith('subcategories')
-      expect(mockSelect).toHaveBeenCalledWith('id, name, category_id')
+      expect(mockSelect).toHaveBeenCalledWith('id, name, category_id, description')
       expect(mockEq).toHaveBeenCalledWith('category_id', categoryId)
       expect(mockOrder).toHaveBeenCalledWith('name', { ascending: true })
 
@@ -457,7 +457,8 @@ describe('CategoryService', () => {
       expect(result[0]).toEqual({
         id: 'sub-1',
         name: 'Komputer/Laptop',
-        categoryId: 'cat-1'
+        categoryId: 'cat-1',
+        description: 'Computer and laptop issues'
       })
     })
 
