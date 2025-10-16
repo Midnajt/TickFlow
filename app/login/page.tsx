@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { AuthLayout } from '@/app/components/AuthLayout';
 import { LoginForm } from '@/app/components/LoginForm';
 
@@ -28,9 +28,13 @@ export default function LoginPage() {
     }
   };
 
+  const handleFormReady = useCallback((fillForm: (email: string, password: string) => void) => {
+    setFillFormFn(() => fillForm);
+  }, []);
+
   return (
     <AuthLayout>
-      <LoginForm onFormReady={(fillForm) => setFillFormFn(() => fillForm)} />
+      <LoginForm onFormReady={handleFormReady} />
       
       <div className="mt-6 border-t border-gray-700 pt-6">
         <div className="text-xs text-gray-400 space-y-2">

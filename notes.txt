@@ -19,6 +19,8 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 - Admin lista agentów i użytkowników + wymuś restart hasła
 - Admin tabela z logami
 
+- trzeba ustawić wyświetlanie użytkowników tylko na lokalnym serwerze, a nie na produkcji
+
 MCP:
 😎 svelte-autofixer
 😎 figma MCP server

@@ -92,6 +92,72 @@ Agent Jan Kowalski obsługuje kategorie: Sprzęt i Sieć
 Agent Anna Nowak obsługuje: Oprogramowanie i Dostępy
 Każde z nich widzi wyłącznie zgłoszenia ze swoich obszarów.
 
+#### 2.3 Administrator (ADMIN)
+
+Kim jest: administrator systemu TickFlow z pełnymi uprawnieniami zarządzania.
+
+Potrzeby:
+
+pełny przegląd wszystkich zgłoszeń w systemie,
+
+zdolność do przypisywania i zarządzania wszystkimi ticketami,
+
+możliwość przejmowania dowolnego zgłoszenia,
+
+podgląd całego systemu bez ograniczeń kategorii.
+
+Uprawnienia:
+
+może tworzyć zgłoszenia,
+
+może przeglądać wszystkie zgłoszenia (zarówno własne, jak i innych użytkowników),
+
+widzi wszystkie kategorie i podkategorie,
+
+może przypisać każde zgłoszenie do siebie lub innego agenta,
+
+może zmieniać status każdego zgłoszenia (bez ograniczeń),
+
+może samodzielnie zgłaszać problemy,
+
+dostęp do wszystkich ticketów niezależnie od kategorii.
+
+Przyszłe funkcjonalności:
+
+zarządzanie kategoriami (tworzenie, edycja, usuwanie),
+
+zarządzanie agentami (przypisywanie kategorii, zarządzanie dostępami),
+
+raportowanie i analityka (statystyki, metryki wydajności),
+
+zarządzanie użytkownikami (tworzenie, usuwanie, zmiana roli),
+
+audit log (śledzenie akcji wszystkich użytkowników).
+
+#### 2.4 Porównanie uprawnień
+
+| Uprawnienie | USER | AGENT | ADMIN |
+|---|---|---|---|
+| **Podstawowe** | | | |
+| Logowanie | ✅ | ✅ | ✅ |
+| Tworzenie ticketu | ✅ | ✅ | ✅ |
+| Podgląd własnych ticketów | ✅ | ✅ | ✅ |
+| **Tickety** | | | |
+| Podgląd ticketów z kategorii | ❌ | ✅ | ✅ (wszystkie) |
+| Podgląd wszystkich ticketów | ❌ | ❌ | ✅ |
+| Przypisywanie ticketu | ❌ | ✅ (z kategorii) | ✅ (wszystkie) |
+| Zmiana statusu ticketu | ❌ | ✅ (przypisane) | ✅ (wszystkie) |
+| **Kategorie** | | | |
+| Podgląd przypisanych kategorii | ❌ | ✅ | ✅ (wszystkie) |
+| **Przyszłe funkcjonalności** | | | |
+| Zarządzanie kategoriami | ❌ | ❌ | ⏳ |
+| Zarządzanie agentami | ❌ | ❌ | ⏳ |
+| Raportowanie i analityka | ❌ | ❌ | ⏳ |
+| Zarządzanie użytkownikami | ❌ | ❌ | ⏳ |
+| Audit log | ❌ | ❌ | ⏳ |
+
+---
+
 ### 🎨 3. Kluczowe funkcjonalności aplikacji
 #### 3.1 Zgłaszanie problemu
 
@@ -181,6 +247,16 @@ Zapobiega to sytuacji, w której dwie osoby pracują nad tym samym problemem.
 Agenci również mogą tworzyć zgłoszenia – np. jeśli mają problem techniczny spoza swojej specjalizacji (np. problem z oprogramowaniem).
 Wtedy zgłoszenie trafia do odpowiednich agentów z danej kategorii.
 
+#### 4.6 Zarządzanie systemem przez administratora
+
+Administrator loguje się do systemu z pełnymi uprawnieniami.
+
+Widzi wszystkie otwarte, w trakcie realizacji i zamknięte tickety w całym systemie bez żadnych ograniczeń kategorii.
+
+Może przypisać dowolne zgłoszenie do siebie, aby pomóc w jego rozwiązaniu, lub do konkretnego agenta, jeśli jest to konieczne.
+
+W przyszłości administrator będzie mógł zarządzać kategoriami, agentami i przeglądać raporty systemu.
+
 ### 🎯 5. Kluczowe założenia projektu
 
 Prosty i intuicyjny interfejs – ma być zrozumiały bez szkolenia.
@@ -227,7 +303,7 @@ Dostęp do narzędzi AI wspierających development
 Dokumentacja techniczna:
 Znajduje się w pliku .ai/tech-stack.md.
 
-### ✅ 8. Definicja „Gotowe”
+### ✅ 8. Definicja „Gotowe"
 
 Aplikacja będzie uznana za gotową (MVP), jeśli:
 
@@ -239,7 +315,11 @@ użytkownicy widzą status swoich zgłoszeń w czasie rzeczywistym,
 
 agenci mogą przejmować i zamykać zgłoszenia,
 
-każdy użytkownik widzi tylko swoje dane,
+każdy użytkownik widzi tylko swoje dane (zgodnie z przypisaną rolą),
+
+administrator widzi wszystkie tickety bez ograniczeń kategorii,
+
+administrator może przypisać każde zgłoszenie do siebie lub innego agenta,
 
 real-time działa płynnie i niezawodnie.
 

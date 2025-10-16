@@ -27,12 +27,7 @@ async function getUser(): Promise<UserSessionDTO | null> {
   }
 }
 
-/**
- * Refaktoryzowany Dashboard
- * - Zmniejszony z 316 linii do ~60 linii
- * - Komponenty wydzielone do osobnych plików
- * - Ikony w reusable components
- */
+
 export default async function Home() {
   const user = await getUser();
 

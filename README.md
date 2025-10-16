@@ -104,16 +104,14 @@ For full requirements, see [prd.md](.ai/prd.md).
 - ✅ Login & Change Password views (fully functional)
 - ✅ Route protection & session management
 - ✅ Test infrastructure (Vitest + Playwright configured)
-- 🚧 Ticket management endpoints (in progress)
-- 🚧 Agent workflows (planned)
+- ✅ Ticket management endpoints (in progress)
+- ✅ Agent workflows (planned)
 - 🚧 Real-time updates (planned)
 - 🚧 Test coverage expansion (target: ≥80%)
 
 See project milestones in [.ai/prd.md](.ai/prd.md) and architectural details in [.ai/tech-stack.md](.ai/tech-stack.md).
 
-## Documentation
 
-📚 **Full documentation available in [documentation/](./documentation/)**
 
 ### Quick Links
 
