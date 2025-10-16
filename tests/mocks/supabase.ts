@@ -9,8 +9,10 @@ export const mockSupabaseClient = {
     update: vi.fn().mockReturnThis(),
     delete: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
+    in: vi.fn().mockReturnThis(),
     single: vi.fn(),
     maybeSingle: vi.fn(),
+    order: vi.fn().mockReturnThis(),
   })),
   auth: {
     getSession: vi.fn(),
