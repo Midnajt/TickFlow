@@ -10,38 +10,38 @@ interface DashboardInfoProps {
  */
 export function DashboardInfo({ user }: DashboardInfoProps) {
   return (
-    <div className="bg-gray-800 rounded-xl shadow-md p-8 border border-gray-700">
-      <div className="flex items-start space-x-4">
-        <div className="w-12 h-12 bg-indigo-900 rounded-lg flex items-center justify-center flex-shrink-0">
-          <InfoIcon className="w-6 h-6 text-indigo-400" />
+    <div className="bg-gray-800 rounded-xl shadow-md p-4 sm:p-8 border border-gray-700">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-900 rounded-lg flex items-center justify-center flex-shrink-0">
+          <InfoIcon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400" />
         </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-white mb-2">Uwierzytelnianie działa! 🎉</h3>
-          <p className="text-gray-400 mb-4">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Uwierzytelnianie działa! 🎉</h3>
+          <p className="text-sm sm:text-base text-gray-400 mb-4">
             Pomyślnie zaimplementowano system uwierzytelniania TickFlow. Poniżej znajdziesz szczegóły
             Twojej sesji:
           </p>
-          <div className="bg-gray-700 rounded-lg p-4 space-y-2 font-mono text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">User ID:</span>
-              <span className="text-white font-medium">{user.id}</span>
+          <div className="bg-gray-700 rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3 font-mono text-xs sm:text-sm overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4">
+              <span className="text-gray-400 flex-shrink-0">User ID:</span>
+              <span className="text-white font-medium break-all sm:text-right">{user.id}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Email:</span>
-              <span className="text-white font-medium">{user.email}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4">
+              <span className="text-gray-400 flex-shrink-0">Email:</span>
+              <span className="text-white font-medium break-all sm:text-right">{user.email}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Name:</span>
-              <span className="text-white font-medium">{user.name}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4">
+              <span className="text-gray-400 flex-shrink-0">Name:</span>
+              <span className="text-white font-medium break-words sm:text-right">{user.name}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Role:</span>
-              <span className="text-white font-medium">{user.role}</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4">
+              <span className="text-gray-400 flex-shrink-0">Role:</span>
+              <span className="text-white font-medium sm:text-right">{user.role}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Password Reset Required:</span>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4">
+              <span className="text-gray-400 flex-shrink-0">Password Reset Required:</span>
               <span
-                className={`font-medium ${
+                className={`font-medium sm:text-right ${
                   user.passwordResetRequired ? 'text-red-400' : 'text-green-400'
                 }`}
               >

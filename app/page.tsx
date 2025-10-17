@@ -50,7 +50,9 @@ const isDevelopment = process.env.NODE_ENV === 'development';
       <DashboardHeader user={user} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
         <DashboardWelcome user={user} />
+
 
         <DashboardStats openCount={openCount} resolvedCount={resolvedCount} userRole={user.role} />
 

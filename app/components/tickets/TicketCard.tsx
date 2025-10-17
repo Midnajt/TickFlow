@@ -9,7 +9,7 @@ interface TicketCardProps {
   onAssign?: () => void;
   onStatusChange?: (status: TicketStatus) => void;
   showActions?: boolean;
-  isAgent?: boolean;
+  isAgent?: boolean; // true dla AGENT lub ADMIN
 }
 
 const statusConfig: Record<TicketStatus, { label: string; color: string; bgColor: string }> = {

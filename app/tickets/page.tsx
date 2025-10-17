@@ -115,7 +115,7 @@ export default function TicketsPage() {
               </button>
               <div>
                 <h1 className="text-2xl font-bold text-white">
-                  {isAgent ? 'Zarządzanie zgłoszeniami' : 'Moje zgłoszenia'}
+                  {canManageTickets ? 'Zarządzanie zgłoszeniami' : 'Moje zgłoszenia'}
                 </h1>
                 <div className="flex items-center gap-2 mt-1">
                   <p className="text-sm text-gray-400">
@@ -131,7 +131,7 @@ export default function TicketsPage() {
               </div>
             </div>
 
-            {!isAgent && !showCreateForm && (
+            {!canManageTickets && !showCreateForm && (
               <button
                 onClick={() => setShowCreateForm(true)}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
@@ -216,8 +216,8 @@ export default function TicketsPage() {
               status={statusFilter}
               assignedToMe={assignedToMeFilter}
               onStatusChange={setStatusFilter}
-              onAssignedToMeChange={isAgent ? setAssignedToMeFilter : undefined}
-              showAssignedFilter={isAgent}
+              onAssignedToMeChange={canManageTickets ? setAssignedToMeFilter : undefined}
+              showAssignedFilter={canManageTickets}
             />
           </div>
         )}
@@ -236,8 +236,8 @@ export default function TicketsPage() {
             isLoading={isLoading}
             userRole={user.role}
             onTicketClick={handleTicketClick}
-            onAssignTicket={isAgent ? handleAssignTicket : undefined}
-            onUpdateStatus={isAgent ? handleUpdateStatus : undefined}
+            onAssignTicket={canManageTickets ? handleAssignTicket : undefined}
+            onUpdateStatus={canManageTickets ? handleUpdateStatus : undefined}
           />
         )}
 

@@ -1,3 +1,5 @@
+import { agentAccounts, userAccounts } from '@/app/lib/testAccounts';
+
 /**
  * Sekcja z testowymi kontami
  */
@@ -9,16 +11,17 @@ export function DashboardTestAccounts() {
         <div>
           <p className="text-blue-400 font-semibold mb-2">AGENCI:</p>
           <div className="space-y-1 font-mono text-xs bg-gray-700 p-3 rounded text-gray-300">
-            <p>👨‍💼 admin@tickflow.com / Admin123!@#</p>
-            <p>👨‍💼 agent@tickflow.com / Agent123!@#</p>
-            <p>👩‍💼 agent2@tickflow.com / Agent2123!@#</p>
+            {agentAccounts.map((account, index) => (
+              <p key={index}>{account.icon} {account.label}</p>
+            ))}
           </div>
         </div>
         <div>
           <p className="text-green-400 font-semibold mb-2">UŻYTKOWNICY:</p>
           <div className="space-y-1 font-mono text-xs bg-gray-700 p-3 rounded text-gray-300">
-            <p>👤 user@tickflow.com / User123!@#</p>
-            <p>👤 user2@tickflow.com / User2123!@#</p>
+            {userAccounts.map((account, index) => (
+              <p key={index}>{account.icon} {account.label}</p>
+            ))}
           </div>
         </div>
       </div>

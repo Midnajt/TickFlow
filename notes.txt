@@ -13,17 +13,25 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 
 - Przywróć ticket
 - Przekaż ticket
-- Resetuj hasło
 - Opis kategorii i podkategorii dla ai (plus kto go obsługuje)
 - Admin tabela z opisami dla kategorii i podkategorii
 - Admin lista agentów i użytkowników + wymuś restart hasła
 - Admin tabela z logami
 - jeżeli ktoś kliknie Zastosuj sugestie to przewiń ekran w przypadku mobilek do komunikatu i okna z kategoriami
-- Sprawdź kiedy jest wymagane ustawienie hasła
 - agenci są przypisani do kategorii, a nie podkategorii
 - trzeba ustawić wyświetlanie użytkowników tylko na lokalnym serwerze, a nie na produkcji
+- Dodaj logi z tym co jest wpisane w textarea jeżeli użytkownik kliknie Sugestia ai
+- dodaj logi logowania. Zrób najpierw sesję planistycznągit
+- w sugestiach AI zwracaj informacje tylko dla użytkownika, co on sam może ewentualnie zrobić aby rozwiązać problem. Jeżeli nic nie może zrobić to nie wymyślaj na siłę propozycji
+- Admin nie może przyjąć zgłoszenia pomimo tego ze wyświetlają mu się otwarte zgloszenia.
+- Rozważ status rozwiązane i zamknięte
+- dodaj możliwość zmiany nazwy
+- adminowi daj możliwość tworzenia użytkowników
+
+
 
 MCP:
 😎 svelte-autofixer
 😎 figma MCP server
 😎  jakiś do vercela
+

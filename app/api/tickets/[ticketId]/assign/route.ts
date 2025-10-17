@@ -10,11 +10,11 @@ import {
 
 /**
  * POST /api/tickets/:ticketId/assign
- * Przypisuje ticket do zalogowanego agenta
- * Wymaga roli AGENT
+ * Przypisuje ticket do zalogowanego agenta lub administratora
+ * Wymaga roli AGENT lub ADMIN
  */
 export const POST = withRole(
-  ["AGENT"],
+  ["AGENT", "ADMIN"],
   async (request: NextRequest, user, context) => {
     try {
       const { params } = context as { params: Promise<{ ticketId: string }> };

@@ -20,7 +20,7 @@ export function TicketList({
   onAssignTicket,
   onUpdateStatus,
 }: TicketListProps) {
-  const isAgent = userRole === 'AGENT';
+  const isAgent = userRole === 'AGENT' || userRole === 'ADMIN';
 
   if (isLoading) {
     return (

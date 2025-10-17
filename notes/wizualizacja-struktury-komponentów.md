@@ -1,1 +1,0 @@
-W formacie ASCII przedstaw strukturę komponentów i zależności rozpoczynając od @RulePreview.tsx

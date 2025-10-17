@@ -25,7 +25,7 @@ export function TicketDetailsDialog({
   const [error, setError] = useState<string | null>(null);
   const [isMutating, setIsMutating] = useState(false);
 
-  const isAgent = userRole === 'AGENT';
+  const isAgent = userRole === 'AGENT' || userRole === 'ADMIN';
 
   const dateFmt = useMemo(
     () =>

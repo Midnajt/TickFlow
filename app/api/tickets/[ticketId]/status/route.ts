@@ -15,10 +15,10 @@ import type { TicketStatus } from "@/src/types";
 /**
  * PATCH /api/tickets/:ticketId/status
  * Aktualizuje status ticketu
- * Wymaga roli AGENT
+ * Wymaga roli AGENT lub ADMIN
  */
 export const PATCH = withRole(
-  ["AGENT"],
+  ["AGENT", "ADMIN"],
   async (request: NextRequest, user, context) => {
     try {
       const { params } = context as { params: Promise<{ ticketId: string }> };
