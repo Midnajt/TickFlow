@@ -191,6 +191,23 @@ export interface TicketStatusUpdateDTO {
   };
 }
 
+// Transfer-ticket command
+export interface TransferTicketCommand {
+  targetAgentId: string;
+}
+
+// Transfer-ticket response
+export interface TicketTransferDTO {
+  ticket: {
+    id: TicketRow["id"];
+    title: TicketRow["title"];
+    status: TicketStatus;
+    assignedToId: TicketRow["assigned_to_id"];
+    assignedTo: UserBaseDTO;
+    updatedAt: TicketRow["updated_at"];
+  };
+}
+
 //
 // --- Agent Categories DTOs ---
 //

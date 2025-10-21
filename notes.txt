@@ -13,9 +13,9 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 
 - Przywróć ticket
 - Przekaż ticket
-- Opis kategorii i podkategorii dla ai (plus kto go obsługuje)
-- Admin tabela z opisami dla kategorii i podkategorii
-- Admin lista agentów i użytkowników + wymuś restart hasła
+- Opis kategorii i podkategorii dla ai (plus kto go obsługuje), tabela do uzupełnienia.
+- Admin tabela z kategroiami i podkategoriami oraz możliwość aktualizowania opisów.
+- Admin lista agentów i użytkowników + wymuś restart hasła danemu użytkownikowi.
 - Admin tabela z logami
 - jeżeli ktoś kliknie Zastosuj sugestie to przewiń ekran w przypadku mobilek do komunikatu i okna z kategoriami
 - agenci są przypisani do kategorii, a nie podkategorii
@@ -24,10 +24,56 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 - dodaj logi logowania. Zrób najpierw sesję planistycznągit
 - w sugestiach AI zwracaj informacje tylko dla użytkownika, co on sam może ewentualnie zrobić aby rozwiązać problem. Jeżeli nic nie może zrobić to nie wymyślaj na siłę propozycji
 - Admin nie może przyjąć zgłoszenia pomimo tego ze wyświetlają mu się otwarte zgloszenia.
-- Rozważ status rozwiązane i zamknięte
+- Rozważ sens status'ów rozwiązane i zamknięte
 - dodaj możliwość zmiany nazwy
 - adminowi daj możliwość tworzenia użytkowników
 
+=============================
+
+
+📋 GRUPA 1: Panel Administratora - Zarządzanie Danymi
+Priorytet: Wysoki | Złożoność: Średnia-Wysoka
+Admin tabela z kategoriami i podkategoriami oraz możliwość aktualizowania opisów
+Opis kategorii i podkategorii dla AI (plus kto go obsługuje), tabela do uzupełnienia
+Admin lista agentów i użytkowników + wymuś restart hasła danemu użytkownikowi
+Adminowi daj możliwość tworzenia użytkowników
+Admin tabela z logami
+Uzasadnienie: Te zadania tworzą kompletny panel administracyjny do zarządzania użytkownikami, kategoriami i monitoringu systemu.
+🎫 GRUPA 2: Zarządzanie Ticketami - Nowe Funkcje ✔✔✔✔
+Priorytet: Wysoki | Złożoność: Średnia
+Przywróć ticket
+Przekaż ticket
+Admin nie może przyjąć zgłoszenia pomimo tego że wyświetlają mu się otwarte zgłoszenia (bugfix)
+Uzasadnienie: Kluczowe funkcje operacyjne dla lepszego zarządzania cyklem życia ticketów.
+🤖 GRUPA 3: Usprawnienia AI Suggestions
+Priorytet: Średni | Złożoność: Niska-Średnia
+W sugestiach AI zwracaj informacje tylko dla użytkownika, co on sam może ewentualnie zrobić aby rozwiązać problem. Jeżeli nic nie może zrobić to nie wymyślaj na siłę propozycji
+Dodaj logi z tym co jest wpisane w textarea jeżeli użytkownik kliknie Sugestia AI
+Uzasadnienie: Poprawa jakości i użyteczności sugestii AI oraz monitoring ich użycia.
+📊 GRUPA 4: System Logowania i Audytu
+Priorytet: Średni | Złożoność: Średnia
+Dodaj logi logowania. Zrób najpierw sesję planistyczną
+Admin tabela z logami (duplicate z Grupa 1 - zaplanuj razem)
+Uzasadnienie: Kompletny system audytu i śledzenia aktywności użytkowników w systemie.
+🎨 GRUPA 5: UX/UI i Poprawki Techniczne
+Priorytet: Niski-Średni | Złożoność: Niska
+Jeżeli ktoś kliknie Zastosuj sugestie to przewiń ekran w przypadku mobilek do komunikatu i okna z kategoriami
+Dodaj możliwość zmiany nazwy (użytkownika?)
+Trzeba ustawić wyświetlanie użytkowników tylko na lokalnym serwerze, a nie na produkcji
+Agenci są przypisani do kategorii, a nie podkategorii (weryfikacja/dokumentacja)
+Rozważ sens status'ów rozwiązane i zamknięte (analiza biznesowa)
+Uzasadnienie: Drobne usprawnienia UX, konfiguracja środowiskowa i decyzje biznesowe.
+💡 Sugerowana kolejność implementacji:
+
+
+
+Start: Grupa 2 (Zarządzanie Ticketami) - szybkie winy, kluczowe dla użytkowników
+Następnie: Grupa 1 (Panel Admin) - fundament zarządzania systemem
+Potem: Grupa 3 (AI) - usprawnienia istniejącej funkcjonalności
+Dalej: Grupa 4 (Logi) - monitoring i bezpieczeństwo
+Na koniec: Grupa 5 (UX/UI) - polerowanie i finalne poprawki
+
+=============================
 
 
 MCP:

@@ -9,6 +9,7 @@ import type {
   UserRole,
   TicketAssignmentDTO,
   TicketStatusUpdateDTO,
+  TicketTransferDTO,
   TicketStatus,
 } from "@/src/types";
 
@@ -75,6 +76,34 @@ export class TicketService {
     userRole: UserRole = "AGENT"
   ): Promise<TicketStatusUpdateDTO> {
     return this.commandService.updateTicketStatus(agentId, ticketId, status, userRole);
+  }
+
+  /**
+   * Przywraca zamknięty ticket (CLOSED → OPEN)
+   */
+  static async restoreTicket(
+    userId: string,
+    ticketId: string,
+    userRole: UserRole
+  ): Promise<TicketStatusUpdateDTO> {
+    return this.commandService.restoreTicket(userId, ticketId, userRole);
+  }
+
+  /**
+   * Przekazuje ticket do innego agenta
+   */
+  static async transferTicket(
+    currentUserId: string,
+    ticketId: string,
+    targetAgentId: string,
+    userRole: UserRole
+  ): Promise<TicketTransferDTO> {
+    return this.commandService.transferTicket(
+      currentUserId,
+      ticketId,
+      targetAgentId,
+      userRole
+    );
   }
 
   /**

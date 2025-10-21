@@ -51,12 +51,30 @@ export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLD
   return <div className={`flex items-center p-5 pt-0 gap-2 ${className ?? ''}`} {...props} />;
 }
 
-export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h2 className={`text-xl font-semibold leading-none tracking-tight text-white ${className ?? ''}`} {...props} />;
-}
+export const DialogTitle = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+>(function DialogTitle({ className, ...props }, ref) {
+  return (
+    <DialogPrimitive.Title
+      ref={ref}
+      className={`text-xl font-semibold leading-none tracking-tight text-white ${className ?? ''}`}
+      {...props}
+    />
+  );
+});
 
-export function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={`text-sm text-gray-400 ${className ?? ''}`} {...props} />;
-}
+export const DialogDescription = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(function DialogDescription({ className, ...props }, ref) {
+  return (
+    <DialogPrimitive.Description
+      ref={ref}
+      className={`text-sm text-gray-400 ${className ?? ''}`}
+      {...props}
+    />
+  );
+});
 
 

@@ -8,6 +8,7 @@ import type {
   TicketDTO,
   TicketAssignmentDTO,
   TicketStatusUpdateDTO,
+  TicketTransferDTO,
   TicketStatus,
   UserRole,
 } from "@/src/types";
@@ -133,6 +134,98 @@ export class TicketCommandService {
 
     // Mapuj do DTO
     return TicketMapper.toTicketStatusUpdateDTO(updatedTicket);
+  }
+
+  /**
+   * Przywraca zamknięty ticket (zmienia status z CLOSED na OPEN)
+   */
+  async restoreTicket(
+    userId: string,
+    ticketId: string,
+    userRole: UserRole
+  ): Promise<TicketStatusUpdateDTO> {
+    // Pobranie ticketu
+    const ticket = await this.repository.findById(ticketId);
+
+    // Walidacja: tylko CLOSED może być przywrócony
+    if (ticket.status !== "CLOSED") {
+      throw new Error("VALIDATION_ERROR:Tylko zamknięte zgłoszenia można przywrócić");
+    }
+
+    // Sprawdzenie uprawnień
+    if (userRole === "USER") {
+      // USER może przywrócić tylko swoje zgłoszenia
+      if (ticket.created_by_id !== userId) {
+        throw new Error("AUTHORIZATION_ERROR:Możesz przywrócić tylko swoje zgłoszenia");
+      }
+    } else if (userRole === "AGENT") {
+      // AGENT może przywrócić zgłoszenia ze swoich kategorii LUB przypisane do siebie
+      const isAssignedToAgent = ticket.assigned_to_id === userId;
+      const hasAccess = await AgentCategoryService.hasAccessToTicket(
+        userId,
+        ticket.subcategory_id
+      );
+      
+      if (!isAssignedToAgent && !hasAccess) {
+        throw new Error("AUTHORIZATION_ERROR:Nie masz uprawnień do tego zgłoszenia");
+      }
+    }
+    // ADMIN może przywrócić każdy ticket (brak dodatkowej walidacji)
+
+    // Przywrócenie ticketu
+    const updatedTicket = await this.repository.restoreTicket(ticketId);
+    
+    // Mapuj do DTO
+    return TicketMapper.toTicketStatusUpdateDTO(updatedTicket);
+  }
+
+  /**
+   * Przekazuje ticket do innego agenta
+   */
+  async transferTicket(
+    currentUserId: string,
+    ticketId: string,
+    targetAgentId: string,
+    userRole: UserRole
+  ): Promise<TicketTransferDTO> {
+    // Pobranie ticketu
+    const ticket = await this.repository.findById(ticketId);
+
+    // Walidacja: ticket musi być przypisany
+    if (!ticket.assigned_to_id) {
+      throw new Error("VALIDATION_ERROR:Można przekazać tylko przypisane zgłoszenia");
+    }
+
+    // Sprawdzenie uprawnień
+    if (userRole === "AGENT") {
+      // AGENT może przekazać tylko tickety przypisane do siebie
+      if (ticket.assigned_to_id !== currentUserId) {
+        throw new Error("AUTHORIZATION_ERROR:Możesz przekazać tylko swoje zgłoszenia");
+      }
+    }
+    // ADMIN może przekazać każdy przypisany ticket
+
+    // Sprawdzenie czy docelowy użytkownik istnieje i jest agentem/adminem
+    const { data: targetUser, error: userError } = await this.repository
+      .getClient()
+      .from("users")
+      .select("id, role")
+      .eq("id", targetAgentId)
+      .single();
+
+    if (userError || !targetUser) {
+      throw new Error("VALIDATION_ERROR:Docelowy użytkownik nie istnieje");
+    }
+
+    if (targetUser.role !== "AGENT" && targetUser.role !== "ADMIN") {
+      throw new Error("VALIDATION_ERROR:Można przekazać tylko agentowi lub administratorowi");
+    }
+
+    // Przekazanie ticketu
+    const updatedTicket = await this.repository.transferTicket(ticketId, targetAgentId);
+    
+    // Mapuj do DTO
+    return TicketMapper.toTicketAssignmentDTO(updatedTicket);
   }
 }
 

@@ -24,6 +24,9 @@ export function TicketDetailsDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isMutating, setIsMutating] = useState(false);
+  const [showTransferDialog, setShowTransferDialog] = useState(false);
+  const [selectedAgentId, setSelectedAgentId] = useState<string>('');
+  const [agents, setAgents] = useState<Array<{ id: string; name: string; email: string; role: string }>>([]);
 
   const isAgent = userRole === 'AGENT' || userRole === 'ADMIN';
 
@@ -60,6 +63,26 @@ export function TicketDetailsDialog({
     };
   }, [open, ticketId]);
 
+  // Ładowanie listy agentów dla funkcjonalności przekazywania
+  useEffect(() => {
+    if (!isAgent || !open) return;
+
+    let cancelled = false;
+    const loadAgents = async () => {
+      try {
+        const data = await ticketsApi.getAgents();
+        if (!cancelled) setAgents(data.agents);
+      } catch (e) {
+        console.error('Błąd ładowania agentów:', e);
+      }
+    };
+    loadAgents();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAgent, open]);
+
   async function handleAssign() {
     if (!ticket) return;
     try {
@@ -85,6 +108,38 @@ export function TicketDetailsDialog({
       onUpdated();
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Nie udało się zaktualizować statusu');
+    } finally {
+      setIsMutating(false);
+    }
+  }
+
+  async function handleRestore() {
+    if (!ticket) return;
+    try {
+      setIsMutating(true);
+      await ticketsApi.restoreTicket(ticket.id);
+      const refreshed = await ticketsApi.getTicketById(ticket.id);
+      setTicket(refreshed);
+      onUpdated();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Nie udało się przywrócić zgłoszenia');
+    } finally {
+      setIsMutating(false);
+    }
+  }
+
+  async function handleTransfer() {
+    if (!ticket || !selectedAgentId) return;
+    try {
+      setIsMutating(true);
+      await ticketsApi.transferTicket(ticket.id, selectedAgentId);
+      const refreshed = await ticketsApi.getTicketById(ticket.id);
+      setTicket(refreshed);
+      setShowTransferDialog(false);
+      setSelectedAgentId('');
+      onUpdated();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Nie udało się przekazać zgłoszenia');
     } finally {
       setIsMutating(false);
     }
@@ -142,6 +197,7 @@ export function TicketDetailsDialog({
                 {ticket.description}
               </div>
 
+              {/* Akcje dla AGENT/ADMIN */}
               {isAgent && (
                 <div className="pt-4 border-t border-gray-700 flex flex-wrap gap-2">
                   {!ticket.assignedTo && (
@@ -151,6 +207,16 @@ export function TicketDetailsDialog({
                       disabled={isMutating}
                     >
                       Przypisz do mnie
+                    </button>
+                  )}
+
+                  {ticket.assignedTo && ticket.status === 'OPEN' && (
+                    <button
+                      onClick={() => handleStatusChange('IN_PROGRESS')}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+                      disabled={isMutating}
+                    >
+                      Rozpocznij pracę
                     </button>
                   )}
 
@@ -173,12 +239,95 @@ export function TicketDetailsDialog({
                       Zamknij
                     </button>
                   )}
+
+                  {ticket.status === 'CLOSED' && (
+                    <button
+                      onClick={handleRestore}
+                      className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+                      disabled={isMutating}
+                    >
+                      Przywróć zgłoszenie
+                    </button>
+                  )}
+
+                  {ticket.assignedTo && (
+                    <button
+                      onClick={() => setShowTransferDialog(true)}
+                      className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+                      disabled={isMutating}
+                    >
+                      Przekaż zgłoszenie
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Akcje dla USER - tylko przywracanie swoich ticketów */}
+              {!isAgent && ticket.status === 'CLOSED' && (
+                <div className="pt-4 border-t border-gray-700 flex flex-wrap gap-2">
+                  <button
+                    onClick={handleRestore}
+                    className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+                    disabled={isMutating}
+                  >
+                    Przywróć zgłoszenie
+                  </button>
                 </div>
               )}
             </div>
           )}
         </div>
       </DialogContent>
+
+      {/* Dialog przekazywania ticketu */}
+      {showTransferDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowTransferDialog(false)}>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-white mb-4">Przekaż zgłoszenie</h3>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="agent-select" className="block text-sm font-medium text-gray-300 mb-2">
+                  Wybierz agenta lub administratora:
+                </label>
+                <select
+                  id="agent-select"
+                  value={selectedAgentId}
+                  onChange={(e) => setSelectedAgentId(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">-- Wybierz --</option>
+                  {agents
+                    .filter(agent => agent.id !== ticket?.assignedToId)
+                    .map((agent) => (
+                      <option key={agent.id} value={agent.id}>
+                        {agent.name} ({agent.email}) - {agent.role}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => {
+                    setShowTransferDialog(false);
+                    setSelectedAgentId('');
+                  }}
+                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium"
+                  disabled={isMutating}
+                >
+                  Anuluj
+                </button>
+                <button
+                  onClick={handleTransfer}
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+                  disabled={isMutating || !selectedAgentId}
+                >
+                  Przekaż
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Dialog>
   );
 }

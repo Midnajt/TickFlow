@@ -144,6 +144,33 @@ export const ticketsApi = {
     });
     return handleResponse<TicketStatusUpdateDTO>(response);
   },
+
+  restoreTicket: async (ticketId: string): Promise<TicketStatusUpdateDTO> => {
+    const response = await fetch(`${API_BASE}/tickets/${ticketId}/restore`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+    return handleResponse<TicketStatusUpdateDTO>(response);
+  },
+
+  transferTicket: async (ticketId: string, targetAgentId: string): Promise<TicketAssignmentDTO> => {
+    const response = await fetch(`${API_BASE}/tickets/${ticketId}/transfer`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ targetAgentId }),
+      credentials: 'include',
+    });
+    return handleResponse<TicketAssignmentDTO>(response);
+  },
+
+  getAgents: async (): Promise<{ agents: Array<{ id: string; name: string; email: string; role: string }> }> => {
+    const response = await fetch(`${API_BASE}/agents`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+    return handleResponse(response);
+  },
 };
 
 /**

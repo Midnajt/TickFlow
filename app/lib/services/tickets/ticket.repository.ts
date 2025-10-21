@@ -160,6 +160,55 @@ export class TicketRepository {
   }
 
   /**
+   * Przywraca zamknięty ticket (zmienia status z CLOSED na OPEN)
+   */
+  async restoreTicket(ticketId: string) {
+    const { data: updatedTicket, error } = await this.supabase
+      .from("tickets")
+      .update({ status: "OPEN" })
+      .eq("id", ticketId)
+      .select("id, title, status, updated_at, assigned_to_id")
+      .single();
+
+    if (error || !updatedTicket) {
+      throw new Error(`DATABASE_ERROR:Błąd podczas przywracania ticketu: ${error?.message}`);
+    }
+
+    return updatedTicket;
+  }
+
+  /**
+   * Przekazuje ticket do innego agenta (zmienia assigned_to_id)
+   */
+  async transferTicket(ticketId: string, targetAgentId: string) {
+    const { data: updatedTicket, error } = await this.supabase
+      .from("tickets")
+      .update({ assigned_to_id: targetAgentId })
+      .eq("id", ticketId)
+      .select(
+        `
+        id,
+        title,
+        status,
+        updated_at,
+        assigned_to_id,
+        assignedTo:users!tickets_assigned_to_id_fkey (
+          id,
+          name,
+          email
+        )
+      `
+      )
+      .single();
+
+    if (error || !updatedTicket) {
+      throw new Error(`DATABASE_ERROR:Błąd podczas przekazywania ticketu: ${error?.message}`);
+    }
+
+    return updatedTicket;
+  }
+
+  /**
    * Zwraca instancję Supabase do użycia w Query Builder
    */
   getClient() {

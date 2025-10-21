@@ -61,9 +61,19 @@ export const getTicketsQuerySchema = z.object({
 });
 
 /**
+ * Schema walidacji dla przekazania ticketu
+ */
+export const transferTicketSchema = z.object({
+  targetAgentId: z
+    .string({ message: "ID docelowego agenta jest wymagane" })
+    .uuid("Nieprawidłowy format ID agenta"),
+});
+
+/**
  * Type inference dla komend i zapytań
  */
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
 export type UpdateTicketStatusInput = z.infer<typeof updateTicketStatusSchema>;
 export type GetTicketsQueryInput = z.infer<typeof getTicketsQuerySchema>;
+export type TransferTicketInput = z.infer<typeof transferTicketSchema>;
 
