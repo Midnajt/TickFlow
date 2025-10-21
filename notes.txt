@@ -28,6 +28,8 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 - dodaj możliwość zmiany nazwy
 - adminowi daj możliwość tworzenia użytkowników
 
+- na supbase w logach requestów mam dużo 401 przy GET /realtime/v1/websocket
+
 =============================
 
 
