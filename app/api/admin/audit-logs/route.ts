@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { withRole } from "@/app/lib/middleware/auth-middleware";
-import { successResponse, errorResponse } from "@/app/lib/utils/api-response";
+import { successResponse, errorResponse, validationErrorResponse } from "@/app/lib/utils/api-response";
 import { AuditLogService } from "@/app/lib/services/audit-log/audit-log.service";
 import { getAuditLogsSchema } from "@/app/lib/validators/audit-logs";
 import { ZodError } from "zod";
@@ -27,7 +27,7 @@ export const GET = withRole(["ADMIN"], async (request: NextRequest, user) => {
     console.error("[Admin Audit Logs] Error:", error);
 
     if (error instanceof ZodError) {
-      return errorResponse(error.errors[0].message, "VALIDATION_ERROR", 400);
+      return validationErrorResponse(error);
     }
 
     if (error instanceof Error && error.message.startsWith("DATABASE_ERROR")) {

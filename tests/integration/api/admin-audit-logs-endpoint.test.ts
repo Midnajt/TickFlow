@@ -105,13 +105,15 @@ describe('Admin Audit Logs Endpoint', () => {
     it('should filter by userId', async () => {
       const { AuditLogService } = await import('@/app/lib/services/audit-log/audit-log.service')
       
+      const validUUID = '123e4567-e89b-12d3-a456-426614174000'
+      
       vi.mocked(AuditLogService.getLogs).mockResolvedValue({
         logs: [mockLogs[0]],
         pagination: { ...mockPagination, total: 1 }
       })
 
       const req = createMockRequest({
-        userId: 'user-123'
+        userId: validUUID
       })
 
       const response = await getAuditLogsGET(req, mockAdminUser)
@@ -121,7 +123,7 @@ describe('Admin Audit Logs Endpoint', () => {
       expect(data.data.logs).toHaveLength(1)
       expect(AuditLogService.getLogs).toHaveBeenCalledWith(
         expect.objectContaining({
-          userId: 'user-123'
+          userId: validUUID
         })
       )
     })
@@ -208,13 +210,15 @@ describe('Admin Audit Logs Endpoint', () => {
     it('should combine multiple filters', async () => {
       const { AuditLogService } = await import('@/app/lib/services/audit-log/audit-log.service')
       
+      const validUUID = '123e4567-e89b-12d3-a456-426614174000'
+      
       vi.mocked(AuditLogService.getLogs).mockResolvedValue({
         logs: [mockLogs[0]],
         pagination: { ...mockPagination, total: 1 }
       })
 
       const req = createMockRequest({
-        userId: 'user-123',
+        userId: validUUID,
         action: 'USER_LOGIN',
         startDate: '2025-01-22T00:00:00Z',
         endDate: '2025-01-22T23:59:59Z',
@@ -227,7 +231,7 @@ describe('Admin Audit Logs Endpoint', () => {
 
       expect(response.status).toBe(200)
       expect(AuditLogService.getLogs).toHaveBeenCalledWith({
-        userId: 'user-123',
+        userId: validUUID,
         action: 'USER_LOGIN',
         startDate: '2025-01-22T00:00:00Z',
         endDate: '2025-01-22T23:59:59Z',

@@ -1,4 +1,4 @@
-<analiza>
+git <analiza>
 1. Struktura kodu i główne komponenty:
    - Katalog `app/actions`: 
      • `ai/complete.ts` – Server Action do uzyskiwania sugestii AI  

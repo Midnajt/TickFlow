@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
       userAgent: AuditLogService.getUserAgent(request),
     });
 
-    // Utworzenie odpowiedzi z ciasteczkiem JWT
-    const response = NextResponse.json(loginResponse, { status: 200 });
+    // Utworzenie odpowiedzi z ciasteczkiem JWT w nowym formacie
+    const response = NextResponse.json({ success: true, data: loginResponse }, { status: 200 });
 
     // Ustawienie HttpOnly cookie z tokenem JWT
     response.cookies.set({

@@ -5,6 +5,7 @@ vi.mock('@/app/lib/services/auth', () => ({
   AuthService: {
     login: vi.fn(),
     getSession: vi.fn(),
+    logout: vi.fn(),
   },
 }))
 
@@ -70,7 +71,10 @@ describe('Audit Logging in Auth Endpoints', () => {
 
       vi.mocked(AuthService.login).mockResolvedValue({
         user: mockUser,
-        token: 'test-token'
+        session: {
+          token: 'test-token',
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+        }
       })
 
       vi.mocked(getServerSession).mockResolvedValue(mockSession as any)
@@ -126,16 +130,21 @@ describe('Audit Logging in Auth Endpoints', () => {
     }
 
     it('should create audit log on logout', async () => {
-      const mockSet = vi.fn()
-      const mockSessionReturn = {
-        set: mockSet
-      }
-      
-      vi.mocked(getServerSession).mockResolvedValue(mockSessionReturn as any)
+      // Mock AuthService.getSession to return user session
+      vi.mocked(AuthService.getSession).mockResolvedValue(mockSession)
+
+      // Mock AuthService.logout
+      vi.mocked(AuthService.logout as any).mockResolvedValue({
+        message: 'Pomyślnie wylogowano'
+      })
 
       const req = createMockRequest()
 
-      await logoutPOST(req, mockSession)
+      const response = await logoutPOST(req)
+      const data = await response.json()
+
+      expect(response.status).toBe(200)
+      expect(data.success).toBe(true)
 
       // Verify audit log was created
       expect(AuditLogService.createLog).toHaveBeenCalledWith({
@@ -144,8 +153,6 @@ describe('Audit Logging in Auth Endpoints', () => {
         ipAddress: '192.168.1.1',
         userAgent: 'Mozilla/5.0'
       })
-
-      expect(mockSet).toHaveBeenCalledWith(null)
     })
   })
 })

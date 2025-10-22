@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthService } from "@/app/lib/services/auth";
 import { AuditLogService } from "@/app/lib/services/audit-log/audit-log.service";
+import { internalErrorResponse } from "@/app/lib/utils/api-response";
 
 /**
  * POST /api/auth/logout
@@ -34,8 +35,11 @@ export async function POST(request: NextRequest) {
     // Wywołanie serwisu wylogowania
     const logoutResponse = await AuthService.logout();
 
-    // Utworzenie odpowiedzi i usunięcie ciasteczka
-    const response = NextResponse.json(logoutResponse, { status: 200 });
+    // Utworzenie odpowiedzi z nowym standardem { success: true, data: {...} }
+    const response = NextResponse.json(
+      { success: true, data: logoutResponse },
+      { status: 200 }
+    );
 
     // Usunięcie auth-token cookie
     response.cookies.set({
@@ -52,13 +56,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Logout error:", error);
 
-    return NextResponse.json(
-      {
-        error: "INTERNAL_ERROR",
-        message: "Wystąpił błąd podczas wylogowania",
-      },
-      { status: 500 }
-    );
+    return internalErrorResponse("Wystąpił błąd podczas wylogowania");
   }
 }
 

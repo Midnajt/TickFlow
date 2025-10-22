@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { withRole } from "@/app/lib/middleware/auth-middleware";
-import { successResponse, errorResponse } from "@/app/lib/utils/api-response";
+import { successResponse, errorResponse, validationErrorResponse } from "@/app/lib/utils/api-response";
 import { UserAdminService } from "@/app/lib/services/users/user-admin.service";
 import { updateUserSchema } from "@/app/lib/validators/users";
 import { ZodError } from "zod";
@@ -26,11 +26,7 @@ export const PATCH = withRole(
       console.error("[Update User] Error:", error);
 
       if (error instanceof ZodError) {
-        return errorResponse(
-          error.errors[0].message,
-          "VALIDATION_ERROR",
-          400
-        );
+        return validationErrorResponse(error);
       }
 
       if (error instanceof Error) {

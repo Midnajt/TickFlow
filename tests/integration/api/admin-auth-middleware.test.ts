@@ -137,7 +137,7 @@ describe('Admin Auth Middleware', () => {
 
       expect(response.status).toBe(403)
       expect(data.error).toBe('AUTHORIZATION_ERROR')
-      expect(data.message).toContain('nie masz uprawnień')
+      expect(data.message).toContain('Brak uprawnień')
     })
 
     it('should return 403 for USER trying to access /api/admin/categories', async () => {

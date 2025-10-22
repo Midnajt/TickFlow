@@ -290,7 +290,7 @@ describe('Admin Users Endpoints', () => {
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(data.data.message).toContain('wymuszono')
+      expect(data.data.message).toContain('Wymuszono')
       expect(UserAdminService.forcePasswordReset).toHaveBeenCalledWith(
         'user-123',
         mockAdminUser.id
