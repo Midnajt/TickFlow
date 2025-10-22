@@ -1,18 +1,32 @@
-import * as z from "zod";
+import { z } from "zod";
 
 /**
- * Schema walidacji dla parametrów zapytania GET /api/categories
+ * Walidator dla aktualizacji opisu kategorii
  */
-export const getCategoriesQuerySchema = z.object({
-  includeSubcategories: z
+export const updateCategorySchema = z.object({
+  description: z
     .string()
-    .optional()
-    .default("true")
-    .transform((val) => val === "true"),
+    .max(500, "Opis nie może przekraczać 500 znaków")
+    .nullable()
+    .optional(),
 });
 
-/**
- * Type inference dla zapytań
- */
-export type GetCategoriesQueryInput = z.infer<typeof getCategoriesQuerySchema>;
+export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>;
 
+/**
+ * Walidator dla aktualizacji podkategorii
+ */
+export const updateSubcategorySchema = z.object({
+  name: z
+    .string()
+    .min(2, "Nazwa musi mieć minimum 2 znaki")
+    .max(100, "Nazwa nie może przekraczać 100 znaków")
+    .optional(),
+  description: z
+    .string()
+    .max(500, "Opis nie może przekraczać 500 znaków")
+    .nullable()
+    .optional(),
+});
+
+export type UpdateSubcategoryInput = z.infer<typeof updateSubcategorySchema>;
