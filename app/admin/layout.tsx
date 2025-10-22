@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "@/app/lib/supabase-server";
-import Link from "next/link";
+import { AdminNavigation } from "@/app/components/admin/AdminNavigation";
+import { AdminErrorBoundary } from "@/app/components/admin/AdminErrorBoundary";
+import DashboardHeader from "@/app/components/DashboardHeader";
 
 export default async function AdminLayout({
   children,
@@ -14,40 +16,23 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      {/* Wspólny górny pasek - kliknięcie w logo TickFlow wróci do strony głównej */}
+      <DashboardHeader user={session.user} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Panel Administratora</h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <h1 className="text-3xl font-bold text-white">Panel Administratora</h1>
+          <p className="mt-2 text-sm text-gray-400">
             Zarządzaj użytkownikami, kategoriami i monitoruj aktywność systemu
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
-            <Link
-              href="/admin/categories"
-              className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-            >
-              Kategorie
-            </Link>
-            <Link
-              href="/admin/users"
-              className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-            >
-              Użytkownicy
-            </Link>
-            <Link
-              href="/admin/logs"
-              className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
-            >
-              Logi Aktywności
-            </Link>
-          </nav>
-        </div>
+        {/* Navigation with active state */}
+        <AdminNavigation />
 
-        {children}
+        {/* Error Boundary catches errors in child components */}
+        <AdminErrorBoundary>{children}</AdminErrorBoundary>
       </div>
     </div>
   );

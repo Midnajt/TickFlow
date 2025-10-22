@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
   // Ścieżki wymagające autoryzacji
-  const protectedPaths = ['/', '/tickets', '/categories', '/change-password'];
+  const protectedPaths = ['/', '/tickets', '/categories', '/change-password', '/admin', '/account'];
   const isProtectedPath = protectedPaths.some(path => 
     pathname === path || pathname.startsWith(`${path}/`)
   );

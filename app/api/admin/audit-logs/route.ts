@@ -37,3 +37,4 @@ export const GET = withRole(["ADMIN"], async (request: NextRequest, user) => {
     return errorResponse("Błąd pobierania logów", "INTERNAL_ERROR", 500);
   }
 });
+

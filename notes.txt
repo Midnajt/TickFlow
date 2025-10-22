@@ -35,13 +35,13 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 
 📋 GRUPA 1: Panel Administratora - Zarządzanie Danymi
 Priorytet: Wysoki | Złożoność: Średnia-Wysoka
-Admin tabela z kategoriami i podkategoriami oraz możliwość aktualizowania opisów
-Opis kategorii i podkategorii dla AI (plus kto go obsługuje), tabela do uzupełnienia
-Admin lista agentów i użytkowników + wymuś restart hasła danemu użytkownikowi
-Adminowi daj możliwość tworzenia użytkowników
-Admin tabela z logami
+    Admin powinien mieć widok z listą kategorii, podkategorii i ich opisów. Z tego miejsca powinien móc aktualizować opisy i widzieć który agent jest przypisany do danych kategorii i podkaregorii.
+    Admin powinien mieć widok z listą użytkowników oraz ich ról.
+    Administrator powinien mieć możwliość utworzenia użytkownika.
+    Administrator powinien mieć widok z logami. W logach powinny być informacje o tym kiedy uzytkownik się zalogował, a więc trzeba tę informację zapisać w tabeli za każdym razem gdy ktoś się zaloguje.
+
 Uzasadnienie: Te zadania tworzą kompletny panel administracyjny do zarządzania użytkownikami, kategoriami i monitoringu systemu.
-🎫 GRUPA 2: Zarządzanie Ticketami - Nowe Funkcje ✔✔✔✔
+🎫 GRUPA 2: Zarządzanie Ticketami - Nowe Funkcje ✔✔✔✔ Grupa 2 jest zrobiona.
 Priorytet: Wysoki | Złożoność: Średnia
 Przywróć ticket
 Przekaż ticket
@@ -55,7 +55,7 @@ Uzasadnienie: Poprawa jakości i użyteczności sugestii AI oraz monitoring ich 
 📊 GRUPA 4: System Logowania i Audytu
 Priorytet: Średni | Złożoność: Średnia
 Dodaj logi logowania. Zrób najpierw sesję planistyczną
-Admin tabela z logami (duplicate z Grupa 1 - zaplanuj razem)
+Admin tabela z logami (duplicate z Grupa 1 - zaplanuj razem), upewnij się czy już nie ma logów
 Uzasadnienie: Kompletny system audytu i śledzenia aktywności użytkowników w systemie.
 🎨 GRUPA 5: UX/UI i Poprawki Techniczne
 Priorytet: Niski-Średni | Złożoność: Niska

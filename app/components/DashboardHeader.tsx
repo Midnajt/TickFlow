@@ -15,7 +15,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
           {/* Logo i nazwa */}
           <div className="flex items-center justify-between lg:justify-start gap-3 min-w-0">
-            <div className="flex items-center space-x-3 min-w-0">
+            <Link href="/" className="flex items-center space-x-3 min-w-0 hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-xl">T</span>
               </div>
@@ -23,7 +23,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
                 <h1 className="text-xl sm:text-2xl font-bold text-white truncate">TickFlow</h1>
                 <p className="text-xs text-gray-400 hidden sm:block">System Zgłoszeń IT</p>
               </div>
-            </div>
+            </Link>
             {/* Rola - widoczna na mobile obok logo */}
             <div
               className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 lg:hidden ${

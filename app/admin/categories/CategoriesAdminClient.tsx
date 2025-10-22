@@ -116,26 +116,26 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
     <div className="space-y-6">
       {/* Success/Error Messages */}
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+        <div className="bg-green-900/50 border border-green-700 text-green-200 px-4 py-3 rounded-md">
           {success}
         </div>
       )}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+        <div className="bg-red-900/50 border border-red-700 text-red-200 px-4 py-3 rounded-md">
           {error}
         </div>
       )}
 
       {categories.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">Brak kategorii do wyświetlenia</p>
+          <p className="text-gray-400">Brak kategorii do wyświetlenia</p>
         </div>
       ) : (
         categories.map((category) => (
-          <div key={category.id} className="bg-white shadow rounded-lg p-6">
+          <div key={category.id} className="bg-gray-800 border border-gray-700 rounded-lg p-6">
             {/* Category Header */}
             <div className="mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">{category.name}</h2>
+              <h2 className="text-xl font-semibold text-white">{category.name}</h2>
               
               {/* Editable description */}
               <div className="mt-2">
@@ -144,7 +144,7 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                     <textarea
                       value={tempCategoryDescription}
                       onChange={(e) => setTempCategoryDescription(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       rows={3}
                       placeholder="Opis kategorii..."
                     />
@@ -159,7 +159,7 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                       <button
                         onClick={cancelEditing}
                         disabled={isSaving}
-                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50"
+                        className="px-4 py-2 bg-gray-600 text-gray-200 rounded-md hover:bg-gray-700 disabled:opacity-50"
                       >
                         Anuluj
                       </button>
@@ -167,12 +167,12 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                   </div>
                 ) : (
                   <div className="flex items-start justify-between">
-                    <p className="text-gray-600 flex-1">
+                    <p className="text-gray-300 flex-1">
                       {category.description || "Brak opisu"}
                     </p>
                     <button
                       onClick={() => startEditingCategory(category)}
-                      className="ml-4 px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200"
+                      className="ml-4 px-3 py-1 text-sm bg-indigo-900 text-indigo-200 rounded-md hover:bg-indigo-800"
                     >
                       Edytuj opis
                     </button>
@@ -183,26 +183,26 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
 
             {/* Subcategories Table */}
             <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Podkategorie</h3>
+              <h3 className="text-sm font-medium text-gray-300 mb-2">Podkategorie</h3>
               {category.subcategories.length === 0 ? (
-                <p className="text-gray-500 text-sm">Brak podkategorii</p>
+                <p className="text-gray-400 text-sm">Brak podkategorii</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full divide-y divide-gray-700">
+                    <thead className="bg-gray-750">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                           Nazwa
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                           Opis
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                           Akcje
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-gray-800 divide-y divide-gray-700">
                       {category.subcategories.map((subcategory) => (
                         <tr key={subcategory.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -211,10 +211,10 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                                 type="text"
                                 value={tempSubcategoryName}
                                 onChange={(e) => setTempSubcategoryName(e.target.value)}
-                                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-2 py-1 bg-gray-700 border border-gray-600 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                               />
                             ) : (
-                              <div className="text-sm font-medium text-gray-900">
+                              <div className="text-sm font-medium text-white">
                                 {subcategory.name}
                               </div>
                             )}
@@ -224,12 +224,12 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                               <textarea
                                 value={tempSubcategoryDescription}
                                 onChange={(e) => setTempSubcategoryDescription(e.target.value)}
-                                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full px-2 py-1 bg-gray-700 border border-gray-600 text-white rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 rows={2}
                                 placeholder="Opis podkategorii..."
                               />
                             ) : (
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-gray-300">
                                 {subcategory.description || "Brak opisu"}
                               </div>
                             )}
@@ -240,14 +240,14 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                                 <button
                                   onClick={() => handleUpdateSubcategory(subcategory.id)}
                                   disabled={isSaving}
-                                  className="text-indigo-600 hover:text-indigo-900 disabled:opacity-50"
+                                  className="text-indigo-400 hover:text-indigo-300 disabled:opacity-50"
                                 >
                                   {isSaving ? "Zapisywanie..." : "Zapisz"}
                                 </button>
                                 <button
                                   onClick={cancelEditing}
                                   disabled={isSaving}
-                                  className="text-gray-600 hover:text-gray-900 disabled:opacity-50"
+                                  className="text-gray-400 hover:text-gray-300 disabled:opacity-50"
                                 >
                                   Anuluj
                                 </button>
@@ -255,7 +255,7 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
                             ) : (
                               <button
                                 onClick={() => startEditingSubcategory(subcategory)}
-                                className="text-indigo-600 hover:text-indigo-900"
+                                className="text-indigo-400 hover:text-indigo-300"
                               >
                                 Edytuj
                               </button>
@@ -271,15 +271,15 @@ export function CategoriesAdminClient({ initialCategories }: Props) {
 
             {/* Assigned Agents */}
             <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Przypisani agenci</h3>
+              <h3 className="text-sm font-medium text-gray-300 mb-2">Przypisani agenci</h3>
               {category.agents.length === 0 ? (
-                <p className="text-gray-500 text-sm">Brak przypisanych agentów</p>
+                <p className="text-gray-400 text-sm">Brak przypisanych agentów</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {category.agents.map((agent) => (
                     <div
                       key={agent.id}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-900 text-purple-200"
                     >
                       {agent.name} ({agent.email})
                     </div>
