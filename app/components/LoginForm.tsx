@@ -90,22 +90,18 @@ export function LoginForm({ onFormReady }: LoginFormProps) {
         return;
       }
 
-      // Success - handle redirect
-      const loginResponse = responseData as LoginResponseDTO;
+      // Success - handle redirect (support both wrapped { success, data } and plain DTO)
+      const loginResponse = (responseData?.data ?? responseData) as LoginResponseDTO;
       
       // Wait for cookie to be set by waiting for the response to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      if (loginResponse.user.passwordResetRequired) {
+      if (loginResponse?.user?.passwordResetRequired) {
         // Use window.location for full page reload to ensure cookie is sent
         window.location.href = '/change-password';
       } else {
-        // Redirect based on user role
-        if (loginResponse.user.role === 'ADMIN') {
-          window.location.href = '/admin/categories';
-        } else {
-          window.location.href = '/';
-        }
+        // Redirect to homepage for all roles (including ADMIN)
+        window.location.href = '/';
       }
     } catch (err) {
       console.error('Login error:', err);

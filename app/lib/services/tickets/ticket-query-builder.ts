@@ -106,14 +106,33 @@ export class TicketQueryBuilder {
       // ADMIN widzi wszystkie tickety bez filtrów
       // Brak filtrowania - pozostaw query bez zmian
     } else if (userRole === "AGENT") {
-      // AGENT widzi tickety z kategorii do których ma dostęp
+      // AGENT widzi: (A) tickety przypisane do niego ORAZ (B) tickety nieprzypisane w jego kategoriach
       const agentCategoryIds = await AgentCategoryService.getAgentCategoryIds(userId);
 
       if (agentCategoryIds.length === 0) {
-        // Agent nie ma przypisanych kategorii - zwróć puste zapytanie
-        this.query = this.query.eq("id", "00000000-0000-0000-0000-000000000000"); // Impossible ID
+        // Brak przypisanych kategorii → pokaż tylko tickety przypisane do agenta
+        this.query = this.query.eq("assigned_to_id", userId);
       } else {
-        this.query = this.query.in("subcategories.category_id", agentCategoryIds);
+        // Pobierz subcategory_id powiązane z kategoriami agenta (użyj kolumny na tabeli tickets: subcategory_id)
+        const { data: subs, error: subsError } = await this.supabase
+          .from("subcategories")
+          .select("id")
+          .in("category_id", agentCategoryIds);
+
+        if (subsError) {
+          // Jeśli nie udało się pobrać podkategorii, ogranicz do przypisanych do agenta
+          this.query = this.query.eq("assigned_to_id", userId);
+        } else {
+          const subcategoryIds: string[] = (subs || []).map((s: any) => s.id);
+          if (subcategoryIds.length === 0) {
+            this.query = this.query.eq("assigned_to_id", userId);
+          } else {
+            // Warunek OR: assigned_to_id = userId OR (assigned_to_id IS NULL AND subcategory_id IN (...))
+            this.query = this.query.or(
+              `assigned_to_id.eq.${userId},and(assigned_to_id.is.null,subcategory_id.in.(${subcategoryIds.join(",")}))`
+            );
+          }
+        }
       }
     }
     return this;

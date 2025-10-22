@@ -1,5 +1,25 @@
 import { z } from "zod";
 
+// Parse boolean that may come as a string from URLSearchParams
+const booleanFromStringSchema = z.preprocess((value) => {
+  if (typeof value === "string") {
+    const lower = value.toLowerCase();
+    if (lower === "true") return true;
+    if (lower === "false") return false;
+  }
+  return value;
+}, z.boolean());
+
+/**
+ * Walidator query params dla listy kategorii
+ */
+export const getCategoriesQuerySchema = z.object({
+  includeSubcategories: booleanFromStringSchema.default(true),
+});
+
+export interface GetCategoriesQueryInput
+  extends z.infer<typeof getCategoriesQuerySchema> {}
+
 /**
  * Walidator dla aktualizacji opisu kategorii
  */

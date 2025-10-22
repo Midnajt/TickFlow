@@ -28,13 +28,17 @@ import type {
 // Base configuration
 const API_BASE = '/api';
 
-// Helper do obsługi błędów
+// Helper do obsługi błędów i rozpakowania standardowej odpowiedzi { success, data }
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'Unknown error' }));
     throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
   }
-  return response.json();
+  const payload = await response.json().catch(() => ({}));
+  if (payload && typeof payload === 'object' && 'success' in payload && 'data' in payload) {
+    return (payload as any).data as T;
+  }
+  return payload as T;
 }
 
 // Helper do pobierania tokenu z cookie

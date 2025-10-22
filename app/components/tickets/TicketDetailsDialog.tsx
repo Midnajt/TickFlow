@@ -252,12 +252,57 @@ export function TicketDetailsDialog({
 
                   {ticket.assignedTo && (
                     <button
-                      onClick={() => setShowTransferDialog(true)}
+                      onClick={() => setShowTransferDialog((v) => !v)}
                       className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
                       disabled={isMutating}
                     >
                       Przekaż zgłoszenie
                     </button>
+                  )}
+
+                  {/* Inline panel z listą agentów wyświetlany pod przyciskiem */}
+                  {ticket.assignedTo && showTransferDialog && (
+                    <div className="w-full mt-3 p-3 bg-gray-800/60 border border-gray-700 rounded-lg">
+                      <div>
+                        <label htmlFor="agent-select-inline" className="block text-sm font-medium text-gray-300 mb-2">
+                          Wybierz agenta lub administratora:
+                        </label>
+                        <select
+                          id="agent-select-inline"
+                          value={selectedAgentId}
+                          onChange={(e) => setSelectedAgentId(e.target.value)}
+                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                          <option value="">-- Wybierz --</option>
+                          {agents
+                            .filter(agent => agent.id !== ticket?.assignedToId)
+                            .map((agent) => (
+                              <option key={agent.id} value={agent.id}>
+                                {agent.name} ({agent.email}) - {agent.role}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                      <div className="flex gap-2 justify-end mt-3">
+                        <button
+                          onClick={() => {
+                            setShowTransferDialog(false);
+                            setSelectedAgentId('');
+                          }}
+                          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium"
+                          disabled={isMutating}
+                        >
+                          Anuluj
+                        </button>
+                        <button
+                          onClick={handleTransfer}
+                          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+                          disabled={isMutating || !selectedAgentId}
+                        >
+                          Przekaż
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
@@ -279,55 +324,7 @@ export function TicketDetailsDialog({
         </div>
       </DialogContent>
 
-      {/* Dialog przekazywania ticketu */}
-      {showTransferDialog && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowTransferDialog(false)}>
-          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold text-white mb-4">Przekaż zgłoszenie</h3>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="agent-select" className="block text-sm font-medium text-gray-300 mb-2">
-                  Wybierz agenta lub administratora:
-                </label>
-                <select
-                  id="agent-select"
-                  value={selectedAgentId}
-                  onChange={(e) => setSelectedAgentId(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  <option value="">-- Wybierz --</option>
-                  {agents
-                    .filter(agent => agent.id !== ticket?.assignedToId)
-                    .map((agent) => (
-                      <option key={agent.id} value={agent.id}>
-                        {agent.name} ({agent.email}) - {agent.role}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="flex gap-2 justify-end">
-                <button
-                  onClick={() => {
-                    setShowTransferDialog(false);
-                    setSelectedAgentId('');
-                  }}
-                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium"
-                  disabled={isMutating}
-                >
-                  Anuluj
-                </button>
-                <button
-                  onClick={handleTransfer}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
-                  disabled={isMutating || !selectedAgentId}
-                >
-                  Przekaż
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Usunięto modal – panel inline renderowany nad DialogContent */}
     </Dialog>
   );
 }
