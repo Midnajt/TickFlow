@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthService } from "@/app/lib/services/auth";
+import { AuditLogService } from "@/app/lib/services/audit-log/audit-log.service";
+import { internalErrorResponse } from "@/app/lib/utils/api-response";
 
 /**
  * POST /api/auth/logout
@@ -7,11 +9,37 @@ import { AuthService } from "@/app/lib/services/auth";
  */
 export async function POST(request: NextRequest) {
   try {
+    // Get user session before logging out to log the action
+    let userId: string | null = null;
+    try {
+      const token = request.cookies.get("auth-token")?.value;
+      if (token) {
+        const session = await AuthService.getSession(token);
+        userId = session.user.id;
+      }
+    } catch (error) {
+      // If session is invalid, we still continue with logout
+      console.log("Could not get session for audit log:", error);
+    }
+
+    // Log logout BEFORE destroying session
+    if (userId) {
+      await AuditLogService.createLog({
+        userId,
+        action: "USER_LOGOUT",
+        ipAddress: AuditLogService.getClientIp(request),
+        userAgent: AuditLogService.getUserAgent(request),
+      });
+    }
+
     // Wywołanie serwisu wylogowania
     const logoutResponse = await AuthService.logout();
 
-    // Utworzenie odpowiedzi i usunięcie ciasteczka
-    const response = NextResponse.json(logoutResponse, { status: 200 });
+    // Utworzenie odpowiedzi z nowym standardem { success: true, data: {...} }
+    const response = NextResponse.json(
+      { success: true, data: logoutResponse },
+      { status: 200 }
+    );
 
     // Usunięcie auth-token cookie
     response.cookies.set({
@@ -28,13 +56,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Logout error:", error);
 
-    return NextResponse.json(
-      {
-        error: "INTERNAL_ERROR",
-        message: "Wystąpił błąd podczas wylogowania",
-      },
-      { status: 500 }
-    );
+    return internalErrorResponse("Wystąpił błąd podczas wylogowania");
   }
 }
 

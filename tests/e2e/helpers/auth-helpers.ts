@@ -7,6 +7,11 @@ import { type Page, expect } from '@playwright/test'
 
 
 export const TEST_USERS = {
+  admin: {
+    email: 'admin@tickflow.com',
+    password: 'Admin123!@#',
+    role: 'ADMIN',
+  },
   userWithPasswordReset: {
     email: 'newuser@tickflow.com',
     password: 'Agent123!@#',
@@ -50,7 +55,8 @@ export async function loginUser(
   
   // Wait for network response
   const responsePromise = page.waitForResponse(
-    response => response.url().includes('/api/auth/login') && response.status() === 200
+    response => response.url().includes('/api/auth/login') && response.status() === 200,
+    { timeout: 30000 } // Zwiększ timeout do 30 sekund dla cold start
   )
   
   // Submit form
@@ -68,7 +74,7 @@ export async function loginUser(
   }
   
   // Wait for redirect with longer timeout
-  await expect(page).toHaveURL(expectRedirect, { timeout: 15000 })
+  await expect(page).toHaveURL(expectRedirect, { timeout: 30000 }) // Zwiększ timeout dla redirect
   
   // Verify we're actually authenticated
   await page.waitForLoadState('networkidle')
@@ -149,14 +155,18 @@ export async function changePassword(
 /**
  * Verify user has specific role
  * @param page - Playwright page object
- * @param role - Expected role (USER or AGENT)
+ * @param role - Expected role (USER, AGENT, or ADMIN)
  * @returns boolean indicating if user has the role
  */
 export async function verifyUserRole(
   page: Page,
-  role: 'USER' | 'AGENT'
+  role: 'USER' | 'AGENT' | 'ADMIN'
 ): Promise<boolean> {
-  if (role === 'AGENT') {
+  if (role === 'ADMIN') {
+    // Admins see Panel Administratora link in header
+    const adminIndicator = page.locator('text=/panel administratora/i').first()
+    return await adminIndicator.isVisible({ timeout: 5000 }).catch(() => false)
+  } else if (role === 'AGENT') {
     // Agents see agent-specific UI elements
     const agentIndicator = page.locator('text=/dostępne zgłoszenia|przypisz|assign/i').first()
     return await agentIndicator.isVisible({ timeout: 5000 }).catch(() => false)
@@ -174,10 +184,26 @@ export async function verifyUserRole(
  */
 export async function clearAuthState(page: Page) {
   await page.context().clearCookies()
-  await page.evaluate(() => {
-    localStorage.clear()
-    sessionStorage.clear()
-  })
+  
+  // Navigate to the app first to ensure we have a valid origin for localStorage access
+  // This prevents SecurityError when page is on about:blank
+  try {
+    const currentUrl = page.url()
+    
+    // If we're on about:blank or invalid origin, navigate to login page first
+    if (!currentUrl || currentUrl === 'about:blank' || !currentUrl.includes('localhost')) {
+      await page.goto('/login', { waitUntil: 'domcontentloaded' })
+    }
+    
+    // Now we can safely clear storage
+    await page.evaluate(() => {
+      localStorage.clear()
+      sessionStorage.clear()
+    })
+  } catch (error) {
+    // Gracefully handle any storage clearing errors
+    console.warn('Failed to clear browser storage:', error)
+  }
 }
 
 /**

@@ -254,3 +254,112 @@ export interface GetCategoryParams {
   categoryId: string;
   includeSubcategories?: boolean;
 }
+
+//
+// --- Admin Category Management DTOs ---
+//
+
+// Update category description command
+export interface UpdateCategoryCommand {
+  description: string | null;
+}
+
+// Update subcategory command
+export interface UpdateSubcategoryCommand {
+  name?: string;
+  description?: string | null;
+}
+
+// Category with agents (for admin panel)
+export interface CategoryWithAgentsDTO extends CategoryDTO {
+  agents: Array<{
+    id: string;
+    name: string;
+    email: string;
+    assignedAt: string;
+  }>;
+}
+
+//
+// --- Admin User Management DTOs ---
+//
+
+// Create user command (admin only)
+export interface CreateUserCommand {
+  email: string;
+  name: string;
+  role: UserRole;
+  password: string;
+}
+
+// User detail DTO (for admin panel)
+export interface UserDetailDTO {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  forcePasswordChange: boolean;
+  createdAt: string;
+  updatedAt: string;
+  // Statystyki
+  ticketsCreatedCount?: number;
+  ticketsAssignedCount?: number;
+}
+
+// Update user command
+export interface UpdateUserCommand {
+  name?: string;
+  role?: UserRole;
+  forcePasswordChange?: boolean;
+}
+
+// Force password reset command
+export interface ForcePasswordResetCommand {
+  userId: string;
+}
+
+//
+// --- Audit Log DTOs ---
+//
+
+type AuditLogRow = Database["public"]["Tables"]["audit_logs"]["Row"];
+
+export type AuditAction = Database["public"]["Enums"]["audit_action"];
+
+export interface AuditLogDTO {
+  id: AuditLogRow["id"];
+  userId: AuditLogRow["user_id"];
+  userName: string | null; // joined from users
+  action: AuditAction;
+  resourceType: AuditLogRow["resource_type"];
+  resourceId: AuditLogRow["resource_id"];
+  details: AuditLogRow["details"];
+  ipAddress: AuditLogRow["ip_address"];
+  userAgent: AuditLogRow["user_agent"];
+  createdAt: AuditLogRow["created_at"];
+}
+
+export interface GetAuditLogsParams {
+  userId?: string;
+  action?: AuditAction;
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface AuditLogsListDTO {
+  logs: AuditLogDTO[];
+  pagination: PaginationDTO;
+}
+
+// Create audit log command (internal use)
+export interface CreateAuditLogCommand {
+  userId?: string | null;
+  action: AuditAction;
+  resourceType?: string | null;
+  resourceId?: string | null;
+  details?: Record<string, any> | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+}

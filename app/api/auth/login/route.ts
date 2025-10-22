@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { loginSchema } from "@/app/lib/validators/auth";
 import { AuthService } from "@/app/lib/services/auth";
 import { checkRateLimit, addRateLimitHeaders } from "@/app/lib/middleware/rate-limiter";
+import { AuditLogService } from "@/app/lib/services/audit-log/audit-log.service";
 import type { LoginCommand } from "@/src/types";
 
 /**
@@ -49,8 +50,17 @@ export async function POST(request: NextRequest) {
     // Wywołanie serwisu logowania
     const loginResponse = await AuthService.login(command);
 
-    // Utworzenie odpowiedzi z ciasteczkiem JWT
-    const response = NextResponse.json(loginResponse, { status: 200 });
+    // Log successful login
+    await AuditLogService.createLog({
+      userId: loginResponse.user.id,
+      action: "USER_LOGIN",
+      details: { email: loginResponse.user.email },
+      ipAddress: AuditLogService.getClientIp(request),
+      userAgent: AuditLogService.getUserAgent(request),
+    });
+
+    // Utworzenie odpowiedzi z ciasteczkiem JWT w nowym formacie
+    const response = NextResponse.json({ success: true, data: loginResponse }, { status: 200 });
 
     // Ustawienie HttpOnly cookie z tokenem JWT
     response.cookies.set({

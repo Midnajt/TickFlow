@@ -100,7 +100,12 @@ export function LoginForm({ onFormReady }: LoginFormProps) {
         // Use window.location for full page reload to ensure cookie is sent
         window.location.href = '/change-password';
       } else {
-        window.location.href = '/';
+        // Redirect based on user role
+        if (loginResponse.user.role === 'ADMIN') {
+          window.location.href = '/admin/categories';
+        } else {
+          window.location.href = '/';
+        }
       }
     } catch (err) {
       console.error('Login error:', err);

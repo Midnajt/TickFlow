@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
   // Ścieżki wymagające autoryzacji
-  const protectedPaths = ['/', '/tickets', '/categories', '/change-password'];
+  const protectedPaths = ['/', '/tickets', '/categories', '/change-password', '/admin', '/account'];
   const isProtectedPath = protectedPaths.some(path => 
     pathname === path || pathname.startsWith(`${path}/`)
   );
@@ -43,6 +43,15 @@ export async function middleware(request: NextRequest) {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  async function getUserRole(token: string): Promise<string | null> {
+    try {
+      const { payload } = await jwtVerify(token, JWT_SECRET);
+      return (payload.role as string) || null;
+    } catch {
+      return null;
     }
   }
 
@@ -69,14 +78,26 @@ export async function middleware(request: NextRequest) {
   // Jeśli użytkownik MA token i jest na chronionej ścieżce -> weryfikuj token
   if (isProtectedPath && token) {
     const isValid = await verifyToken(token);
-    if (isValid) {
-      return NextResponse.next();
+    if (!isValid) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      const response = NextResponse.redirect(url);
+      response.cookies.delete('auth-token');
+      return response;
     }
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    const response = NextResponse.redirect(url);
-    response.cookies.delete('auth-token');
-    return response;
+    
+    // Check admin routes - only ADMIN role can access
+    if (pathname.startsWith('/admin')) {
+      const role = await getUserRole(token);
+      if (role !== 'ADMIN') {
+        // Redirect non-admin users to tickets page
+        const url = request.nextUrl.clone();
+        url.pathname = '/tickets';
+        return NextResponse.redirect(url);
+      }
+    }
+    
+    return NextResponse.next();
   }
 
   // Dla wszystkich innych przypadków - pozwól na dostęp

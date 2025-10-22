@@ -3,9 +3,10 @@ import { ZodError } from "zod";
 
 /**
  * Standardowa odpowiedź sukcesu API
+ * Zwraca format: { success: true, data: {...} }
  */
-export function successResponse<T>(data: T, status = 200): NextResponse<T> {
-  return NextResponse.json(data, { status });
+export function successResponse<T>(data: T, status = 200): NextResponse {
+  return NextResponse.json({ success: true, data }, { status });
 }
 
 /**

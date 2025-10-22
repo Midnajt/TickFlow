@@ -21,7 +21,7 @@ describe('API Response Utilities', () => {
       expect(response.status).toBe(200)
 
       const json = await response.json()
-      expect(json).toEqual(data)
+      expect(json).toEqual({ success: true, data })
     })
 
     it('should return success response with custom status code', async () => {
@@ -31,7 +31,7 @@ describe('API Response Utilities', () => {
       expect(response.status).toBe(201)
 
       const json = await response.json()
-      expect(json).toEqual(data)
+      expect(json).toEqual({ success: true, data })
     })
 
     it('should handle empty object', async () => {
@@ -40,7 +40,7 @@ describe('API Response Utilities', () => {
       expect(response.status).toBe(200)
 
       const json = await response.json()
-      expect(json).toEqual({})
+      expect(json).toEqual({ success: true, data: {} })
     })
 
     it('should handle array data', async () => {
@@ -48,7 +48,7 @@ describe('API Response Utilities', () => {
       const response = successResponse(data)
 
       const json = await response.json()
-      expect(json).toEqual(data)
+      expect(json).toEqual({ success: true, data })
     })
 
     it('should handle string data', async () => {
@@ -56,14 +56,14 @@ describe('API Response Utilities', () => {
       const response = successResponse(data)
 
       const json = await response.json()
-      expect(json).toEqual(data)
+      expect(json).toEqual({ success: true, data })
     })
 
     it('should handle null data', async () => {
       const response = successResponse(null)
 
       const json = await response.json()
-      expect(json).toBeNull()
+      expect(json).toEqual({ success: true, data: null })
     })
   })
 

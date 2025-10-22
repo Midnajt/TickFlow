@@ -198,6 +198,50 @@ export interface Database {
         };
         Relationships: [];
       };
+      audit_logs: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          action: Database["public"]["Enums"]["audit_action"];
+          resource_type: string | null;
+          resource_id: string | null;
+          details: Json | null;
+          ip_address: string | null;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          action: Database["public"]["Enums"]["audit_action"];
+          resource_type?: string | null;
+          resource_id?: string | null;
+          details?: Json | null;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          action?: Database["public"]["Enums"]["audit_action"];
+          resource_type?: string | null;
+          resource_id?: string | null;
+          details?: Json | null;
+          ip_address?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: {
       [key: string]: never;
@@ -208,6 +252,14 @@ export interface Database {
     Enums: {
       role: "USER" | "AGENT" | "ADMIN";
       ticket_status: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+      audit_action: 
+        | "USER_LOGIN" 
+        | "USER_LOGOUT" 
+        | "USER_CREATED" 
+        | "USER_UPDATED" 
+        | "USER_PASSWORD_RESET"
+        | "CATEGORY_UPDATED"
+        | "SUBCATEGORY_UPDATED";
     };
     CompositeTypes: {
       [key: string]: never;
@@ -315,6 +367,15 @@ export const Constants = {
     Enums: {
       role: ["USER", "AGENT", "ADMIN"] as const,
       ticket_status: ["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"] as const,
+      audit_action: [
+        "USER_LOGIN",
+        "USER_LOGOUT", 
+        "USER_CREATED",
+        "USER_UPDATED",
+        "USER_PASSWORD_RESET",
+        "CATEGORY_UPDATED",
+        "SUBCATEGORY_UPDATED"
+      ] as const,
     },
   },
 } as const;
