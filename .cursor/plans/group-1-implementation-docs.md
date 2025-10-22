@@ -1236,6 +1236,94 @@ import DashboardHeader from "@/app/components/DashboardHeader";
 
 ---
 
+---
+
+## 🧪 INTEGRATION TESTS - Wykonanie (2025-10-22)
+
+### Pliki utworzone/zmodyfikowane:
+1. ✅ `tests/integration/api/admin-users-endpoints.test.ts` (już istniał)
+2. ✅ `tests/integration/api/admin-categories-endpoints.test.ts` (już istniał)
+3. ✅ `tests/integration/api/admin-audit-logs-endpoint.test.ts` (już istniał)
+4. ✅ `tests/integration/api/admin-auth-middleware.test.ts` (już istniał)
+5. ✅ `tests/integration/api/auth-audit-logging.test.ts` (NOWY - utworzony w tej sesji)
+6. ✅ `app/lib/middleware/auth-middleware.ts` (NOWY - re-export dla backward compatibility)
+
+### Wszystkie 10 wymaganych testów zaimplementowane:
+1. ✅ POST /api/admin/users (create user) - 3 testy
+2. ✅ GET /api/admin/users (list users) - 2 testy
+3. ✅ PATCH /api/admin/users/:userId (update user) - 4 testy
+4. ✅ POST /api/admin/users/:userId/force-password-reset - 3 testy
+5. ✅ GET /api/admin/categories (with agents) - 2 testy
+6. ✅ PATCH /api/admin/categories/:categoryId - 5 testów
+7. ✅ PATCH /api/admin/subcategories/:subcategoryId - 9 testów
+8. ✅ GET /api/admin/audit-logs (with filters) - 15 testów
+9. ✅ Auth middleware dla admin endpoints - 18 testów
+10. ✅ Audit logging w login/logout endpoints - 3 testy
+
+**Łącznie:** 64 testy jednostkowe pokrywające wszystkie wymagane scenariusze integracyjne
+
+### Podejście MVP:
+- Minimalistyczne testy - tylko wymagane scenariusze
+- Brak nadmiarowych feature testów
+- Skupienie na kluczowych funkcjonalnościach
+
+### Utworzony auth-middleware.ts:
+Re-export funkcji `withAuth` i `withRole` z `app/lib/utils/auth.ts` dla zachowania backward compatibility z istniejącymi admin endpoints.
+
+---
+
+## 🎭 E2E TESTS (PLAYWRIGHT) - Wykonanie (2025-10-22)
+
+### Pliki utworzone/zmodyfikowane:
+1. ✅ `tests/e2e/admin.spec.ts` (NOWY - 10 testów E2E)
+2. ✅ `tests/e2e/global-setup.ts` (dodano admin usera)
+3. ✅ `tests/e2e/helpers/auth-helpers.ts` (dodano admin do TEST_USERS i rozszerzono verifyUserRole)
+
+### Wszystkie 10 wymaganych testów E2E zaimplementowane:
+1. ✅ Admin login → redirect to /admin/categories
+2. ✅ Admin navigation (categories → users → logs)
+3. ✅ Create new user workflow (form validation, success)
+4. ✅ Update category description
+5. ✅ Update subcategory name and description
+6. ✅ Force password reset for user
+7. ✅ Audit logs filtering (by user, by action, by date)
+8. ✅ Audit logs pagination
+9. ✅ Non-admin USER cannot access /admin/* (redirect to /tickets)
+10. ✅ Non-admin AGENT cannot access /admin/* (redirect to /tickets)
+
+**Łącznie:** 10 testów E2E pokrywających wszystkie wymagane scenariusze end-to-end
+
+### Podejście MVP:
+- Minimalistyczne testy E2E - tylko scenariusze z listy
+- Brak dodatkowych feature testów
+- Skupienie na głównych workflow użytkownika
+- Prosty, czytelny kod testowy
+
+### Test User dodany:
+```typescript
+{
+  email: 'admin@tickflow.com',
+  password: 'Admin123!@#',
+  name: 'Admin User',
+  role: 'ADMIN' as const,
+  force_password_change: false,
+}
+```
+
+### Uruchomienie testów:
+```bash
+# Uruchom wszystkie testy E2E
+npx playwright test
+
+# Uruchom tylko testy admin panelu
+npx playwright test admin.spec.ts
+
+# Uruchom z UI mode
+npx playwright test --ui
+```
+
+---
+
 **Data utworzenia dokumentacji:** 2025-01-22  
-**Ostatnia aktualizacja:** 2025-10-22 (POST-IMPLEMENTATION FIXES - UI/UX IMPROVEMENTS)  
-**Status:** GRUPA 1 - 100% ZAKOŃCZONA + UI IMPROVEMENTS ✅
+**Ostatnia aktualizacja:** 2025-10-22 (E2E TESTS COMPLETE)  
+**Status:** GRUPA 1 - 100% ZAKOŃCZONA + UI IMPROVEMENTS + INTEGRATION TESTS + E2E TESTS ✅

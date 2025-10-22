@@ -1,5 +1,5 @@
 import { createSupabaseAdmin } from "@/app/lib/supabase-server";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import type {
   CreateUserCommand,
   UpdateUserCommand,

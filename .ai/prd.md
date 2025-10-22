@@ -32,7 +32,7 @@ pozwala agentom IT efektywnie zarządzać zgłoszeniami, widząc w czasie rzeczy
 
 Projekt będzie uznany za udany, gdy:
 
-dział IT faktycznie korzysta z aplikacji,
+Dział IT faktycznie korzysta z aplikacji,
 
 liczba zdublowanych zgłoszeń spadnie do zera,
 
@@ -95,7 +95,6 @@ Każde z nich widzi wyłącznie zgłoszenia ze swoich obszarów.
 #### 2.3 Administrator (ADMIN)
 
 Kim jest: administrator systemu TickFlow z pełnymi uprawnieniami zarządzania.
-
 Potrzeby:
 
 pełny przegląd wszystkich zgłoszeń w systemie,
@@ -122,17 +121,12 @@ może samodzielnie zgłaszać problemy,
 
 dostęp do wszystkich ticketów niezależnie od kategorii.
 
-Przyszłe funkcjonalności:
+Zaimplementowane w MVP (Admin Panel v1):
 
-zarządzanie kategoriami (tworzenie, edycja, usuwanie),
-
-zarządzanie agentami (przypisywanie kategorii, zarządzanie dostępami),
-
-raportowanie i analityka (statystyki, metryki wydajności),
-
-zarządzanie użytkownikami (tworzenie, usuwanie, zmiana roli),
-
-audit log (śledzenie akcji wszystkich użytkowników).
+- Zarządzanie użytkownikami: tworzenie, edycja (nazwa, rola, wymuszenie zmiany hasła), wymuszenie resetu hasła.
+- Zarządzanie kategoriami: edycja opisu kategorii i aktualizacja podkategorii (nazwa/opis).
+- Audit log: przegląd logów z filtrami (użytkownik, akcja, data) i paginacją; logowanie login/logout oraz akcji administracyjnych.
+- UI: ciemny motyw, wspólny nagłówek, aktywne zakładki, loading states i error boundary.
 
 #### 2.4 Porównanie uprawnień
 
@@ -150,11 +144,11 @@ audit log (śledzenie akcji wszystkich użytkowników).
 | **Kategorie** | | | |
 | Podgląd przypisanych kategorii | ❌ | ✅ | ✅ (wszystkie) |
 | **Przyszłe funkcjonalności** | | | |
-| Zarządzanie kategoriami | ❌ | ❌ | ⏳ |
+| Zarządzanie kategoriami | ❌ | ❌ | ✅ (edycja) |
 | Zarządzanie agentami | ❌ | ❌ | ⏳ |
 | Raportowanie i analityka | ❌ | ❌ | ⏳ |
-| Zarządzanie użytkownikami | ❌ | ❌ | ⏳ |
-| Audit log | ❌ | ❌ | ⏳ |
+| Zarządzanie użytkownikami | ❌ | ❌ | ✅ |
+| Audit log | ❌ | ❌ | ✅ |
 
 ---
 
@@ -162,7 +156,7 @@ audit log (śledzenie akcji wszystkich użytkowników).
 #### 3.1 Zgłaszanie problemu
 
 Prosty formularz do zgłoszenia problemu IT:
-użytkownik wybiera kategorię i podkategorię, wpisuje tytuł oraz krótki opis.
+Użytkownik wybiera kategorię i podkategorię, wpisuje tytuł oraz krótki opis.
 
 Ograniczenie długości opisu, by zgłoszenia były konkretne i zwięzłe.
 
@@ -188,7 +182,7 @@ Nowe → W trakcie → Zakończone.
 #### 3.4 Aktualizacje w czasie rzeczywistym
 
 Aplikacja reaguje natychmiast na zmiany statusu:
-jeśli agent przypisze zgłoszenie, inni agenci widzą, że zostało przejęte.
+Jeśli agent przypisze zgłoszenie, inni agenci widzą, że zostało przejęte.
 
 Użytkownik natychmiast widzi, że ktoś rozpoczął pracę nad jego problemem lub że został on rozwiązany.
 
@@ -207,6 +201,15 @@ Konta i Dostępy (Account & Access) — np. reset hasła, uprawnienia
 Inne (Other) — wszystko spoza powyższych
 
 Każdy agent ma przypisane kategorie, w których może działać.
+
+#### 3.6 Panel administratora (MVP v1 – wdrożone)
+
+- Strony: `Kategorie`, `Użytkownicy`, `Logi` (audit logs) z nawigacją i aktywnymi zakładkami.
+- Użytkownicy: lista z filtrami, tworzenie i edycja w modalach, wymuszenie resetu hasła.
+- Kategorie: edycja opisu kategorii i aktualizacja podkategorii (nazwa/opis).
+- Audit Logs: przegląd, filtrowanie (użytkownik/akcja/daty), paginacja, szczegóły JSON.
+- Bezpieczeństwo: dostęp tylko dla roli `ADMIN` (middleware + RLS na `audit_logs`).
+- UX: ciemny motyw, wspólny `DashboardHeader`, loading states i error boundary.
 
 ### 🚀 4. Scenariusze użycia
 #### 4.1 Pierwsze logowanie
@@ -247,15 +250,11 @@ Zapobiega to sytuacji, w której dwie osoby pracują nad tym samym problemem.
 Agenci również mogą tworzyć zgłoszenia – np. jeśli mają problem techniczny spoza swojej specjalizacji (np. problem z oprogramowaniem).
 Wtedy zgłoszenie trafia do odpowiednich agentów z danej kategorii.
 
-#### 4.6 Zarządzanie systemem przez administratora
+#### 4.6 Zarządzanie przez administratora (MVP v1)
 
-Administrator loguje się do systemu z pełnymi uprawnieniami.
-
-Widzi wszystkie otwarte, w trakcie realizacji i zamknięte tickety w całym systemie bez żadnych ograniczeń kategorii.
-
-Może przypisać dowolne zgłoszenie do siebie, aby pomóc w jego rozwiązaniu, lub do konkretnego agenta, jeśli jest to konieczne.
-
-W przyszłości administrator będzie mógł zarządzać kategoriami, agentami i przeglądać raporty systemu.
+- Tworzenie/edycja użytkowników, wymuszenie resetu hasła.
+- Edycja opisów kategorii i podkategorii.
+- Przegląd i filtrowanie audit logów (login/logout i akcje admina).
 
 ### 🎯 5. Kluczowe założenia projektu
 
@@ -286,6 +285,12 @@ nie ma duplikacji zgłoszeń,
 każda osoba widzi tylko swoje zgłoszenia,
 
 real-time działa płynnie (zmiany widoczne natychmiast).
+
+Z punktu widzenia administratora (MVP v1):
+
+- Mogę utworzyć i edytować użytkownika (rola, wymuszenie zmiany hasła).
+- Mogę przeglądać i filtrować audit logi (login/logout i akcje admina).
+- Mogę edytować opisy kategorii i podkategorii.
 
 
 ### 📚 7. Zasoby i wsparcie
@@ -321,7 +326,9 @@ administrator widzi wszystkie tickety bez ograniczeń kategorii,
 
 administrator może przypisać każde zgłoszenie do siebie lub innego agenta,
 
-real-time działa płynnie i niezawodnie.
+real-time działa płynnie i niezawodnie,
+
+Admin Panel v1 działa: tworzenie/edycja użytkowników, wymuszenie resetu hasła, edycja opisów kategorii/podkategorii, przegląd audit logów z filtrami i paginacją.
 
 ### 🎉 9. Podsumowanie
 

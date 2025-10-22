@@ -42,6 +42,13 @@ export default async function globalSetup() {
   // Test users matching tests/e2e/helpers/auth-helpers.ts
   const testUsers = [
     {
+      email: 'admin@tickflow.com',
+      password: 'Admin123!@#',
+      name: 'Admin User',
+      role: 'ADMIN' as const,
+      force_password_change: false,
+    },
+    {
       email: 'newuser@tickflow.com',
       password: 'Agent123!@#',
       name: 'New User',

@@ -13,8 +13,10 @@
 - **BATCH 9:** ✅ ZAKOŃCZONY (4/4 zadania)
 - **BATCH 10:** ✅ ZAKOŃCZONY (2/2 zadania)
 - **REFACTORING & FIXES:** ✅ ZAKOŃCZONY (9/9 zadań)
+- **INTEGRATION TESTS:** ✅ ZAKOŃCZONY (10/10 testów)
+- **E2E TESTS (Playwright):** ✅ ZAKOŃCZONY (10/10 testów)
 
-**Łącznie:** 45/45 zadań wykonanych (100%)
+**Łącznie:** 65/65 zadań wykonanych (100%)
 
 ---
 
@@ -101,41 +103,42 @@
 
 ## TESTING
 
-### Unit Tests
-- [ ] Test: AuditLogService.createLog
-- [ ] Test: AuditLogService.getLogs (filtering, pagination)
-- [ ] Test: CategoryAdminService.getCategoriesWithAgents
-- [ ] Test: CategoryAdminService.updateCategoryDescription
-- [ ] Test: CategoryAdminService.updateSubcategory
-- [ ] Test: UserAdminService.getAllUsers
-- [ ] Test: UserAdminService.createUser (including duplicate email check)
-- [ ] Test: UserAdminService.updateUser
-- [ ] Test: UserAdminService.forcePasswordReset
-- [ ] Test: Walidatory Zod (categories, users, audit-logs)
+### Unit Tests ✅ ZAKOŃCZONE (106/106 testów - 100%)
+- [x] Test: AuditLogService.createLog ✅ (4 testy)
+- [x] Test: AuditLogService.getLogs (filtering, pagination) ✅ (16 testów)
+- [x] Test: CategoryAdminService.getCategoriesWithAgents ✅ (7 testów)
+- [x] Test: CategoryAdminService.updateCategoryDescription ✅ (4 testy)
+- [x] Test: CategoryAdminService.updateSubcategory ✅ (7 testów)
+- [x] Test: UserAdminService.getAllUsers ✅ (5 testów)
+- [x] Test: UserAdminService.createUser (including duplicate email check) ✅ (4 testy)
+- [x] Test: UserAdminService.updateUser ✅ (7 testów)
+- [x] Test: UserAdminService.forcePasswordReset ✅ (3 testy)
+- [x] Test: Walidatory Zod (categories, users, audit-logs) ✅ (49 testów)
 
-### Integration Tests
-- [ ] Test: POST /api/admin/users (create user)
-- [ ] Test: GET /api/admin/users (list users)
-- [ ] Test: PATCH /api/admin/users/:userId (update user)
-- [ ] Test: POST /api/admin/users/:userId/force-password-reset
-- [ ] Test: GET /api/admin/categories (with agents)
-- [ ] Test: PATCH /api/admin/categories/:categoryId
-- [ ] Test: PATCH /api/admin/subcategories/:subcategoryId
-- [ ] Test: GET /api/admin/audit-logs (with filters)
-- [ ] Test: Auth middleware dla admin endpoints (403 for non-admin)
-- [ ] Test: Audit logging w login/logout endpoints
+### Integration Tests ✅ ZAKOŃCZONE (10/10 testów)
+- [x] Test: POST /api/admin/users (create user) - admin-users-endpoints.test.ts
+- [x] Test: GET /api/admin/users (list users) - admin-users-endpoints.test.ts
+- [x] Test: PATCH /api/admin/users/:userId (update user) - admin-users-endpoints.test.ts
+- [x] Test: POST /api/admin/users/:userId/force-password-reset - admin-users-endpoints.test.ts
+- [x] Test: GET /api/admin/categories (with agents) - admin-categories-endpoints.test.ts
+- [x] Test: PATCH /api/admin/categories/:categoryId - admin-categories-endpoints.test.ts
+- [x] Test: PATCH /api/admin/subcategories/:subcategoryId - admin-categories-endpoints.test.ts
+- [x] Test: GET /api/admin/audit-logs (with filters) - admin-audit-logs-endpoint.test.ts
+- [x] Test: Auth middleware dla admin endpoints (403 for non-admin) - admin-auth-middleware.test.ts
+- [x] Test: Audit logging w login/logout endpoints - auth-audit-logging.test.ts
 
-### E2E Tests (Playwright)
-- [ ] Test: Admin login → redirect to /admin/categories
-- [ ] Test: Admin navigation (categories → users → logs)
-- [ ] Test: Create new user workflow (form validation, success)
-- [ ] Test: Update category description
-- [ ] Test: Update subcategory name and description
-- [ ] Test: Force password reset for user
-- [ ] Test: Audit logs filtering (by user, by action, by date)
-- [ ] Test: Audit logs pagination
-- [ ] Test: Non-admin user cannot access /admin/* (redirect to /tickets)
-- [ ] Test: Agent user cannot access /admin/* (403)
+### E2E Tests (Playwright) ✅ ZAKOŃCZONE (10/10 testów)
+- [x] Test: Admin login → redirect to /admin/categories
+- [x] Test: Admin navigation (categories → users → logs)
+- [x] Test: Create new user workflow (form validation, success)
+- [x] Test: Update category description
+- [x] Test: Update subcategory name and description
+- [x] Test: Force password reset for user
+- [x] Test: Audit logs filtering (by user, by action, by date)
+- [x] Test: Audit logs pagination
+- [x] Test: Non-admin user cannot access /admin/* (redirect to /tickets)
+- [x] Test: Agent user cannot access /admin/* (403)
+
 
 ### Manual Testing Checklist
 - [ ] Weryfikacja: Audit logs zapisują IP i User Agent
