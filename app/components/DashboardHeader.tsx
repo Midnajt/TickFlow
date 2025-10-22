@@ -57,6 +57,14 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               {user.role}
             </div>
             <div className="flex items-center gap-2">
+              {user.role === 'ADMIN' && (
+                <Link
+                  href="/admin/categories"
+                  className="flex-1 sm:flex-none px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors text-center"
+                >
+                  Panel Administratora
+                </Link>
+              )}
               <Link
                 href="/account"
                 className="flex-1 sm:flex-none px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors text-center"

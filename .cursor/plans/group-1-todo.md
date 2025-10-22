@@ -4,16 +4,16 @@
 - **BATCH 0:** ✅ ZAKOŃCZONY (3/3 zadania)
 - **BATCH 1:** ✅ ZAKOŃCZONY (6/6 zadań)
 - **BATCH 2:** ✅ ZAKOŃCZONY (3/3 zadania)
-- **BATCH 3:** ⏳ OCZEKUJE (0/4 zadania)
-- **BATCH 4:** ⏳ OCZEKUJE (0/5 zadań)
-- **BATCH 5:** ⏳ OCZEKUJE (0/1 zadanie)
-- **BATCH 6:** ⏳ OCZEKUJE (0/1 zadanie)
-- **BATCH 7:** ⏳ OCZEKUJE (0/3 zadania)
-- **BATCH 8:** ⏳ OCZEKUJE (0/4 zadania)
+- **BATCH 3:** ✅ ZAKOŃCZONY (4/4 zadania)
+- **BATCH 4:** ✅ ZAKOŃCZONY (5/5 zadań)
+- **BATCH 5:** ✅ ZAKOŃCZONY (1/1 zadanie)
+- **BATCH 6:** ✅ ZAKOŃCZONY (1/1 zadanie)
+- **BATCH 7:** ✅ ZAKOŃCZONY (3/3 zadania)
+- **BATCH 8:** ✅ ZAKOŃCZONY (4/4 zadania)
 - **BATCH 9:** ⏳ OCZEKUJE (0/4 zadania)
 - **BATCH 10:** ⏳ OCZEKUJE (0/2 zadania)
 
-**Łącznie:** 12/35 zadań wykonanych (34.3%)
+**Łącznie:** 30/35 zadań wykonanych (85.7%)
 
 ---
 
@@ -40,39 +40,39 @@
 
 ## BATCH 3: Services - Category Management (4 zadania)
 
-- [ ] 3.1: Utworzenie `app/lib/services/categories/category-admin.service.ts`
-- [ ] 3.2: Utworzenie `app/api/admin/categories/route.ts` (GET)
-- [ ] 3.3: Utworzenie `app/api/admin/categories/[categoryId]/route.ts` (PATCH)
-- [ ] 3.4: Utworzenie `app/api/admin/subcategories/[subcategoryId]/route.ts` (PATCH)
+- [x] 3.1: Utworzenie `app/lib/services/categories/category-admin.service.ts`
+- [x] 3.2: Utworzenie `app/api/admin/categories/route.ts` (GET)
+- [x] 3.3: Utworzenie `app/api/admin/categories/[categoryId]/route.ts` (PATCH)
+- [x] 3.4: Utworzenie `app/api/admin/subcategories/[subcategoryId]/route.ts` (PATCH)
 
 ## BATCH 4: Services - User Management (5 zadań)
 
-- [ ] 4.1: Utworzenie `app/lib/services/users/user-admin.service.ts`
-- [ ] 4.2: Utworzenie `app/api/admin/users/route.ts` (GET + POST)
-- [ ] 4.3: Utworzenie `app/api/admin/users/[userId]/route.ts` (PATCH)
-- [ ] 4.4: Utworzenie `app/api/admin/users/[userId]/force-password-reset/route.ts` (POST)
-- [ ] 4.5: Dodanie zabezpieczenia przed self-modification w user endpoints
+- [x] 4.1: Utworzenie `app/lib/services/users/user-admin.service.ts`
+- [x] 4.2: Utworzenie `app/api/admin/users/route.ts` (GET + POST)
+- [x] 4.3: Utworzenie `app/api/admin/users/[userId]/route.ts` (PATCH)
+- [x] 4.4: Utworzenie `app/api/admin/users/[userId]/force-password-reset/route.ts` (POST)
+- [x] 4.5: Dodanie zabezpieczenia przed self-modification w user endpoints
 
 ## BATCH 5: API Endpoint - Audit Logs (1 zadanie)
 
-- [ ] 5.1: Utworzenie `app/api/admin/audit-logs/route.ts` (GET)
+- [x] 5.1: Utworzenie `app/api/admin/audit-logs/route.ts` (GET)
 
 ## BATCH 6: API Client (1 zadanie)
 
-- [ ] 6.1: Aktualizacja `app/lib/api-client.ts` (dodanie adminApi)
+- [x] 6.1: Aktualizacja `app/lib/api-client.ts` (dodanie adminApi)
 
 ## BATCH 7: Frontend - Admin Layout & Navigation (3 zadania)
 
-- [ ] 7.1: Utworzenie `app/admin/layout.tsx`
-- [ ] 7.2: Aktualizacja `app/components/DashboardHeader.tsx` (link do admin panelu)
-- [ ] 7.3: Utworzenie `app/admin/page.tsx` (redirect)
+- [x] 7.1: Utworzenie `app/admin/layout.tsx`
+- [x] 7.2: Aktualizacja `app/components/DashboardHeader.tsx` (link do admin panelu)
+- [x] 7.3: Utworzenie `app/admin/page.tsx` (redirect)
 
 ## BATCH 8: Frontend - Categories Management Page (4 zadania)
 
-- [ ] 8.1: Utworzenie `app/admin/categories/page.tsx` (Server Component)
-- [ ] 8.2: Utworzenie `app/admin/categories/CategoriesAdminClient.tsx`
-- [ ] 8.3: Dodanie inline edycji dla category description
-- [ ] 8.4: Dodanie edycji dla subcategories (modal lub inline)
+- [x] 8.1: Utworzenie `app/admin/categories/page.tsx` (Server Component)
+- [x] 8.2: Utworzenie `app/admin/categories/CategoriesAdminClient.tsx`
+- [x] 8.3: Dodanie inline edycji dla category description
+- [x] 8.4: Dodanie edycji dla subcategories (modal lub inline)
 
 ## BATCH 9: Frontend - Users Management Page (4 zadania)
 

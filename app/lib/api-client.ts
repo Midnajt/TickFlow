@@ -17,6 +17,12 @@ import type {
   TicketAssignmentDTO,
   TicketStatusUpdateDTO,
   TicketStatus,
+  CategoryWithAgentsDTO,
+  UserDetailDTO,
+  CreateUserCommand,
+  UpdateUserCommand,
+  GetAuditLogsParams,
+  AuditLogsListDTO,
 } from '@/src/types';
 
 // Base configuration
@@ -199,6 +205,104 @@ export const agentCategoriesApi = {
       credentials: 'include',
     });
     return handleResponse<GetAgentCategoriesResponseDTO>(response);
+  },
+};
+
+/**
+ * Admin API
+ */
+export const adminApi = {
+  // Categories
+  getCategories: async () => {
+    const response = await fetch(`${API_BASE}/admin/categories`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+    return handleResponse<{ categories: CategoryWithAgentsDTO[] }>(response);
+  },
+
+  updateCategory: async (categoryId: string, description: string | null) => {
+    const response = await fetch(`${API_BASE}/admin/categories/${categoryId}`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ description }),
+      credentials: 'include',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+
+  updateSubcategory: async (
+    subcategoryId: string,
+    data: { name?: string; description?: string | null }
+  ) => {
+    const response = await fetch(`${API_BASE}/admin/subcategories/${subcategoryId}`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+      credentials: 'include',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+
+  // Users
+  getUsers: async () => {
+    const response = await fetch(`${API_BASE}/admin/users`, {
+      headers: getAuthHeaders(),
+      credentials: 'include',
+    });
+    return handleResponse<{ users: UserDetailDTO[] }>(response);
+  },
+
+  createUser: async (data: CreateUserCommand) => {
+    const response = await fetch(`${API_BASE}/admin/users`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+      credentials: 'include',
+    });
+    return handleResponse<{ user: UserDetailDTO }>(response);
+  },
+
+  updateUser: async (userId: string, data: UpdateUserCommand) => {
+    const response = await fetch(`${API_BASE}/admin/users/${userId}`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+      credentials: 'include',
+    });
+    return handleResponse<{ message: string }>(response);
+  },
+
+  forcePasswordReset: async (userId: string) => {
+    const response = await fetch(
+      `${API_BASE}/admin/users/${userId}/force-password-reset`,
+      {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      }
+    );
+    return handleResponse<{ message: string }>(response);
+  },
+
+  // Audit Logs
+  getAuditLogs: async (params?: GetAuditLogsParams) => {
+    const queryParams = new URLSearchParams();
+    if (params?.userId) queryParams.set('userId', params.userId);
+    if (params?.action) queryParams.set('action', params.action);
+    if (params?.startDate) queryParams.set('startDate', params.startDate);
+    if (params?.endDate) queryParams.set('endDate', params.endDate);
+    if (params?.page) queryParams.set('page', params.page.toString());
+    if (params?.limit) queryParams.set('limit', params.limit.toString());
+
+    const response = await fetch(
+      `${API_BASE}/admin/audit-logs?${queryParams.toString()}`,
+      {
+        headers: getAuthHeaders(),
+        credentials: 'include',
+      }
+    );
+    return handleResponse<AuditLogsListDTO>(response);
   },
 };
 
