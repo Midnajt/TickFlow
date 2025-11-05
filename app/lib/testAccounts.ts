@@ -21,3 +21,13 @@ export const testAccounts: TestAccount[] = [
 export const agentAccounts = testAccounts.filter(acc => acc.role === 'agent');
 export const userAccounts = testAccounts.filter(acc => acc.role === 'user');
 
+/**
+ * Testowe konta produkcyjne (widoczne również na produkcji dla testerów)
+ */
+export const productionTestAccounts: TestAccount[] = [
+  { email: 'agent@tickflow.com', password: 'Agent123!@#', label: 'agent@tickflow.com / Agent123!@#', icon: '👨‍💼', role: 'agent' },
+  { email: 'user@tickflow.com', password: 'User123!@#', label: 'user@tickflow.com / User123!@#', icon: '👤', role: 'user' },
+];
+
+export const productionAgentAccounts = productionTestAccounts.filter(acc => acc.role === 'agent');
+export const productionUserAccounts = productionTestAccounts.filter(acc => acc.role === 'user');

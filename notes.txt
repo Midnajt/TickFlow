@@ -33,7 +33,7 @@ wykorzystan plan działania z endpoints-plan.md oraz podsumowania z endpoints-wo
 =============================
 
 
-📋 GRUPA 1: Panel Administratora - Zarządzanie Danymi
+📋 GRUPA 1: Panel Administratora - Zarządzanie Danymi ✔✔✔✔ Grupa 1 jest zrobiona.
 Priorytet: Wysoki | Złożoność: Średnia-Wysoka
     Admin powinien mieć widok z listą kategorii, podkategorii i ich opisów. Z tego miejsca powinien móc aktualizować opisy i widzieć który agent jest przypisany do danych kategorii i podkaregorii.
     Admin powinien mieć widok z listą użytkowników oraz ich ról.
