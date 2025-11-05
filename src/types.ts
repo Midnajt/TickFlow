@@ -261,7 +261,7 @@ export interface GetCategoryParams {
 
 // Update category description command
 export interface UpdateCategoryCommand {
-  description: string | null;
+  description?: string | null;
 }
 
 // Update subcategory command

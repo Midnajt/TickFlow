@@ -5,6 +5,7 @@ import type {
   UpdateUserCommand,
   UserDetailDTO,
 } from "@/src/types";
+import type { Database } from "@/app/lib/database.types";
 import { AuditLogService } from "@/app/lib/services/audit-log/audit-log.service";
 
 export class UserAdminService {
@@ -88,10 +89,10 @@ export class UserAdminService {
         force_password_change: true, // Zawsze wymuszamy zmianę
       })
       .select()
-      .single();
+      .single<Database["public"]["Tables"]["users"]["Row"]>();
 
-    if (error) {
-      throw new Error(`DATABASE_ERROR:${error.message}`);
+    if (error || !newUser) {
+      throw new Error(`DATABASE_ERROR:${error?.message || "Nie udało się utworzyć użytkownika"}`);
     }
 
     // Log akcji
